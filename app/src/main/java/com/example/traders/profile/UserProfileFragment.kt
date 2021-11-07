@@ -1,10 +1,11 @@
-package com.example.traders
+package com.example.traders.profile
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.traders.R
 
 class UserProfileFragment : Fragment() {
 

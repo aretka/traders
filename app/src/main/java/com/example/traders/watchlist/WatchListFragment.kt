@@ -1,4 +1,4 @@
-package com.example.traders
+package com.example.traders.watchlist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import com.example.traders.R
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import javax.inject.Provider
@@ -34,10 +35,5 @@ class WatchListFragment : Fragment() {
                 WatchListFragmentDirections.actionWatchListFragmentToUserProfileFragment()
             )
         }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = WatchListFragment()
     }
 }
