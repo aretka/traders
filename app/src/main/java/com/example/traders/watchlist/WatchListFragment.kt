@@ -28,12 +28,5 @@ class WatchListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val navButton = view.findViewById<Button>(R.id.navigation_button)
-        navButton.setOnClickListener {
-            navController.get().navigate(
-                WatchListFragmentDirections.actionWatchListFragmentToUserProfileFragment()
-            )
-        }
     }
 }
