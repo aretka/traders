@@ -19,13 +19,29 @@ class WatchListFragment : Fragment() {
 
     private val viewModel: WatchListViewModel by viewModels()
 
+    private var adapter: WatchListAdapter? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            viewModel.errorEvent.collect { error ->
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val binding = FragmentWatchListBinding.inflate(layoutInflater, container, false)
+        viewModel.addItemsToList()
+        adapter = WatchListAdapter()
+        binding.itemsList.adapter = adapter
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_watch_list, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,8 +49,13 @@ class WatchListFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.state.collect { state ->
-                Toast.makeText(requireContext(), state.someData, Toast.LENGTH_LONG).show()
+                adapter?.updateData(state.cryptoList)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        adapter = null
     }
 }

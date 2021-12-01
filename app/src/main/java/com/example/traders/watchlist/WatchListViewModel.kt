@@ -14,6 +14,15 @@ import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class WatchListViewModel @Inject constructor(): BaseViewModel() {
-    private val _state = MutableStateFlow(WatchListState())
+    private val _state = MutableStateFlow(WatchListState(emptyList()))
     val state = _state.asStateFlow()
+
+    fun addItemsToList() {
+        val cryptoItem = CryptoInfo("BTC/USD", 50505)
+        val list : MutableList<CryptoInfo> = mutableListOf()
+        for (i in 1..20) {
+            list.add(cryptoItem)
+        }
+        _state.value.cryptoList = list
+    }
 }
