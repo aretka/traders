@@ -4,34 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".watchlist.WatchListFragment"
-    >
+    tools:context=".watchlist.WatchListFragment" >
 
-
-<!--    <Button-->
-<!--        android:id="@+id/button_all_crypto"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="All crypto"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--    <Button-->
-<!--        android:id="@+id/button_favourites"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Favourites"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/button_new_crypto"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/button_all_crypto"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--    <Button-->
-<!--        android:id="@+id/button_new_crypto"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="New crypto"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/crypto_tab"
         android:layout_width="match_parent"
@@ -41,44 +15,24 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="All crypto"/>
+            tools:text="All crypto" />
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Favourites"/>
+            tools:text="Favourites"/>
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New crypto"/>
+            tools:text="New crypto"/>
     </com.google.android.material.tabs.TabLayout>
 
-    <TextView
-        android:id="@+id/text_crypto_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Crypto list"
-        android:textSize="25dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/crypto_tab" />
-
-    <Button
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        app:layout_constraintTop_toBottomOf="@id/crypto_tab"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/ic_add_icon" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/items_list"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/crypto_page_viewer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-
+        app:layout_constraintTop_toBottomOf="@+id/crypto_tab"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_crypto_list"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/list_item_crypto"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

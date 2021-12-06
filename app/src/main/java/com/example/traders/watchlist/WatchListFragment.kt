@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.example.traders.R
+import androidx.viewpager2.widget.ViewPager2
 import com.example.traders.databinding.FragmentWatchListBinding
+import com.example.traders.watchlist.adapters.ViewPagerAdapter
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -18,8 +20,6 @@ import kotlinx.coroutines.launch
 class WatchListFragment : Fragment() {
 
     private val viewModel: WatchListViewModel by viewModels()
-
-    private var adapter: WatchListAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,26 +36,28 @@ class WatchListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentWatchListBinding.inflate(layoutInflater, container, false)
-        viewModel.addItemsToList()
-        adapter = WatchListAdapter()
-        binding.itemsList.adapter = adapter
+        setUpTabs(binding.cryptoPageViewer, binding.cryptoTab)
 
         // Inflate the layout for this fragment
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        lifecycleScope.launch {
-            viewModel.state.collect { state ->
-                adapter?.updateData(state.cryptoList)
+    private fun setUpTabs(viewPager: ViewPager2, tabLayout: TabLayout) {
+        val viewPagerAdapter = ViewPagerAdapter(childFragmentManager, lifecycle)
+        viewPager.adapter = viewPagerAdapter
+        TabLayoutMediator(tabLayout, viewPager){tab, position ->
+            when(position){
+                0->{
+                    tab.text = "All crypto"
+                }
+                1->{
+                    tab.text = "Favourites"
+                }
+                2->{
+                    tab.text = "New crypto"
+                }
             }
-        }
+        }.attach()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        adapter = null
-    }
 }
