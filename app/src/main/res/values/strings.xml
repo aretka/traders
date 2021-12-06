@@ -5,4 +5,7 @@
     <string name="fragment_watch_list_label">fragment_watch_list</string>
     <string name="navigation_profile_label">Profile</string>
     <string name="navigation_watch_list_label">Watch list</string>
+    <string name="watchlist_tab_all_crypto_label">All crypto</string>
+    <string name="watchlist_tab_favourites_label">Favourites</string>
+    <string name="watchlist_tab_new_crypto_label">New crypto</string>
 </resources>

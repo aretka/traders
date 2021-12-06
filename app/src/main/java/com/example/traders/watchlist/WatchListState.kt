@@ -1,3 +1,3 @@
 package com.example.traders.watchlist
 
-data class WatchListState(val someData: String = "Some data")
+data class WatchListState(val cryptoList: List<CryptoInfo>)
