@@ -18,6 +18,6 @@ class AllCryptoViewModel @Inject constructor() : BaseViewModel() {
         for (i in 1..20) {
             list.add(cryptoItem)
         }
-        _state.value.cryptoList = list
+        _state.value = _state.value.copy(list)
     }
 }
