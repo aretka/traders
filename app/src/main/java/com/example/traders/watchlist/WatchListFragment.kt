@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.example.traders.R
 import com.example.traders.databinding.FragmentWatchListBinding
 import com.example.traders.watchlist.adapters.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
@@ -47,14 +48,14 @@ class WatchListFragment : Fragment() {
         viewPager.adapter = viewPagerAdapter
         TabLayoutMediator(tabLayout, viewPager){tab, position ->
             when(position){
-                0->{
-                    tab.text = "All crypto"
+                0 -> {
+                    tab.text = getString(R.string.watchlist_tab_all_crypto_label)
                 }
-                1->{
-                    tab.text = "Favourites"
+                1 -> {
+                    tab.text = getString(R.string.watchlist_tab_favourites_label)
                 }
-                2->{
-                    tab.text = "New crypto"
+                2 -> {
+                    tab.text = getString(R.string.watchlist_tab_new_crypto_label)
                 }
             }
         }.attach()

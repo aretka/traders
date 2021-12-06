@@ -17,7 +17,7 @@ class WatchListAdapter() : RecyclerView.Adapter<SimpleViewHolder<ListItemCryptoB
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleViewHolder<ListItemCryptoBinding> {
         val layoutInflater = LayoutInflater.from(parent.context)
-        Log.d("TAG", "ViewHolderCreated")
+
         return SimpleViewHolder(ListItemCryptoBinding.inflate(layoutInflater, parent, false))
     }
 

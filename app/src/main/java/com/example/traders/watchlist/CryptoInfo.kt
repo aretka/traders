@@ -5,4 +5,5 @@ data class CryptoInfo(
     var fullName: String,
     var price: Int,
     var priceChange: Int,
-    var percentagePriceChange: Double)
+    var percentagePriceChange: Double
+)
