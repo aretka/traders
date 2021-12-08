@@ -1,10 +1,17 @@
 package com.example.traders.watchlist.allCrypto
 
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.traders.BaseViewModel
-import com.example.traders.watchlist.CryptoInfo
+import com.example.traders.network.RetrofitInstance
+import com.example.traders.watchlist.cryptoData.Data
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -12,12 +19,35 @@ class AllCryptoViewModel @Inject constructor() : BaseViewModel() {
     private val _state = MutableStateFlow(AllCryptoState(emptyList()))
     val state = _state.asStateFlow()
 
-    fun addItemsToList() {
-        val cryptoItem = CryptoInfo("BTC/USD", "Bitcoin in dollars", 50000, 2091, 4.1)
-        val list: MutableList<CryptoInfo> = mutableListOf()
-        for (i in 1..20) {
-            list.add(cryptoItem)
+    // I will transfer to StateFlow later, this is just for easier personal usage
+    private val _cryptoData = MutableLiveData<List<Data>>()
+    val cryptoData = _cryptoData
+
+    init {
+        getCryptoPrices()
+    }
+
+    fun getCryptoPrices() {
+        viewModelScope.launch {
+
+            var response = try {
+                RetrofitInstance.api.getCryptoPrices()
+            } catch (e: IOException) {
+                Log.d("Response", "IOException, internet connection interference: ${e}")
+                return@launch
+            } catch (e: HttpException) {
+                Log.d("Response", "HttpException, unexpected response: ${e}")
+                return@launch
+            }
+
+            if (response.isSuccessful && response.body() != null) {
+                val responseData = response.body()
+                _cryptoData.value = responseData?.data
+                Log.d("Response", "Items: ${_cryptoData.value?.size}")
+            } else {
+                Log.d("Response", "Response not successful")
+            }
+
         }
-        _state.value = _state.value.copy(list)
     }
 }

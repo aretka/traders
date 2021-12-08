@@ -8,7 +8,8 @@ import com.example.traders.watchlist.allCrypto.AllCryptoFragment
 import com.example.traders.watchlist.favourites.FavouriteCryptoFragment
 import com.example.traders.watchlist.newCrypto.NewCryptoFragment
 
-class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :  FragmentStateAdapter(fragmentManager, lifecycle){
+class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
+    FragmentStateAdapter(fragmentManager, lifecycle) {
     companion object {
         private const val NUM_OF_FRAGMENTS = 3
         private const val FIRST_POSITION = 0
@@ -21,7 +22,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     }
 
     override fun createFragment(position: Int): Fragment {
-        return when(position) {
+        return when (position) {
             FIRST_POSITION -> {
                 AllCryptoFragment()
             }
@@ -31,7 +32,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
             THIRD_POSITION -> {
                 NewCryptoFragment()
             }
-            else->{
+            else -> {
                 Fragment()
             }
         }

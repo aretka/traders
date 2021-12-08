@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
->
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/crypto_logo"
@@ -14,8 +12,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/ic_home"
-        tools:src="@drawable/ic_home"
-        />
+        tools:src="@drawable/ic_home" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -23,20 +21,23 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/crypto_logo">
+
         <TextView
             android:id="@+id/crypto_name_shortcut"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="17sp"
             android:textStyle="bold"
-            tools:text="BTC/USD"/>
+            tools:text="BTC/USD" />
+
         <TextView
             android:id="@+id/crypto_full_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            tools:text="Bitcoin in dollars"/>
+            tools:text="Bitcoin in dollars" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -44,6 +45,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+
         <TextView
             android:id="@+id/crypto_price"
             android:layout_width="wrap_content"
@@ -52,7 +54,7 @@
             android:paddingEnd="5dp"
             android:textSize="17sp"
             android:textStyle="bold"
-            tools:text="72000"/>
+            tools:text="72000" />
 
         <TextView
             android:id="@+id/crypto_price_change"
@@ -63,7 +65,7 @@
             android:textColor="#00FF0A"
             android:textSize="14sp"
             android:textStyle="bold"
-            tools:text="+5000 +10%"/>
+            tools:text="+5000 +10%" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
