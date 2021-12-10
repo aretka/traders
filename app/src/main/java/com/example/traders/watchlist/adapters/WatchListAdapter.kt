@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import com.bumptech.glide.Glide
+import com.example.traders.R
 import com.example.traders.databinding.ListItemCryptoBinding
 import com.example.traders.watchlist.cryptoData.Data
 
@@ -37,6 +39,13 @@ class WatchListAdapter() : RecyclerView.Adapter<SimpleViewHolder<ListItemCryptoB
         holder.binding.cryptoPrice.text =
             roundNumber(item.metrics.market_data.ohlcv_last_24_hour.close)
         holder.binding.cryptoPriceChange.text = "${priceChange} + ${percentagePriceChange}%"
+
+        // Glide downloads and caches image in local storage for later usage
+        Glide.with(holder.binding.cryptoLogo)
+            .load(item.imageURL)
+            .placeholder(R.drawable.ic_download)
+            .error(R.drawable.ic_image_error)
+            .into(holder.binding.cryptoLogo)
     }
 
 

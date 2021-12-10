@@ -26,15 +26,6 @@ class AllCryptoFragment : Fragment() {
         binding.itemsList.adapter = adapter
 
         viewModel.cryptoData.observe(viewLifecycleOwner, { response ->
-            Log.d("Response", response[0].id)
-            response.forEach { crypto ->
-                Log.d(
-                    "Response",
-                    crypto.symbol + " - Open: " +
-                            crypto.metrics.market_data.ohlcv_last_24_hour.open.toString() + " Close: " +
-                            crypto.metrics.market_data.ohlcv_last_24_hour.close.toString()
-                )
-            }
             adapter?.updateData(response)
         })
 

@@ -42,7 +42,7 @@ class AllCryptoViewModel @Inject constructor() : BaseViewModel() {
 
             if (response.isSuccessful && response.body() != null) {
                 val responseData = response.body()
-                _cryptoData.value = responseData?.data
+                _cryptoData.value = insertImageURLsAndReturnList(responseData?.data)
                 Log.d("Response", "Items: ${_cryptoData.value?.size}")
             } else {
                 Log.d("Response", "Response not successful")
@@ -50,4 +50,15 @@ class AllCryptoViewModel @Inject constructor() : BaseViewModel() {
 
         }
     }
+
+
+    private fun insertImageURLsAndReturnList (list: List<Data>?): List<Data> {
+        val mutableList: List<Data>? = list
+        for (i in mutableList!!.indices) {
+            mutableList[i].imageURL =
+                "https://cryptologos.cc/logos/${mutableList[i].slug}-${mutableList[i].symbol.lowercase()}-logo.png?v=014"
+        }
+        return mutableList
+    }
+
 }
