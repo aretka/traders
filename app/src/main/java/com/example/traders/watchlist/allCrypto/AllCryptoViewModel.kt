@@ -23,6 +23,9 @@ class AllCryptoViewModel @Inject constructor() : BaseViewModel() {
     private val _cryptoData = MutableLiveData<List<Data>>()
     val cryptoData = _cryptoData
 
+    private val _cryptoValues = MutableLiveData<List<String>>()
+    val cryptoValues = _cryptoValues
+
     init {
         getCryptoPrices()
     }
@@ -42,7 +45,7 @@ class AllCryptoViewModel @Inject constructor() : BaseViewModel() {
 
             if (response.isSuccessful && response.body() != null) {
                 val responseData = response.body()
-                _cryptoData.value = insertImageURLsAndReturnList(responseData?.data)
+                _cryptoData.value = responseData?.data
                 Log.d("Response", "Items: ${_cryptoData.value?.size}")
             } else {
                 Log.d("Response", "Response not successful")
@@ -51,14 +54,9 @@ class AllCryptoViewModel @Inject constructor() : BaseViewModel() {
         }
     }
 
-
-    private fun insertImageURLsAndReturnList (list: List<Data>?): List<Data> {
-        val mutableList: List<Data>? = list
-        for (i in mutableList!!.indices) {
-            mutableList[i].imageURL =
-                "https://cryptologos.cc/logos/${mutableList[i].slug}-${mutableList[i].symbol.lowercase()}-logo.png?v=014"
-        }
-        return mutableList
+    fun onCryptoClicked(slug: String, symbol: String) {
+        val list = listOf(slug, symbol)
+        _cryptoValues.value = list
     }
 
 }

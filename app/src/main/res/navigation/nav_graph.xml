@@ -13,10 +13,32 @@
         <action
             android:id="@+id/action_watchListFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_watchListFragment_to_cryptoItem"
+            app:destination="@id/cryptoItem" />
     </fragment>
+
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="com.example.traders.profile.UserProfileFragment"
         android:label="fragment_user_profile"
         tools:layout="@layout/fragment_user_profile" />
+
+    <fragment
+        android:id="@+id/cryptoItem"
+        android:name="com.example.traders.watchlist.allCrypto.singleCryptoScreen.CryptoItem"
+        android:label="CryptoItem" >
+        <action
+            android:id="@+id/action_cryptoItem_to_watchListFragment"
+            app:destination="@id/watchListFragment"
+            app:popUpTo="@id/watchListFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="slug"
+            app:argType="string" />
+        <argument
+            android:name="symbol"
+            app:argType="string" />
+    </fragment>
+
 </navigation>

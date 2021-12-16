@@ -5,6 +5,6 @@ import retrofit2.Response
 import retrofit2.http.GET
 
 interface CryptoApi {
-    @GET("/api/v2/assets?limit=100&fields=id,slug,symbol,metrics/market_data/ohlcv_last_24_hour")
+    @GET("/api/v2/assets?limit=50&fields=id,slug,symbol,metrics/market_data/ohlcv_last_24_hour")
     suspend fun getCryptoPrices(): Response<CryptoData>
 }
