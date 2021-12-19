@@ -1,8 +1,13 @@
 package com.example.traders.watchlist.adapters
 
+import android.content.Context
+import android.graphics.Color
+import android.provider.Settings.Global.getString
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -11,7 +16,8 @@ import com.example.traders.R
 import com.example.traders.databinding.ListItemCryptoBinding
 import com.example.traders.watchlist.cryptoData.Data
 
-class WatchListAdapter(val clickListener: SingleCryptoListener) : RecyclerView.Adapter<SimpleViewHolder<ListItemCryptoBinding>>() {
+class WatchListAdapter(val clickListener: SingleCryptoListener) :
+    RecyclerView.Adapter<SimpleViewHolder<ListItemCryptoBinding>>() {
     private var list: List<Data> = emptyList()
 
     override fun onCreateViewHolder(
@@ -41,7 +47,11 @@ class WatchListAdapter(val clickListener: SingleCryptoListener) : RecyclerView.A
         holder.binding.cryptoFullName.text = item.slug.replaceFirstChar { char -> char.uppercase() }
         holder.binding.cryptoPrice.text =
             roundNumber(item.metrics.market_data.ohlcv_last_24_hour.close)
-        holder.binding.cryptoPriceChange.text = "${priceChange} + ${percentagePriceChange}%"
+        getCryptoPriceChangeText(
+            priceChange,
+            percentagePriceChange,
+            holder.binding.cryptoPriceChange
+        )
 
         // Glide downloads and caches image in local storage for later usage
         Glide.with(holder.binding.cryptoLogo)
@@ -68,4 +78,28 @@ class SingleCryptoListener(val clickListener: (slug: String, symbol: String) -> 
 
 fun roundNumber(numToRound: Double): String {
     return String.format("%.2f", numToRound)
+}
+
+fun getCryptoPriceChangeText(
+    priceChange: String,
+    percentagePriceChange: String,
+    textView: TextView
+) {
+
+    if (priceChange.contains('-')) {
+        textView.text = textView.context.getString(
+            R.string.crypto_price_red,
+            priceChange,
+            percentagePriceChange
+        )
+        textView.setTextColor(Color.parseColor("#eb4034"))
+    } else {
+        textView.text = textView.context.getString(
+            R.string.crypto_price_green,
+            priceChange,
+            percentagePriceChange
+        )
+        textView.setTextColor(Color.parseColor("#79e82e"))
+    }
+
 }
