@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.traders.BaseViewModel
 import com.example.traders.network.RetrofitInstance
-import com.example.traders.watchlist.cryptoData.Data
+import com.example.traders.watchlist.cryptoData.cryptoPriceData.Data
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,10 +21,12 @@ class AllCryptoViewModel @Inject constructor() : BaseViewModel() {
 
     // I will transfer to StateFlow later, this is just for easier personal usage
     private val _cryptoData = MutableLiveData<List<Data>>()
-    val cryptoData = _cryptoData
+    val cryptoData
+        get() = _cryptoData
 
-    private val _cryptoValues = MutableLiveData<List<String>>()
-    val cryptoValues = _cryptoValues
+    private val _cryptoValues = MutableLiveData<List<Any>>()
+    val cryptoValues
+        get() = _cryptoValues
 
     init {
         getCryptoPrices()
@@ -54,8 +56,8 @@ class AllCryptoViewModel @Inject constructor() : BaseViewModel() {
         }
     }
 
-    fun onCryptoClicked(slug: String, symbol: String) {
-        val list = listOf(slug, symbol)
+    fun onCryptoClicked(slug: String, price: Float, priceChange: Float) {
+        val list = listOf(slug, price, priceChange)
         _cryptoValues.value = list
     }
 

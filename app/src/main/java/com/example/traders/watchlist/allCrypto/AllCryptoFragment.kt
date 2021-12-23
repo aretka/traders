@@ -24,9 +24,10 @@ class AllCryptoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentTabAllCryptoBinding.inflate(inflater, container, false)
-        adapter = WatchListAdapter(SingleCryptoListener{ slug, symbol ->
-            viewModel.onCryptoClicked(slug, symbol)
+        adapter = WatchListAdapter(SingleCryptoListener{ symbol, price, priceChange ->
+            viewModel.onCryptoClicked(symbol, price, priceChange)
         })
+
         binding.itemsList.adapter = adapter
 
         viewModel.cryptoData.observe(viewLifecycleOwner, { response ->
@@ -36,7 +37,11 @@ class AllCryptoFragment : Fragment() {
         viewModel.cryptoValues.observe(viewLifecycleOwner, { list ->
             list?.let {
                 this.findNavController().navigate(WatchListFragmentDirections
-                    .actionWatchListFragmentToCryptoItem(list[0], list[1]))
+                    .actionWatchListFragmentToCryptoItem(
+                        list[0].toString(),
+                        list[1] as Float,
+                        list[2] as Float
+                    ))
             }
         })
 

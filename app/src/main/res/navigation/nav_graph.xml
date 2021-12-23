@@ -34,11 +34,14 @@
             app:popUpTo="@id/watchListFragment"
             app:popUpToInclusive="true" />
         <argument
-            android:name="slug"
-            app:argType="string" />
-        <argument
             android:name="symbol"
             app:argType="string" />
+        <argument
+            android:name="price"
+            app:argType="float" />
+        <argument
+            android:name="priceChange"
+            app:argType="float" />
     </fragment>
 
 </navigation>

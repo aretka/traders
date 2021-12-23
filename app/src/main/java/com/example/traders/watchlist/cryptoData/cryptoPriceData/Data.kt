@@ -1,4 +1,4 @@
-package com.example.traders.watchlist.cryptoData
+package com.example.traders.watchlist.cryptoData.cryptoPriceData
 
 data class Data(
     val id: String,

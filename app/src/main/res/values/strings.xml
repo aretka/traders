@@ -10,4 +10,33 @@
     <string name="watchlist_tab_new_crypto_label">New crypto</string>
     <string name="crypto_price_green">+%1$s +%2$s%%</string>
     <string name="crypto_price_red">%1$s  %2$s%%</string>
+    <string name="crypto_description">The live %1$s price today is %2$.2f$ with a 24h volume of %3$.2f$. Market dominance is %4$.2f%% comprised of %5$.2f$. There are %6$.0f of total circulating coins</string>
+
+    <!--  Crypto price statistics labels  -->
+    <string name="crypto_1hour_change_label">Last 1 hour data</string>
+    <string name="crypto_24hour_change_label">Last 24 hour data </string>
+    <string name="crypto_ATH_label">ATH data</string>
+    <string name="crypto_roi_data_label">Roi data</string>
+
+    <!--  Crypto last 1 hour labels  -->
+    <string name="open_text">Open</string>
+    <string name="high_text">High</string>
+    <string name="low_text">Low</string>
+    <string name="close_text">Close</string>
+    <string name="volume_text">Volume</string>
+
+    <!--  Cryrpto ATH labels  -->
+    <string name="ATH_price">Price:</string>
+    <string name="ATH_date">Date:</string>
+    <string name="ATH_days_since">Days since:</string>
+    <string name="ATH_percent_down">Percent down:</string>
+    <string name="ATH_breakeven_multiple">Break even multiplication:</string>
+
+    <!--  Crypto roi data(week, month, year) labels  -->
+    <string name="roi_last1_week">Last 1 week:</string>
+    <string name="roi_last1_month">Last 1 month:</string>
+    <string name="roi_last3_months">Last 3 months:</string>
+    <string name="roi_last1_year">Last 1 year:</string>
+
 </resources>
+

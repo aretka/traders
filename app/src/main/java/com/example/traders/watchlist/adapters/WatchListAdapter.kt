@@ -1,22 +1,19 @@
 package com.example.traders.watchlist.adapters
 
-import android.content.Context
 import android.graphics.Color
-import android.provider.Settings.Global.getString
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.example.traders.R
 import com.example.traders.databinding.ListItemCryptoBinding
-import com.example.traders.watchlist.cryptoData.Data
+import com.example.traders.getCryptoPriceChangeText
+import com.example.traders.roundNumber
+import com.example.traders.watchlist.cryptoData.cryptoPriceData.Data
 
-class WatchListAdapter(val clickListener: SingleCryptoListener) :
+class WatchListAdapter(private val clickListener: SingleCryptoListener) :
     RecyclerView.Adapter<SimpleViewHolder<ListItemCryptoBinding>>() {
     private var list: List<Data> = emptyList()
 
@@ -36,10 +33,8 @@ class WatchListAdapter(val clickListener: SingleCryptoListener) :
             item.metrics.market_data.ohlcv_last_24_hour.close - item.metrics.market_data.ohlcv_last_24_hour.open
         )
 
-        val percentagePriceChange = roundNumber(
-            100 - item.metrics.market_data.ohlcv_last_24_hour.open
-                .div(item.metrics.market_data.ohlcv_last_24_hour.close).times(100)
-        )
+        val percentagePriceChange = roundNumber(item.metrics.market_data.percent_change_usd_last_24_hours)
+
         holder.binding.root.setOnClickListener {
             clickListener.onClick(item)
         }
@@ -61,7 +56,6 @@ class WatchListAdapter(val clickListener: SingleCryptoListener) :
             .into(holder.binding.cryptoLogo)
     }
 
-
     override fun getItemCount(): Int = list.size
 
     fun updateData(list: List<Data>) {
@@ -72,34 +66,9 @@ class WatchListAdapter(val clickListener: SingleCryptoListener) :
 
 class SimpleViewHolder<T : ViewBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root)
 
-class SingleCryptoListener(val clickListener: (slug: String, symbol: String) -> Unit) {
-    fun onClick(data: Data) = clickListener(data.slug, data.symbol)
-}
-
-fun roundNumber(numToRound: Double): String {
-    return String.format("%.2f", numToRound)
-}
-
-fun getCryptoPriceChangeText(
-    priceChange: String,
-    percentagePriceChange: String,
-    textView: TextView
-) {
-
-    if (priceChange.contains('-')) {
-        textView.text = textView.context.getString(
-            R.string.crypto_price_red,
-            priceChange,
-            percentagePriceChange
-        )
-        textView.setTextColor(Color.parseColor("#eb4034"))
-    } else {
-        textView.text = textView.context.getString(
-            R.string.crypto_price_green,
-            priceChange,
-            percentagePriceChange
-        )
-        textView.setTextColor(Color.parseColor("#79e82e"))
-    }
-
+class SingleCryptoListener(val clickListener: (symbol: String, price: Float, priceChange: Float) -> Unit) {
+    fun onClick(data: Data) = clickListener(data.symbol,
+        data.metrics.market_data.ohlcv_last_24_hour.close.toFloat(),
+        data.metrics.market_data.percent_change_usd_last_24_hours.toFloat()
+    )
 }

@@ -10,13 +10,16 @@ import com.example.traders.databinding.FragmentCryptoItemDescriptionBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CryptoDescriptionFragment : Fragment() {
+class CryptoDescriptionFragment(slug: String) : Fragment() {
+
+    private val slug = slug
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentCryptoItemDescriptionBinding.inflate(inflater, container, false)
+        binding.textView.text = slug
 
         return binding.root
     }
