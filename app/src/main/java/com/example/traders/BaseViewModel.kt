@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-open class BaseViewModel: ViewModel(), CoroutineScope {
+open class BaseViewModel : ViewModel(), CoroutineScope {
 
     private val _errorEvents = MutableSharedFlow<ErrorEvent>()
     val errorEvent = _errorEvents.asSharedFlow()

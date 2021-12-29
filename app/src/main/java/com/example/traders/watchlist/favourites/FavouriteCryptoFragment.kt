@@ -1,10 +1,10 @@
 package com.example.traders.watchlist.favourites
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.traders.databinding.FragmentTabFavouriteCryptoBinding
 
 class FavouriteCryptoFragment : Fragment() {

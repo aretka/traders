@@ -46,8 +46,8 @@ class WatchListFragment : Fragment() {
     private fun setUpTabs(viewPager: ViewPager2, tabLayout: TabLayout) {
         val viewPagerAdapter = ViewPagerAdapter(childFragmentManager, lifecycle)
         viewPager.adapter = viewPagerAdapter
-        TabLayoutMediator(tabLayout, viewPager){tab, position ->
-            when(position){
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            when (position) {
                 0 -> {
                     tab.text = getString(R.string.watchlist_tab_all_crypto_label)
                 }

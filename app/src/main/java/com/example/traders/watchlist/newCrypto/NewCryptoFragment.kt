@@ -1,11 +1,10 @@
 package com.example.traders.watchlist.newCrypto
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.traders.R
+import androidx.fragment.app.Fragment
 import com.example.traders.databinding.FragmentTabNewCryptoBinding
 
 class NewCryptoFragment : Fragment() {
