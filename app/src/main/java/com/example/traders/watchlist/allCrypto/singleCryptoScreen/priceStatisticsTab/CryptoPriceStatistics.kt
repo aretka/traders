@@ -6,11 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.Transformation
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.traders.BaseFragment
 import com.example.traders.R
 import com.example.traders.databinding.FragmentCryptoItemPriceStatisticsBinding
 import com.example.traders.roundNumber
@@ -18,9 +17,8 @@ import com.example.traders.watchlist.cryptoData.cryptoStatsData.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CryptoPriceStatistics(symbol: String) : Fragment() {
+class CryptoPriceStatistics(val symbol: String) : BaseFragment() {
 
-    private val symbol = symbol
     private val viewModel: CryptoPriceStatisticsViewModel by viewModels()
 
     override fun onCreateView(
@@ -64,33 +62,38 @@ class CryptoPriceStatistics(symbol: String) : Fragment() {
             )
         })
 
-        binding.expand1HourIcon.setOnClickListener {
-            onIconClicked(it, binding.layout1Hour)
-        }
+        binding.expand1HourIcon.setOnClickListener { onIconClicked(it, binding.layout1Hour) }
 
-        binding.expand24HourIcon.setOnClickListener {
-            onIconClicked(it, binding.layout24Hour)
-        }
+        binding.expand24HourIcon.setOnClickListener { onIconClicked(it, binding.layout24Hour) }
 
-        binding.expandATHIcon.setOnClickListener {
-            onIconClicked(it, binding.layoutATH)
-        }
+        binding.expandATHIcon.setOnClickListener { onIconClicked(it, binding.layoutATH) }
 
-        binding.expandRoiDataIcon.setOnClickListener {
-            onIconClicked(it, binding.layoutRoiData)
-        }
+        binding.expandRoiDataIcon.setOnClickListener { onIconClicked(it, binding.layoutRoiData) }
 
         return binding.root
     }
 
-    private fun fillRoiData(roiDataLast1Week: TextView, roiDataLast1Month: TextView, roiDataLast3Months: TextView, roiDataLast1Year: TextView, roiData: RoiData) {
+    private fun fillRoiData(
+        roiDataLast1Week: TextView,
+        roiDataLast1Month: TextView,
+        roiDataLast3Months: TextView,
+        roiDataLast1Year: TextView,
+        roiData: RoiData
+    ) {
         roiDataLast1Week.text = roundNumber(roiData.percent_change_last_1_week)
         roiDataLast1Month.text = roundNumber(roiData.percent_change_last_1_month)
         roiDataLast3Months.text = roundNumber(roiData.percent_change_last_3_months)
         roiDataLast1Year.text = roundNumber(roiData.percent_change_last_1_year)
     }
 
-    private fun fillATH(athPrice: TextView, athDate: TextView, athDaysSince: TextView, athPercentDown: TextView, athBreakEvenMultiple: TextView, athData: AllTimeHigh) {
+    private fun fillATH(
+        athPrice: TextView,
+        athDate: TextView,
+        athDaysSince: TextView,
+        athPercentDown: TextView,
+        athBreakEvenMultiple: TextView,
+        athData: AllTimeHigh
+    ) {
         athPrice.text = roundNumber(athData.price) + '$'
         athDate.text = athData.at
         athDaysSince.text = athData.days_since.toString()

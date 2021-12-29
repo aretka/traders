@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.example.traders.BaseFragment
 import com.example.traders.R
 import com.example.traders.databinding.FragmentWatchListBinding
 import com.example.traders.watchlist.adapters.ViewPagerAdapter
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class WatchListFragment : Fragment() {
+class WatchListFragment : BaseFragment() {
 
     private val viewModel: WatchListViewModel by viewModels()
 
@@ -44,7 +44,7 @@ class WatchListFragment : Fragment() {
     }
 
     private fun setUpTabs(viewPager: ViewPager2, tabLayout: TabLayout) {
-        val viewPagerAdapter = ViewPagerAdapter(childFragmentManager, lifecycle)
+        val viewPagerAdapter = ViewPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
         viewPager.adapter = viewPagerAdapter
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
@@ -60,5 +60,4 @@ class WatchListFragment : Fragment() {
             }
         }.attach()
     }
-
 }

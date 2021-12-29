@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.traders.BaseViewModel
-import com.example.traders.network.RetrofitInstance
+import com.example.traders.repository.CryptoRepository
 import com.example.traders.watchlist.cryptoData.cryptoStatsData.CryptoStatistics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -13,7 +13,9 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class CryptoPriceStatisticsViewModel @Inject constructor() : BaseViewModel() {
+class CryptoPriceStatisticsViewModel @Inject constructor(
+    private val repository: CryptoRepository
+) : BaseViewModel() {
     private val _cryptoStatsResponse = MutableLiveData<CryptoStatistics>()
     val cryptoStatsResponse
         get() = _cryptoStatsResponse
@@ -22,7 +24,7 @@ class CryptoPriceStatisticsViewModel @Inject constructor() : BaseViewModel() {
         viewModelScope.launch {
 
             var response = try {
-                RetrofitInstance.api.getCryptoPriceStatistics(slug)
+                repository.getCryptoPriceStatistics(slug)
             } catch (e: IOException) {
                 Log.d("Response", "IOException, internet connection interference: ${e}")
                 return@launch
@@ -33,7 +35,7 @@ class CryptoPriceStatisticsViewModel @Inject constructor() : BaseViewModel() {
 
             if (response.isSuccessful && response.body() != null) {
                 val responseData = response.body()
-                _cryptoStatsResponse.value = responseData
+                _cryptoStatsResponse.value = responseData!!
             } else {
                 Log.d("Response", "Response not successful")
             }

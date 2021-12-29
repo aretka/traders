@@ -1,9 +1,7 @@
 package com.example.traders.watchlist.adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
@@ -33,7 +31,8 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
             item.metrics.market_data.ohlcv_last_24_hour.close - item.metrics.market_data.ohlcv_last_24_hour.open
         )
 
-        val percentagePriceChange = roundNumber(item.metrics.market_data.percent_change_usd_last_24_hours)
+        val percentagePriceChange =
+            roundNumber(item.metrics.market_data.percent_change_usd_last_24_hours)
 
         holder.binding.root.setOnClickListener {
             clickListener.onClick(item)
@@ -67,7 +66,8 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
 class SimpleViewHolder<T : ViewBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root)
 
 class SingleCryptoListener(val clickListener: (symbol: String, price: Float, priceChange: Float) -> Unit) {
-    fun onClick(data: Data) = clickListener(data.symbol,
+    fun onClick(data: Data) = clickListener(
+        data.symbol,
         data.metrics.market_data.ohlcv_last_24_hour.close.toFloat(),
         data.metrics.market_data.percent_change_usd_last_24_hours.toFloat()
     )

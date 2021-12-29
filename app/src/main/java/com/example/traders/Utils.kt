@@ -1,6 +1,5 @@
 package com.example.traders
 
-import android.graphics.Color
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 
