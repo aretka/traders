@@ -8,8 +8,7 @@ import com.example.traders.watchlist.allCrypto.AllCryptoFragment
 import com.example.traders.watchlist.favourites.FavouriteCryptoFragment
 import com.example.traders.watchlist.newCrypto.NewCryptoFragment
 
-class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
-    FragmentStateAdapter(fragmentManager, lifecycle) {
+class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fragmentManager, lifecycle) {
     companion object {
         private const val NUM_OF_FRAGMENTS = 3
         private const val FIRST_POSITION = 0

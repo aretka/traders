@@ -1,4 +1,4 @@
-package com.example.traders.watchlist.cryptoData
+package com.example.traders.watchlist.cryptoData.cryptoStatsData
 
 data class OhlcvLast24Hour(
     val close: Double,
