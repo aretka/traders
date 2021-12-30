@@ -14,24 +14,179 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/main_crypto_description"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:gravity="bottom"
-                android:lineSpacingExtra="4dp"
-                android:textColor="@color/black"
-                android:textSize="@dimen/small_text_size" />
+                android:padding="20dp"
+                android:background="@drawable/crypto_layout">
+
+                <ImageView
+                    android:id="@+id/crypto_image"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/ic_image_error"/>
+
+                <TextView
+                    android:id="@+id/crypto_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_bold"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/large_text_size"
+                    android:textStyle="bold"
+                    tools:text="$ 45,604.43"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/crypto_image" />
+
+                <TextView
+                    android:id="@+id/crypto_price_change"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-1,355.46 -1.96%"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/small_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/crypto_image"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/crypto_24h_change"
+                    android:textSize="@dimen/extra_small_text_size"
+                    android:textStyle="italic"
+                    app:layout_constraintBottom_toTopOf="@id/crypto_price_change"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/dominance_cap_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/crypto_image">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/crypto_market_dominance"
+                        android:textSize="@dimen/extra_small_text_size"
+                        android:textStyle="italic" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/crypto_market_cap"
+                        android:textSize="@dimen/extra_small_text_size"
+                        android:textStyle="italic" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/dominance_price_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dominance_cap_container">
+
+                    <TextView
+                        android:id="@+id/market_dominance"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/small_text_size"
+                        tools:text="60.34%" />
+
+                    <TextView
+                        android:id="@+id/market_cap"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/small_text_size"
+                        tools:text="$ 608,236,452.34" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/coin_volume_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dominance_price_container">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/crypto_1h_volume"
+                        android:textSize="@dimen/extra_small_text_size"
+                        android:textStyle="italic" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/crypto_24h_volume"
+                        android:textSize="@dimen/extra_small_text_size"
+                        android:textStyle="italic" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/coin_volume_container">
+
+                    <TextView
+                        android:id="@+id/volume_1h"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/small_text_size"
+                        android:textStyle="bold"
+                        tools:text="359,351,352,532" />
+
+                    <TextView
+                        android:id="@+id/volume_24h"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/small_text_size"
+                        android:textStyle="bold"
+                        tools:text="$ 34,624,353.69" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardview_1_hour"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_marginBottom="0dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
                 app:cardCornerRadius="15dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,10 +199,10 @@
                         android:id="@+id/last_1_hour_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_medium"
                         android:text="@string/crypto_1hour_change_label"
-                        android:textColor="@color/purple_700"
-                        android:textSize="@dimen/medium_text_size"
-                        android:textStyle="bold"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="@dimen/small_text_size"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -76,19 +231,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/open_text"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/open_text" />
 
                             <TextView
                                 android:id="@+id/last_1hour_open"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -99,19 +247,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/high_text"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/high_text" />
 
                             <TextView
                                 android:id="@+id/last_1hour_high"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -122,19 +263,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/low_text"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/low_text"/>
 
                             <TextView
                                 android:id="@+id/last_1hour_low"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -145,19 +279,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/close_text"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/close_text" />
 
                             <TextView
                                 android:id="@+id/last_1hour_close"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -168,19 +295,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/volume_text"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/volume_text" />
 
                             <TextView
                                 android:id="@+id/last_1hour_volume"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -209,10 +329,10 @@
                         android:id="@+id/last_24_hour_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_medium"
                         android:text="@string/crypto_24hour_change_label"
-                        android:textColor="@color/purple_700"
-                        android:textSize="@dimen/medium_text_size"
-                        android:textStyle="bold"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="@dimen/small_text_size"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -241,19 +361,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/open_text"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/open_text"/>
 
                             <TextView
                                 android:id="@+id/last_24hour_open"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -264,19 +377,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/high_text"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/high_text" />
 
                             <TextView
                                 android:id="@+id/last_24hour_high"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -287,19 +393,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/low_text"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/low_text"/>
 
                             <TextView
                                 android:id="@+id/last_24hour_low"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -310,19 +409,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/close_text"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/close_text" />
 
                             <TextView
                                 android:id="@+id/last_24hour_close"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -333,19 +425,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/volume_text"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/volume_text" />
 
                             <TextView
                                 android:id="@+id/last_24hour_volume"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -374,10 +459,10 @@
                         android:id="@+id/ATH_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_medium"
                         android:text="@string/crypto_ATH_label"
-                        android:textColor="@color/purple_700"
-                        android:textSize="@dimen/medium_text_size"
-                        android:textStyle="bold"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="@dimen/small_text_size"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -406,19 +491,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/ATH_price"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/ATH_price"/>
 
                             <TextView
                                 android:id="@+id/ATH_price"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="68000.50 $" />
                         </RelativeLayout>
 
@@ -429,19 +507,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/ATH_date"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/ATH_date"/>
 
                             <TextView
                                 android:id="@+id/ATH_date"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -452,19 +523,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/ATH_days_since"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/ATH_days_since" />
 
                             <TextView
                                 android:id="@+id/ATH_days_since"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -475,19 +539,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/ATH_percent_down"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/ATH_percent_down" />
 
                             <TextView
                                 android:id="@+id/ATH_percent_down"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -498,19 +555,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/ATH_breakeven_multiple"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/ATH_breakeven_multiple" />
 
                             <TextView
                                 android:id="@+id/ATH_break_even_multiple"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -539,10 +589,10 @@
                         android:id="@+id/roi_data_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_medium"
                         android:text="@string/crypto_roi_data_label"
-                        android:textColor="@color/purple_700"
-                        android:textSize="@dimen/medium_text_size"
-                        android:textStyle="bold"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="@dimen/small_text_size"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -571,19 +621,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/roi_last1_week"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/roi_last1_week" />
 
                             <TextView
                                 android:id="@+id/roi_data_last1_week"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="68000.50 $" />
                         </RelativeLayout>
 
@@ -594,19 +637,13 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/roi_last1_month"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/roi_last1_month"/>
 
                             <TextView
                                 android:id="@+id/roi_data_last1_month"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
+
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -617,19 +654,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/roi_last3_months"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/roi_last3_months" />
 
                             <TextView
                                 android:id="@+id/roi_data_last3_months"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
@@ -640,19 +670,12 @@
                             android:paddingStart="24dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="@string/ATH_days_since"
-                                android:textSize="@dimen/medium_text_size" />
+                                style="@style/single_crypto_subheading_label"
+                                android:text="@string/roi_last1_year" />
 
                             <TextView
                                 android:id="@+id/roi_data_last1_year"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="@dimen/medium_text_size"
-                                android:textStyle="bold"
+                                style="@style/single_crypto_subheading_value"
                                 tools:text="45900.34 $" />
                         </RelativeLayout>
 
