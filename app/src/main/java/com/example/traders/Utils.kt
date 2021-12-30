@@ -4,7 +4,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 
 fun roundNumber(numToRound: Double): String {
-    return String.format("%.2f", numToRound)
+    return String.format("%,.2f", numToRound)
 }
 
 fun getCryptoPriceChangeText(
