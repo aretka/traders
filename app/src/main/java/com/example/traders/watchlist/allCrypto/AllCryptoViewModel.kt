@@ -83,7 +83,8 @@ class AllCryptoViewModel @Inject constructor(
         }
     }
 
-    fun onCryptoClicked(slug: String) {
+    fun onCryptoClicked(slug: String?) {
+        if (slug == null) return
         _cryptoValues.value = slug
     }
 

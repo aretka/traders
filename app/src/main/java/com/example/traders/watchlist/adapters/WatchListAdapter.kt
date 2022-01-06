@@ -38,7 +38,7 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
             clickListener.onClick(item)
         }
         holder.binding.cryptoNameShortcut.text = item.symbol
-        holder.binding.cryptoFullName.text = item.slug.replaceFirstChar { char -> char.uppercase() }
+        holder.binding.cryptoFullName.text = item.slug?.replaceFirstChar { char -> char.uppercase() }
         holder.binding.cryptoPrice.text =
             roundNumber(item.metrics.market_data.ohlcv_last_24_hour.close)
         getCryptoPriceChangeText(
@@ -49,7 +49,7 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
 
         // Glide downloads and caches image in local storage for later usage
         Glide.with(holder.binding.cryptoLogo)
-            .load("https://cryptologos.cc/logos/${item.slug}-${item.symbol.lowercase()}-logo.png?v=014")
+            .load("https://cryptologos.cc/logos/${item.slug}-${item.symbol?.lowercase()}-logo.png?v=014")
             .placeholder(R.drawable.ic_download)
             .error(R.drawable.ic_image_error)
             .into(holder.binding.cryptoLogo)
@@ -65,6 +65,6 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
 
 class SimpleViewHolder<T : ViewBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root)
 
-class SingleCryptoListener(val clickListener: (symbol: String) -> Unit) {
+class SingleCryptoListener(val clickListener: (symbol: String?) -> Unit) {
     fun onClick(data: Data) = clickListener(data.symbol)
 }
