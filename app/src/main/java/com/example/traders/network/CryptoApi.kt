@@ -1,10 +1,12 @@
 package com.example.traders.network
 
+import com.example.traders.watchlist.cryptoData.cryptoChartData.CryptoChartData
 import com.example.traders.watchlist.cryptoData.cryptoPriceData.CryptoPriceData
 import com.example.traders.watchlist.cryptoData.cryptoStatsData.CryptoStatistics
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface CryptoApi {
     // Get request for recent crypto prices
@@ -35,4 +37,15 @@ interface CryptoApi {
     suspend fun getCryptoPriceStatistics(
         @Path("slug") slug: String
     ): Response<CryptoStatistics>
+
+    // Get request for chart data
+    @GET(
+"/api/v1/assets/{slug}/metrics/price/time-series"
+    )
+    suspend fun getCryptoChartData(
+        @Path("slug") slug: String,
+        @Query("start") startDate: String,
+        @Query("end") endDate: String,
+        @Query("interval") interval: String,
+    ): Response<CryptoChartData>
 }
