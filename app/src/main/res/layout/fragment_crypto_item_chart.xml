@@ -4,13 +4,11 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/textView"
+    <com.example.traders.customviews.CandleChart
+        android:id="@+id/candle_chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Chart"
-        android:textSize="30sp"
-        android:gravity="center"
+        android:layout_height="300dp"
+        android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
