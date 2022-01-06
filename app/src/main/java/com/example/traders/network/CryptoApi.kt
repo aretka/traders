@@ -44,8 +44,7 @@ interface CryptoApi {
     )
     suspend fun getCryptoChartData(
         @Path("slug") slug: String,
-        @Query("start") startDate: String,
-        @Query("end") endDate: String,
+        @Query("after") afterDate: String,
         @Query("interval") interval: String,
     ): Response<CryptoChartData>
 }
