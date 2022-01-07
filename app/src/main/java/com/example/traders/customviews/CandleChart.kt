@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.PorterDuff
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
@@ -33,6 +34,7 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs) 
         cryptoData = list
         minVal = min
         maxVal = max
+        calculateVals()
     }
 
     fun calculateVals() {
@@ -67,6 +69,8 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs) 
         var yLineBottom: Float
         var yCandleTop: Float
         var yCandleBottom: Float
+        linePositions.clear()
+        candlePositions.clear()
 
         val minMaxDiff = maxVal - minVal
 
@@ -104,7 +108,8 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        Log.e("CryptoChart", "On Draw called")
+        canvas?.drawColor(Color.WHITE, PorterDuff.Mode.CLEAR)
+        canvas?.drawColor(Color.WHITE)
         if(cryptoData.size > 0) drawCandles(canvas, mGreenLinePaint, mRedLinePaint, mGreenPaint, mRedPaint)
     }
 }
