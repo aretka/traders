@@ -47,5 +47,11 @@
     <string name="roi_last3_months">Last 3 months:</string>
     <string name="roi_last1_year">Last 1 year:</string>
 
+    <!--  Crypto chart buttons  -->
+    <string name="month1">1m</string>
+    <string name="month3">3m</string>
+    <string name="month6">6m</string>
+    <string name="month12">1yr</string>
+
 </resources>
 
