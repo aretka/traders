@@ -25,8 +25,8 @@ class AllCryptoFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentTabAllCryptoBinding.inflate(inflater, container, false)
-        adapter = WatchListAdapter(SingleCryptoListener { symbol ->
-            viewModel.onCryptoClicked(symbol)
+        adapter = WatchListAdapter(SingleCryptoListener { id, symbol ->
+            viewModel.onCryptoClicked(id, symbol)
         })
 
         binding.itemsList.adapter = adapter
@@ -39,7 +39,7 @@ class AllCryptoFragment : BaseFragment() {
             crytpoValues?.let {
                 this.findNavController().navigate(
                     WatchListFragmentDirections
-                        .actionWatchListFragmentToCryptoItem(crytpoValues)
+                        .actionWatchListFragmentToCryptoItem(crytpoValues[0], crytpoValues[1])
                 )
             }
         })

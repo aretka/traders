@@ -65,6 +65,6 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
 
 class SimpleViewHolder<T : ViewBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root)
 
-class SingleCryptoListener(val clickListener: (symbol: String?) -> Unit) {
-    fun onClick(data: Data) = clickListener(data.symbol)
+class SingleCryptoListener(val clickListener: (id: String, symbol: String?) -> Unit) {
+    fun onClick(data: Data) = clickListener(data.id, data.symbol)
 }

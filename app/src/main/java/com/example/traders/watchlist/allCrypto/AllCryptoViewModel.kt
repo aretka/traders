@@ -25,7 +25,7 @@ class AllCryptoViewModel @Inject constructor(
     val cryptoData
         get() = _cryptoData
 
-    private val _cryptoValues = MutableLiveData<String>()
+    private val _cryptoValues = MutableLiveData<List<String>?>(null)
     val cryptoValues
         get() = _cryptoValues
 
@@ -65,27 +65,26 @@ class AllCryptoViewModel @Inject constructor(
             val response = try {
                 repository.getCryptoPrices()
             } catch (e: IOException) {
-                Log.d("Response", "IOException, internet connection interference: ${e}")
+                Log.e("Response", "IOException, internet connection interference: ${e}")
                 return@launch
             } catch (e: HttpException) {
-                Log.d("Response", "HttpException, unexpected response: ${e}")
+                Log.e("Response", "HttpException, unexpected response: ${e}")
                 return@launch
             }
 
             if (response.isSuccessful && response.body() != null) {
                 val responseData = response.body()
                 _cryptoData.value = responseData?.data
-                Log.d("Response", "Items: ${_cryptoData.value?.size}")
             } else {
-                Log.d("Response", "Response not successful")
+                Log.e("Response", "Response not successful")
             }
             _isRefreshing.value = false
         }
     }
 
-    fun onCryptoClicked(slug: String?) {
-        if (slug == null) return
-        _cryptoValues.value = slug
+    fun onCryptoClicked(id: String, symbol: String?) {
+        if (symbol == null) return
+        _cryptoValues.value = listOf(id, symbol)
     }
 
 }

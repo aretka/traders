@@ -19,7 +19,7 @@ import com.example.traders.watchlist.cryptoData.cryptoStatsData.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CryptoPriceStatistics(val symbol: String) : BaseFragment() {
+class CryptoPriceStatistics(val id: String) : BaseFragment() {
 
     private val viewModel: CryptoPriceStatisticsViewModel by viewModels()
 
@@ -28,7 +28,7 @@ class CryptoPriceStatistics(val symbol: String) : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentCryptoItemPriceStatisticsBinding.inflate(inflater, container, false)
-        viewModel.fetchCryptoPriceStatistics(symbol)
+        viewModel.fetchCryptoPriceStatistics(id)
         viewModel.cryptoStatsResponse.observe(viewLifecycleOwner, {
             fillMainSectionData(
                 binding,
