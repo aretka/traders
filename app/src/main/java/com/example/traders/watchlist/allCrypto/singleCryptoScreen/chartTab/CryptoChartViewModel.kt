@@ -1,13 +1,12 @@
 package com.example.traders.watchlist.allCrypto.singleCryptoScreen.chartTab
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.traders.BaseViewModel
 import com.example.traders.repository.CryptoRepository
-import com.example.traders.watchlist.cryptoData.cryptoChartData.CryptoChartData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -21,31 +20,11 @@ class CryptoChartViewModel @Inject constructor(
     private val repository: CryptoRepository
 ) : BaseViewModel() {
     private var id: String = ""
-    private val _chartResponse = MutableLiveData(ChartData())
-    val chartResponse
-        get() = _chartResponse
+    private val _chartState = MutableStateFlow(ChartState())
+    val chartState: StateFlow<ChartState>
+        get() = _chartState
 
-    private val _isMonth1BtnActive = MutableLiveData(true)
-    val isMonth1BtnActive
-        get() = _isMonth1BtnActive
-
-    private val _isMonth3BtnActive = MutableLiveData(false)
-    val isMonth3BtnActive
-        get() = _isMonth3BtnActive
-
-    private val _isMonth6BtnActive = MutableLiveData(false)
-    val isMonth6BtnActive
-        get() = _isMonth6BtnActive
-
-    private val _isMonth12BtnActive = MutableLiveData(false)
-    val isMonth12BtnActive
-        get() = _isMonth12BtnActive
-
-    private val _chartBtnsEnabled = MutableLiveData(false)
-    val chartBtnsEnabled
-        get() = _chartBtnsEnabled
-
-    fun fetchCryptoPriceStatistics(numDays: Long = 30, candleInterval: String = "1d") {
+    fun fetchCryptoPriceStatistics(numDays: Long, candleInterval: String) {
         val startDate = getStartDate(numDays)
         viewModelScope.launch {
 
@@ -61,17 +40,19 @@ class CryptoChartViewModel @Inject constructor(
 
             if (response.isSuccessful && response.body() != null) {
                 val responseData = response.body()
-                when(numDays.toInt()) {
-                    90 -> _chartResponse.value = _chartResponse.value?.copy(chartDataFor90d = responseData!!.data.values)
-                    360 -> _chartResponse.value = _chartResponse.value?.copy(chartDataFor360d = responseData!!.data.values)
+                when (numDays.toInt()) {
+                    90 -> _chartState.value =
+                        _chartState.value.copy(chartDataFor90d = responseData!!.data.values)
+                    360 -> _chartState.value =
+                        _chartState.value.copy(chartDataFor360d = responseData!!.data.values)
                     else -> Log.e(this.javaClass.toString(), "Wrong num of days")
                 }
             } else {
                 Log.d("Response", "Response not successful")
             }
 
-            if(_chartResponse.value?.chartDataFor90d != null && _chartResponse.value?.chartDataFor360d != null) {
-                chartBtnsEnabled.value = true
+            if (_chartState.value.chartDataFor90d != null && _chartState.value.chartDataFor360d != null) {
+                _chartState.value = _chartState.value.copy(chartBtnsEnabled = true)
             }
         }
     }
@@ -82,31 +63,33 @@ class CryptoChartViewModel @Inject constructor(
     }
 
     fun onChartBtnSelected(btnId: BtnId) {
-        when(btnId) {
-            BtnId.MONTH1_BTN -> {
-                setBtnActiveToFalse()
-                _isMonth1BtnActive.value = true
-            }
-            BtnId.MONTH3_BTN -> {
-                setBtnActiveToFalse()
-                _isMonth3BtnActive.value = true
-            }
-            BtnId.MONTH6_BTN -> {
-                setBtnActiveToFalse()
-                _isMonth6BtnActive.value = true
-            }
-            BtnId.MONTH12_BTN -> {
-                setBtnActiveToFalse()
-                _isMonth12BtnActive.value = true
+        if (_chartState.value.chartBtnsEnabled) {
+            when (btnId) {
+                BtnId.MONTH1_BTN -> {
+                    setBtnActiveToFalse()
+                    _chartState.value = _chartState.value.copy(isMonth1BtnActive = true)
+                }
+                BtnId.MONTH3_BTN -> {
+                    setBtnActiveToFalse()
+                    _chartState.value = _chartState.value.copy(isMonth3BtnActive = true)
+                }
+                BtnId.MONTH6_BTN -> {
+                    setBtnActiveToFalse()
+                    _chartState.value = _chartState.value.copy(isMonth6BtnActive = true)
+                }
+                BtnId.MONTH12_BTN -> {
+                    setBtnActiveToFalse()
+                    _chartState.value = _chartState.value.copy(isMonth12BtnActive = true)
+                }
             }
         }
     }
 
     private fun setBtnActiveToFalse() {
-        _isMonth1BtnActive.value = false
-        _isMonth3BtnActive.value = false
-        _isMonth6BtnActive.value = false
-        _isMonth12BtnActive.value = false
+        _chartState.value = _chartState.value.copy(isMonth1BtnActive = false)
+        _chartState.value = _chartState.value.copy(isMonth3BtnActive = false)
+        _chartState.value = _chartState.value.copy(isMonth6BtnActive = false)
+        _chartState.value = _chartState.value.copy(isMonth12BtnActive = false)
     }
 
     private fun getStartDate(daysBefore: Long): String {
