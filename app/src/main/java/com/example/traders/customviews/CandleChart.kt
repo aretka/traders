@@ -29,11 +29,11 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private var maxVal = 0f
 
 
-    fun importListValues(list: List<List<Float>>, min: Float, max: Float) {
+    fun importListValues(list: List<List<Float>>) {
         Log.e("CryptoChart", "importListValues called")
         cryptoData = list
-        minVal = min
-        maxVal = max
+        minVal = list.minOf { it[3] }
+        maxVal = list.maxOf { it[2] }
         calculateVals()
     }
 
