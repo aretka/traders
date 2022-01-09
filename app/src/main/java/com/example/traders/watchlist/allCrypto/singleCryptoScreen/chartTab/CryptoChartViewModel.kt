@@ -20,18 +20,10 @@ import javax.inject.Inject
 class CryptoChartViewModel @Inject constructor(
     private val repository: CryptoRepository
 ) : BaseViewModel() {
-    private var slug: String = ""
-    private val _cryptoStatsResponse = MutableLiveData<CryptoChartData>()
-    val cryptoStatsResponse
-        get() = _cryptoStatsResponse
-
-    private val _minVal = MutableLiveData<Float>()
-    val minVal
-        get() = _minVal
-
-    private val _maxVal = MutableLiveData<Float>()
-    val maxVal
-        get() = _maxVal
+    private var id: String = ""
+    private val _chartResponse = MutableLiveData(ChartData())
+    val chartResponse
+        get() = _chartResponse
 
     private val _isMonth1BtnActive = MutableLiveData(true)
     val isMonth1BtnActive
@@ -49,12 +41,16 @@ class CryptoChartViewModel @Inject constructor(
     val isMonth12BtnActive
         get() = _isMonth12BtnActive
 
+    private val _chartBtnsEnabled = MutableLiveData(false)
+    val chartBtnsEnabled
+        get() = _chartBtnsEnabled
+
     fun fetchCryptoPriceStatistics(numDays: Long = 30, candleInterval: String = "1d") {
         val startDate = getStartDate(numDays)
         viewModelScope.launch {
 
             val response = try {
-                repository.getCryptoChartData(slug, startDate, candleInterval)
+                repository.getCryptoChartData(id, startDate, candleInterval)
             } catch (e: IOException) {
                 Log.d("Response", "IOException, internet connection interference: ${e}")
                 return@launch
@@ -65,45 +61,52 @@ class CryptoChartViewModel @Inject constructor(
 
             if (response.isSuccessful && response.body() != null) {
                 val responseData = response.body()
-                _cryptoStatsResponse.value = responseData!!
+                when(numDays.toInt()) {
+                    90 -> _chartResponse.value = _chartResponse.value?.copy(chartDataFor90d = responseData!!.data.values)
+                    360 -> _chartResponse.value = _chartResponse.value?.copy(chartDataFor360d = responseData!!.data.values)
+                    else -> Log.e(this.javaClass.toString(), "Wrong num of days")
+                }
             } else {
                 Log.d("Response", "Response not successful")
             }
 
+            if(_chartResponse.value?.chartDataFor90d != null && _chartResponse.value?.chartDataFor360d != null) {
+                chartBtnsEnabled.value = true
+            }
         }
+    }
+
+    fun fetchAllChartData() {
+        fetchCryptoPriceStatistics(90, "1d")
+        fetchCryptoPriceStatistics(360, "1w")
     }
 
     fun onChartBtnSelected(btnId: BtnId) {
         when(btnId) {
             BtnId.MONTH1_BTN -> {
-                fetchCryptoPriceStatistics(30, "1d")
+                setBtnActiveToFalse()
                 _isMonth1BtnActive.value = true
-                _isMonth3BtnActive.value = false
-                _isMonth6BtnActive.value = false
-                _isMonth12BtnActive.value = false
             }
             BtnId.MONTH3_BTN -> {
-                fetchCryptoPriceStatistics(90,"1d")
-                _isMonth1BtnActive.value = false
+                setBtnActiveToFalse()
                 _isMonth3BtnActive.value = true
-                _isMonth6BtnActive.value = false
-                _isMonth12BtnActive.value = false
             }
             BtnId.MONTH6_BTN -> {
-                fetchCryptoPriceStatistics(180,"1w")
-                _isMonth1BtnActive.value = false
-                _isMonth3BtnActive.value = false
+                setBtnActiveToFalse()
                 _isMonth6BtnActive.value = true
-                _isMonth12BtnActive.value = false
             }
             BtnId.MONTH12_BTN -> {
-                fetchCryptoPriceStatistics(360,"1w")
-                _isMonth1BtnActive.value = false
-                _isMonth3BtnActive.value = false
-                _isMonth6BtnActive.value = false
+                setBtnActiveToFalse()
                 _isMonth12BtnActive.value = true
             }
         }
+    }
+
+    private fun setBtnActiveToFalse() {
+        _isMonth1BtnActive.value = false
+        _isMonth3BtnActive.value = false
+        _isMonth6BtnActive.value = false
+        _isMonth12BtnActive.value = false
     }
 
     private fun getStartDate(daysBefore: Long): String {
@@ -114,13 +117,8 @@ class CryptoChartViewModel @Inject constructor(
         return text
     }
 
-    fun findMinAndMaxValues() {
-        _minVal.value = _cryptoStatsResponse.value?.data?.values?.minOf { it -> it[3] }
-        _maxVal.value = _cryptoStatsResponse.value?.data?.values?.maxOf { it -> it[2] }
-    }
-
-    fun assignSlug(slug: String) {
-        this.slug = slug
+    fun assignId(slug: String) {
+        this.id = slug
     }
 }
 
