@@ -43,13 +43,13 @@ class CryptoItemFragment : BaseFragment() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
                 0 -> {
-                    tab.setIcon(R.drawable.ic_price_history)
+                    tab.setText(R.string.crypto_stats)
                 }
                 1 -> {
-                    tab.setIcon(R.drawable.ic_chart)
+                    tab.setText(R.string.crypto_chart)
                 }
                 2 -> {
-                    tab.setIcon(R.drawable.ic_description)
+                    tab.setText(R.string.crypto_desc)
                 }
             }
         }.attach()
