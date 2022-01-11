@@ -1,6 +1,7 @@
 package com.example.traders.network
 
 import com.example.traders.watchlist.cryptoData.cryptoChartData.CryptoChartData
+import com.example.traders.watchlist.cryptoData.cryptoDescData.CryptoDescData
 import com.example.traders.watchlist.cryptoData.cryptoPriceData.CryptoPriceData
 import com.example.traders.watchlist.cryptoData.cryptoStatsData.CryptoStatistics
 import retrofit2.Response
@@ -30,4 +31,13 @@ interface CryptoApi {
         @Query("after") afterDate: String,
         @Query("interval") interval: String,
     ): Response<CryptoChartData>
+
+    @GET(
+        "/api/v2/assets/{id}/profile?fields=" +
+                "profile/general/overview/project_details," +
+                "profile/general/background"
+    )
+    suspend fun getCryptoDescriptionData(
+        @Path("id") id: String
+    ): Response<CryptoDescData>
 }
