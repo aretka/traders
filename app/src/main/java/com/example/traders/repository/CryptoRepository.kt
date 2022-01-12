@@ -14,4 +14,5 @@ class CryptoRepository @Inject constructor(private val api: CryptoApi) {
         afterDate: String,
         interval: String
     ) = api.getCryptoChartData(slug, afterDate, interval)
+    suspend fun getCryptoDescriptionData(id: String) = api.getCryptoDescriptionData(id)
 }

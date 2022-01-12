@@ -53,5 +53,9 @@
     <string name="month6">6m</string>
     <string name="month12">1yr</string>
 
+    <!--  Description tab labels  -->
+    <string name="project_info">Project info</string>
+    <string name="pre_history">Pre history</string>
+
 </resources>
 
