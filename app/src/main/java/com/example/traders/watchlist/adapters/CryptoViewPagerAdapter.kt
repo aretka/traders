@@ -8,9 +8,8 @@ import com.example.traders.watchlist.allCrypto.singleCryptoScreen.chartTab.Crypt
 import com.example.traders.watchlist.allCrypto.singleCryptoScreen.descriptionTab.CryptoDescriptionFragment
 import com.example.traders.watchlist.allCrypto.singleCryptoScreen.priceStatisticsTab.CryptoPriceStatistics
 
-class CryptoViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, slug: String) :
+class CryptoViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, val id: String) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
-    private val slug = slug
 
     companion object {
         private const val NUM_OF_FRAGMENTS = 3
@@ -26,13 +25,13 @@ class CryptoViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecy
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             FIRST_POSITION -> {
-                CryptoPriceStatistics(slug)
+                CryptoPriceStatistics(id)
             }
             SECOND_POSITION -> {
-                CryptoChartFragment(slug)
+                CryptoChartFragment(id)
             }
             THIRD_POSITION -> {
-                CryptoDescriptionFragment(slug)
+                CryptoDescriptionFragment(id)
             }
             else -> {
                 Fragment()

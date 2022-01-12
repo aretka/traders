@@ -4,14 +4,44 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/textView"
+    <com.example.traders.customviews.CandleChart
+        android:id="@+id/candle_chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Chart"
-        android:textSize="30sp"
-        android:gravity="center"
+        android:layout_height="300dp"
+        android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <LinearLayout
+        android:background="@drawable/crypto_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:weightSum="4"
+        app:layout_constraintTop_toBottomOf="@id/candle_chart"
+        app:layout_constraintStart_toStartOf="parent">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/month1_btn"
+            android:background="@drawable/active_chart_btn"
+            style="@style/crypto_chart_btn_style"
+            android:text="@string/month1"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/month3_btn"
+            android:background="@drawable/inactive_chart_btn"
+            style="@style/crypto_chart_btn_style"
+            android:text="@string/month3"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/month6_btn"
+            android:background="@drawable/inactive_chart_btn"
+            style="@style/crypto_chart_btn_style"
+            android:text="@string/month6"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/month12_btn"
+            android:background="@drawable/inactive_chart_btn"
+            style="@style/crypto_chart_btn_style"
+            android:text="@string/month12"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

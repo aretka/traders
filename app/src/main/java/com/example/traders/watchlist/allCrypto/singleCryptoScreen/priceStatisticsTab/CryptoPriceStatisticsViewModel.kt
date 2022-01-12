@@ -26,10 +26,10 @@ class CryptoPriceStatisticsViewModel @Inject constructor(
             var response = try {
                 repository.getCryptoPriceStatistics(slug)
             } catch (e: IOException) {
-                Log.d("Response", "IOException, internet connection interference: ${e}")
+                Log.e("ResponseCryptoItem", "IOException, internet connection interference: ${e}")
                 return@launch
             } catch (e: HttpException) {
-                Log.d("Response", "HttpException, unexpected response: ${e}")
+                Log.e("ResponseCryptoItem", "HttpException, unexpected response: ${e}")
                 return@launch
             }
 
@@ -37,7 +37,7 @@ class CryptoPriceStatisticsViewModel @Inject constructor(
                 val responseData = response.body()
                 _cryptoStatsResponse.value = responseData!!
             } else {
-                Log.d("Response", "Response not successful")
+                Log.e("ResponseCryptoItem", "Response not successful")
             }
 
         }

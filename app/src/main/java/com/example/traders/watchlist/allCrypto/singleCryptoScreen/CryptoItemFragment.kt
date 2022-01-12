@@ -26,7 +26,7 @@ class CryptoItemFragment : BaseFragment() {
         val receivedValues = CryptoItemFragmentArgs.fromBundle(requireArguments())
         binding.slug.text = receivedValues.symbol.uppercase()
 
-        setUpTabs(binding.singleItemViewPager, binding.singleItemTablayout, receivedValues.symbol)
+        setUpTabs(binding.singleItemViewPager, binding.singleItemTablayout, receivedValues.id)
 
         binding.backButton.setOnClickListener {
             this.findNavController().navigateUp()
@@ -36,9 +36,9 @@ class CryptoItemFragment : BaseFragment() {
         return binding.root
     }
 
-    private fun setUpTabs(viewPager: ViewPager2, tabLayout: TabLayout, symbol: String) {
+    private fun setUpTabs(viewPager: ViewPager2, tabLayout: TabLayout, id: String) {
         val viewPagerAdapter =
-            CryptoViewPagerAdapter(childFragmentManager, lifecycle, symbol.lowercase())
+            CryptoViewPagerAdapter(childFragmentManager, lifecycle, id)
         viewPager.adapter = viewPagerAdapter
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
