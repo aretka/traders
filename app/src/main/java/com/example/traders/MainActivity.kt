@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.cryptoItemFragment -> {
                     bottomNavigationView.animate()
                         .translationX(-bottomNavigationView.width.toFloat())
-                        .setDuration(350)
+                        .setDuration(300)
                         .setListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationEnd(animation: Animator?) {
                                 super.onAnimationEnd(animation)
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                 else -> {
                     bottomNavigationView.animate()
                         .translationX(0F)
-                        .setDuration(350)
+                        .setDuration(300)
                         .setListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationStart(animation: Animator?) {
                                 super.onAnimationEnd(animation)

@@ -12,7 +12,16 @@
     <string name="crypto_price_red">%1$s  %2$s%%</string>
     <string name="crypto_description">The live %1$s price today is %2$.2f$ with a 24h volume of %3$.2f$. Market dominance is %4$.2f%% comprised of %5$.2f$. There are %6$.0f of total circulating coins</string>
 
-    <!--  Crypto price statistics labels  -->
+
+
+    <!--  Crypto main price statistics labels  -->
+    <string name="crypto_24h_change">24h change</string>
+    <string name="crypto_24h_volume">24h Volume</string>
+    <string name="crypto_market_dominance">Market Dominance</string>
+    <string name="crypto_market_cap">Market Cap</string>
+    <string name="crypto_1h_volume">1h Volume</string>
+
+    <!--  Crypto price statistics card headings  -->
     <string name="crypto_1hour_change_label">Last 1 hour data</string>
     <string name="crypto_24hour_change_label">Last 24 hour data </string>
     <string name="crypto_ATH_label">ATH data</string>
