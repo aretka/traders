@@ -33,6 +33,7 @@
         tools:text="BTC" />
 
     <com.google.android.material.tabs.TabLayout
+        style="@style/AppTabLayout"
         android:id="@+id/single_item_tablayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
