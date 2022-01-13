@@ -1,3 +1,5 @@
 package com.example.traders.watchlist.allCrypto
 
-data class AllCryptoState(val cryptoList: List<String>, val cryptoValues: List<Any>)
+import com.example.traders.watchlist.cryptoData.cryptoPriceData.Data
+
+data class AllCryptoState(val cryptoList: List<Data>)

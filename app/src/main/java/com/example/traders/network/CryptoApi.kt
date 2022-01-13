@@ -2,7 +2,7 @@ package com.example.traders.network
 
 import com.example.traders.watchlist.cryptoData.cryptoChartData.CryptoChartData
 import com.example.traders.watchlist.cryptoData.cryptoDescData.CryptoDescData
-import com.example.traders.watchlist.cryptoData.cryptoPriceData.CryptoPriceData
+import com.example.traders.watchlist.cryptoData.cryptoPriceData.CryptoPriceResponse
 import com.example.traders.watchlist.cryptoData.cryptoStatsData.CryptoStatistics
 import retrofit2.Response
 import retrofit2.http.GET
@@ -14,7 +14,7 @@ interface CryptoApi {
     @GET("/api/v2/assets?limit=50&fields=id,slug,symbol," +
             "metrics/market_data/ohlcv_last_24_hour," +
             "metrics/market_data/percent_change_usd_last_24_hours")
-    suspend fun getCryptoPrices(): Response<CryptoPriceData>
+    suspend fun getCryptoPrices(): Response<CryptoPriceResponse>
 
     // Get request for crypto price statistics
     @GET("/api/v1/assets/{slug}/metrics")

@@ -20,7 +20,7 @@ open class BaseViewModel : ViewModel(), CoroutineScope {
     val errorEvent = _errorEvents.asSharedFlow()
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        launchWithProgress {
+        launch {
             _errorEvents.emit(ErrorEvent(Exception(throwable)))
         }
     }
