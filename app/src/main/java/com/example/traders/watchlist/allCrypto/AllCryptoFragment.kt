@@ -5,15 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import com.example.traders.BaseFragment
 import com.example.traders.databinding.FragmentTabAllCryptoBinding
-import com.example.traders.watchlist.WatchListFragmentDirections
 import com.example.traders.watchlist.adapters.SingleCryptoListener
 import com.example.traders.watchlist.adapters.WatchListAdapter
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class AllCryptoFragment : BaseFragment() {
@@ -25,52 +21,46 @@ class AllCryptoFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentTabAllCryptoBinding.inflate(inflater, container, false)
-        adapter = WatchListAdapter(SingleCryptoListener { id, symbol ->
-            viewModel.onCryptoClicked(id, symbol)
-        })
 
-        binding.itemsList.adapter = adapter
-
-        viewModel.cryptoData.observe(viewLifecycleOwner, { response ->
-            adapter?.updateData(response)
-        })
-
-        viewModel.cryptoValues.observe(viewLifecycleOwner, { crytpoValues ->
-            crytpoValues?.let {
-                this.findNavController().navigate(
-                    WatchListFragmentDirections
-                        .actionWatchListFragmentToCryptoItem(crytpoValues[0], crytpoValues[1])
-                )
+        with(viewModel) {
+            cryptoData.observe(viewLifecycleOwner) {
+                adapter?.updateData(it.cryptoList)
             }
-        })
-
-        viewModel.isLoading.observe(viewLifecycleOwner, { isLoading ->
-            if (isLoading) {
-                binding.allCryptoLoader.visibility = View.VISIBLE
-            } else {
-                binding.allCryptoLoader.visibility = View.GONE
+            isLoading.observe(viewLifecycleOwner) { isLoading ->
+                binding.handleLoader(isLoading)
             }
-        })
-
-        binding.pullToRefresh.setOnRefreshListener {
-            viewModel.getCryptoOnRefresh()
-            viewModel.isRefreshing.observe(viewLifecycleOwner, Observer {
-                if (!it) binding.pullToRefresh.isRefreshing = false
-            })
+            viewModel.isRefreshing.observe(viewLifecycleOwner) {
+                binding.pullToRefresh.isRefreshing = it
+            }
         }
+
+        binding.setPullToRefreshListener()
+        binding.setListAdapter()
 
         return binding.root
     }
 
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//
-//        lifecycleScope.launch {
-//            viewModel.state.collect { state ->
-//                adapter?.updateData(state.cryptoList)
-//            }
-//        }
-//    }
+    private fun FragmentTabAllCryptoBinding.setPullToRefreshListener() {
+        pullToRefresh.setOnRefreshListener {
+            viewModel.getCryptoOnRefresh()
+        }
+    }
+
+    private fun FragmentTabAllCryptoBinding.setListAdapter() {
+        adapter = WatchListAdapter(SingleCryptoListener { id, symbol ->
+            viewModel.onCryptoClicked(id, symbol)
+        })
+
+        itemsList.adapter = adapter
+    }
+
+    private fun FragmentTabAllCryptoBinding.handleLoader(isLoading: Boolean) {
+        if (isLoading) {
+            allCryptoLoader.visibility = View.VISIBLE
+        } else {
+            allCryptoLoader.visibility = View.GONE
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()

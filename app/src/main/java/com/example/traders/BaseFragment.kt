@@ -3,6 +3,7 @@ package com.example.traders
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 
 open class BaseFragment : Fragment() {
@@ -34,5 +35,9 @@ open class BaseFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Log.e(this.javaClass.toString(), "onResume")
+    }
+
+    open fun showError(errorMessage: String) {
+        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
     }
 }

@@ -27,6 +27,7 @@ class WatchListFragment : BaseFragment() {
 
         lifecycleScope.launch {
             viewModel.errorEvent.collect { error ->
+                showError(error.e.message.orEmpty())
             }
         }
     }
@@ -35,7 +36,7 @@ class WatchListFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentWatchListBinding.inflate(layoutInflater, container, false)
         setUpTabs(binding.cryptoPageViewer, binding.cryptoTab)
 
@@ -48,15 +49,9 @@ class WatchListFragment : BaseFragment() {
         viewPager.adapter = viewPagerAdapter
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
-                0 -> {
-                    tab.text = getString(R.string.watchlist_tab_all_crypto_label)
-                }
-                1 -> {
-                    tab.text = getString(R.string.watchlist_tab_favourites_label)
-                }
-                2 -> {
-                    tab.text = getString(R.string.watchlist_tab_new_crypto_label)
-                }
+                0 -> tab.text = getString(R.string.watchlist_tab_all_crypto_label)
+                1 -> tab.text = getString(R.string.watchlist_tab_favourites_label)
+                2 -> tab.text = getString(R.string.watchlist_tab_new_crypto_label)
             }
         }.attach()
     }

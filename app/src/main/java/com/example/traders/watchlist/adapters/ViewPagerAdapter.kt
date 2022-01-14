@@ -22,18 +22,10 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            FIRST_POSITION -> {
-                AllCryptoFragment()
-            }
-            SECOND_POSITION -> {
-                FavouriteCryptoFragment()
-            }
-            THIRD_POSITION -> {
-                NewCryptoFragment()
-            }
-            else -> {
-                Fragment()
-            }
+            FIRST_POSITION -> AllCryptoFragment()
+            SECOND_POSITION -> FavouriteCryptoFragment()
+            THIRD_POSITION -> NewCryptoFragment()
+            else -> Fragment()
         }
     }
 
