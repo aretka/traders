@@ -16,8 +16,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 
 class CryptoItemFragment : BaseFragment() {
-
-    // Aretinovo komentaras
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
