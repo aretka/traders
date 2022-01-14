@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.example.traders.BaseFragment
 import com.example.traders.databinding.FragmentTabAllCryptoBinding
+import com.example.traders.watchlist.WatchListFragmentDirections
 import com.example.traders.watchlist.adapters.SingleCryptoListener
 import com.example.traders.watchlist.adapters.WatchListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AllCryptoFragment : BaseFragment() {
+
     private val viewModel: AllCryptoViewModel by viewModels()
     private var adapter: WatchListAdapter? = null
 
@@ -48,7 +50,11 @@ class AllCryptoFragment : BaseFragment() {
 
     private fun FragmentTabAllCryptoBinding.setListAdapter() {
         adapter = WatchListAdapter(SingleCryptoListener { id, symbol ->
-            viewModel.onCryptoClicked(id, symbol)
+            if (symbol != null) {
+                val direction = WatchListFragmentDirections
+                    .actionWatchListFragmentToCryptoItem(id, symbol)
+                navController.navigate(direction)
+            }
         })
 
         itemsList.adapter = adapter
