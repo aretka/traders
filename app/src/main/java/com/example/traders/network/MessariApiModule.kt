@@ -12,15 +12,15 @@ private const val BASE_URL = "https://data.messari.io"
 
 @Module
 @InstallIn(SingletonComponent::class)
-class ApiModule {
+class MessariApiModule {
     @Singleton
     @Provides
-        fun provideCryptoApi(): CryptoApi{
+        fun provideCryptoApi(): MessariApi {
             return Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(CryptoApi::class.java)
+                .create(MessariApi::class.java)
         }
 
 }

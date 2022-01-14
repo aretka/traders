@@ -9,7 +9,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface CryptoApi {
+interface MessariApi {
     // Get request for recent crypto prices
     @GET("/api/v2/assets?limit=50&fields=id,slug,symbol," +
             "metrics/market_data/ohlcv_last_24_hour," +
