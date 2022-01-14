@@ -12,5 +12,4 @@ interface BinanceApi {
 
     @GET("/api/v3/ticker/24hr")
     suspend fun get24HourData(): Response<Binance24Data>
-    
 }
