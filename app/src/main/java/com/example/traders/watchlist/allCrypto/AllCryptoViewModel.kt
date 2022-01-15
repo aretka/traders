@@ -14,13 +14,13 @@ import javax.inject.Inject
 @HiltViewModel
 class AllCryptoViewModel @Inject constructor(
     private val repository: CryptoRepository,
-    private val navigation: NavController,
+//    private val navigation: NavController
 ) : BaseViewModel() {
     private val _state = MutableStateFlow(AllCryptoState(emptyList()))
     val state = _state.asStateFlow()
 
     //TODO I will transfer to StateFlow later, this is just for easier personal usage
-    private val _cryptoData = MutableLiveData<AllCryptoState>()
+    private val _cryptoData = MutableLiveData(AllCryptoState())
     val cryptoData
         get() = _cryptoData
 
@@ -55,6 +55,6 @@ class AllCryptoViewModel @Inject constructor(
         if (symbol == null) return
 
         val direction = WatchListFragmentDirections.actionWatchListFragmentToCryptoItem(id, symbol)
-        navigation.navigate(direction)
+//        navigation.navigate(direction)
     }
 }
