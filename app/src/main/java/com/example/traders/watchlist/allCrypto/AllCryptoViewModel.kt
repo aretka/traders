@@ -1,10 +1,8 @@
 package com.example.traders.watchlist.allCrypto
 
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.NavController
 import com.example.traders.BaseViewModel
 import com.example.traders.repository.CryptoRepository
-import com.example.traders.watchlist.WatchListFragmentDirections
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,8 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AllCryptoViewModel @Inject constructor(
-    private val repository: CryptoRepository,
-//    private val navigation: NavController
+    private val repository: CryptoRepository
 ) : BaseViewModel() {
     private val _state = MutableStateFlow(AllCryptoState(emptyList()))
     val state = _state.asStateFlow()
@@ -51,10 +48,4 @@ class AllCryptoViewModel @Inject constructor(
         _cryptoData.value = _cryptoData.value?.copy(cryptoList = cryptoPrices)
     }
 
-    fun onCryptoClicked(id: String, symbol: String?) {
-        if (symbol == null) return
-
-        val direction = WatchListFragmentDirections.actionWatchListFragmentToCryptoItem(id, symbol)
-//        navigation.navigate(direction)
-    }
 }
