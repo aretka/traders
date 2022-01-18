@@ -1,5 +1,6 @@
 package com.example.traders.network
 
+import com.example.traders.debug.FlipperInitializer.addFlipperNetworkInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,12 +15,17 @@ private const val BASE_URL = "https://api.binance.com"
 @InstallIn(SingletonComponent::class)
 class BinanceApiModule {
     @Provides
-    fun provideBinanceApi() : BinanceApi {
-    return Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(OkHttpClient.Builder().addInterceptor(AuthenticationInterceptor()).build())
-        .build()
-        .create(BinanceApi::class.java)
+    fun provideBinanceApi(): BinanceApi {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(
+                OkHttpClient.Builder()
+                    .addInterceptor(AuthenticationInterceptor())
+                    .addFlipperNetworkInterceptor()
+                    .build()
+            )
+            .build()
+            .create(BinanceApi::class.java)
     }
 }
