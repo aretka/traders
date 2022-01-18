@@ -1,6 +1,6 @@
 package com.example.traders.network
 
-import com.example.traders.debug.FlipperInitializer.applyFlipperNetworkInterceptor
+import com.example.traders.debug.FlipperInitializer.addFlipperNetworkInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,7 +22,7 @@ class BinanceApiModule {
             .client(
                 OkHttpClient.Builder()
                     .addInterceptor(AuthenticationInterceptor())
-                    .applyFlipperNetworkInterceptor()
+                    .addFlipperNetworkInterceptor()
                     .build()
             )
             .build()

@@ -28,7 +28,7 @@ object FlipperInitializer {
         }.start()
     }
 
-    fun OkHttpClient.Builder.applyFlipperNetworkInterceptor(): OkHttpClient.Builder {
+    fun OkHttpClient.Builder.addFlipperNetworkInterceptor(): OkHttpClient.Builder {
         return this.addNetworkInterceptor(FlipperOkhttpInterceptor(networkFlipperPlugin))
     }
 }
