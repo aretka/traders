@@ -91,4 +91,8 @@ dependencies {
     // OkHttp
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 
+    //Flipper
+    debugImplementation "com.facebook.flipper:flipper:0.128.4"
+    debugImplementation "com.facebook.flipper:flipper-network-plugin:0.128.4"
+    debugImplementation 'com.facebook.soloader:soloader:0.10.1'
 }
