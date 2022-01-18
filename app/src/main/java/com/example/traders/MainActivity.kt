@@ -7,16 +7,25 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.traders.webSocket.BinanceWSClient
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var webSocketClient: BinanceWSClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setUpBottomNavigation()
+        webSocketClient.startConnection()
     }
 
     private fun setUpBottomNavigation() {
@@ -53,5 +62,15 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        webSocketClient.stopConnection()
+    }
+
+    override fun onResume() {
+        super.onResume()
+//        webSocketClient.restartConnection()
     }
 }

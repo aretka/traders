@@ -26,7 +26,7 @@ class AllCryptoFragment : BaseFragment() {
 
         with(viewModel) {
             cryptoData.observe(viewLifecycleOwner) {
-                adapter?.updateData(it.cryptoList)
+                adapter?.updateData(it.binanceCryptoData)
             }
             isLoading.observe(viewLifecycleOwner) { isLoading ->
                 binding.handleLoader(isLoading)
