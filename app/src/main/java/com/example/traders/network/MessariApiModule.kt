@@ -1,9 +1,11 @@
 package com.example.traders.network
 
+import com.example.traders.debug.FlipperInitializer.addFlipperNetworkInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -19,6 +21,7 @@ class MessariApiModule {
             return Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(OkHttpClient.Builder().addFlipperNetworkInterceptor().build())
                 .build()
                 .create(MessariApi::class.java)
         }
