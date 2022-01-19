@@ -30,8 +30,7 @@ class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
 
     override fun onMessage(message: String?) {
         val crypto = gson.fromJson(message, PriceTicker::class.java)
-        val successfullyEmitted = _state.tryEmit(crypto)
-//        Log.e(TAG, "Value emitted successfully - $successfullyEmitted")
+        _state.tryEmit(crypto)
     }
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
@@ -52,7 +51,6 @@ class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
                 )
             )
         }
-        Log.e(TAG, "isOpen == ${isOpen}")
     }
 
     override fun unsubscribe(params: List<String>, type: String) {
@@ -78,11 +76,11 @@ class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
     }
 
     override fun stopConnection() {
-        close()
+        if(isOpen) close()
     }
 
     override fun restartConnection() {
-        reconnect()
+        if(isClosed) reconnect()
     }
 
     companion object {

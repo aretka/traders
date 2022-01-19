@@ -66,11 +66,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+        // stops client only if it is open
         webSocketClient.stopConnection()
     }
 
     override fun onResume() {
         super.onResume()
-//        webSocketClient.restartConnection()
+        // restarts client only if it is closed
+        webSocketClient.restartConnection()
     }
 }
