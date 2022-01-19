@@ -33,7 +33,7 @@
             app:popUpTo="@id/watchListFragment"
             app:popUpToInclusive="true" />
         <argument
-            android:name="id"
+            android:name="slug"
             app:argType="string" />
         <argument
             android:name="symbol"
