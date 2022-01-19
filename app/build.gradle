@@ -94,10 +94,6 @@ dependencies {
     // WebSocket
     implementation "org.java-websocket:Java-WebSocket:1.5.1"
 
-    // Moshi
-    implementation 'com.squareup.moshi:moshi:1.9.2'
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.2'
-
     //Flipper
     debugImplementation "com.facebook.flipper:flipper:0.128.4"
     debugImplementation "com.facebook.flipper:flipper-network-plugin:0.128.4"
