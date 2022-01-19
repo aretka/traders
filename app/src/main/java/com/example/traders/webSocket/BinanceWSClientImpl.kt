@@ -1,7 +1,12 @@
 package com.example.traders.webSocket
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.compose.ui.text.toLowerCase
+import com.example.traders.enumConstantNames
 import com.example.traders.paramsToJson
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTicker
 import com.google.gson.Gson
 import kotlinx.coroutines.channels.BufferOverflow
@@ -11,6 +16,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
+import java.util.*
+import kotlin.reflect.KClass
 
 class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
 
@@ -24,8 +31,16 @@ class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
         get() = _state.asSharedFlow()
 
     override fun onOpen(handshakedata: ServerHandshake?) {
+        // Geting string list of enum names
+        val cryptoList = FixedCryptoList::class.enumConstantNames().toMutableList()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            cryptoList.replaceAll { slug ->
+                slug.lowercase() + "usdt"
+            }
+        }
+
         Log.e(TAG, "Http status message: ${handshakedata?.httpStatusMessage.orEmpty()}")
-        subscribe(listOf("btcusdt", "bnbusdt"), "ticker")
+        subscribe(cryptoList, "ticker")
     }
 
     override fun onMessage(message: String?) {
@@ -87,4 +102,5 @@ class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
         private const val TAG = "WebSocketClient"
         private val gson = Gson()
     }
+
 }
