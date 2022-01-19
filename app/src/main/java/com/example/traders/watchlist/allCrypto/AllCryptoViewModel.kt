@@ -19,27 +19,18 @@ class AllCryptoViewModel @Inject constructor(
     private val repository: CryptoRepository,
     private val webSocketClient: BinanceWSClient
 ) : BaseViewModel() {
+
     private val _state = MutableStateFlow(AllCryptoState())
     val state = _state.asStateFlow()
 
-    //TODO I will transfer to StateFlow later, this is just for easier personal usage
-    private val _cryptoData = MutableLiveData(AllCryptoState())
-    val cryptoData
-        get() = _cryptoData
-
-    private val _isRefreshing = MutableLiveData(false)
-    val isRefreshing
-        get() = _isRefreshing
-
     init {
-//        getCrypto()
         repository.startFetching()
         collectBinanceData()
         collectBinanceTickerData()
     }
 
     // This function cannot be called since connection hasnt been established yet at this point
-    // Subscribe and unsubscribe will be called when connection is successfully established
+    // Subscribe and unsubscribe will be called when connection is successfully established or terminated
     private fun initWebSocket() {
         Log.e("ALlCryptoViewModel", "initWebSocket called")
         webSocketClient.subscribe(listOf("btcusdt", "bnbusdt"), "ticker")
@@ -49,7 +40,7 @@ class AllCryptoViewModel @Inject constructor(
         launch {
             repository.binanceMarketData.collect { list ->
                 if (list != null) {
-                    _cryptoData.value = _cryptoData.value?.copy(binanceCryptoData = list)
+                    _state.value = _state.value?.copy(binanceCryptoData = list)
                 }
             }
         }
@@ -59,11 +50,12 @@ class AllCryptoViewModel @Inject constructor(
         Log.e("AllCryptoView", "CollectBinanceTickerData launched")
         launch {
             webSocketClient.state.collect {
-                Log.e("AllCryptoView", it.data?.last.orEmpty())
+//                Log.e("AllCryptoView", it.data?.last.orEmpty())
             }
         }
     }
 
+    // TODO remove this when binance websockets fully implemented
     private fun getCrypto() {
         launchWithProgress {
             updateCryptoData()
@@ -72,15 +64,16 @@ class AllCryptoViewModel @Inject constructor(
 
     fun getCryptoOnRefresh() {
         launch {
-            _isRefreshing.value = true
+            _state.value = _state.value?.copy(isRefreshing = true)
             updateCryptoData()
-            _isRefreshing.value = false
+            _state.value = _state.value?.copy(isCryptoFetched = true)
+            _state.value = _state.value?.copy(isRefreshing = false)
         }
     }
 
     private suspend fun updateCryptoData() {
         val cryptoPrices = repository.getCryptoPrices().body()?.data ?: return
-        _cryptoData.value = _cryptoData.value?.copy(cryptoList = cryptoPrices)
+        _state.value = _state.value?.copy(cryptoList = cryptoPrices)
     }
 
 }

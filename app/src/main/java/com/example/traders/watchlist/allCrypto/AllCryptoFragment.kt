@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.traders.BaseFragment
 import com.example.traders.databinding.FragmentTabAllCryptoBinding
 import com.example.traders.watchlist.WatchListFragmentDirections
 import com.example.traders.watchlist.adapters.SingleCryptoListener
 import com.example.traders.watchlist.adapters.WatchListAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AllCryptoFragment : BaseFragment() {
@@ -24,15 +28,13 @@ class AllCryptoFragment : BaseFragment() {
     ): View {
         val binding = FragmentTabAllCryptoBinding.inflate(inflater, container, false)
 
-        with(viewModel) {
-            cryptoData.observe(viewLifecycleOwner) {
-                adapter?.updateData(it.binanceCryptoData)
+        lifecycleScope.launch {
+            viewModel.state.collect { state ->
+                binding.pullToRefresh.isRefreshing = state.isRefreshing
+                adapter?.submitList(state.binanceCryptoData)
             }
-            isLoading.observe(viewLifecycleOwner) { isLoading ->
-                binding.handleLoader(isLoading)
-            }
-            viewModel.isRefreshing.observe(viewLifecycleOwner) {
-                binding.pullToRefresh.isRefreshing = it
+            viewModel.isLoading.observe(viewLifecycleOwner) {
+                binding.handleLoader(it)
             }
         }
 
@@ -49,10 +51,10 @@ class AllCryptoFragment : BaseFragment() {
     }
 
     private fun FragmentTabAllCryptoBinding.setListAdapter() {
-        adapter = WatchListAdapter(SingleCryptoListener { id, symbol ->
+        adapter = WatchListAdapter(SingleCryptoListener { slug, symbol ->
             if (symbol != null) {
                 val direction = WatchListFragmentDirections
-                    .actionWatchListFragmentToCryptoItem(id, symbol)
+                    .actionWatchListFragmentToCryptoItem(slug, symbol)
                 navController.navigate(direction)
             }
         })

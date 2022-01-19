@@ -5,5 +5,7 @@ import com.example.traders.watchlist.cryptoData.cryptoPriceData.Data
 
 data class AllCryptoState(
     val cryptoList: List<Data> = emptyList(),
-    val binanceCryptoData: List<Binance24DataItem> = emptyList()
-    )
+    val binanceCryptoData: List<Binance24DataItem> = emptyList(),
+    val isCryptoFetched: Boolean = false,
+    val isRefreshing: Boolean = false
+)
