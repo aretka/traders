@@ -4,12 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 data class PriceTickerData(
 
-    @SerializedName("E")
-    val eventTime: Long,
-
-    @SerializedName("e")
-    val eventType: String,
-
     @SerializedName("s")
     val symbol: String,
 
@@ -19,11 +13,11 @@ data class PriceTickerData(
     @SerializedName("h")
     val high: String,
 
-    @SerializedName("o")
-    val open: String,
-
     @SerializedName("l")
     val low: String,
+
+    @SerializedName("o")
+    val open: String,
 
     @SerializedName("p")
     val priceChange: String,
