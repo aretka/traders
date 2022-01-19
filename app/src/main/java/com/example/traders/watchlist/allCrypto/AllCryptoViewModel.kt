@@ -3,6 +3,7 @@ package com.example.traders.watchlist.allCrypto
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.traders.BaseViewModel
+import com.example.traders.ToBinance24DataItem
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.webSocket.BinanceWSClient
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,8 +50,20 @@ class AllCryptoViewModel @Inject constructor(
     private fun collectBinanceTickerData() {
         Log.e("AllCryptoView", "CollectBinanceTickerData launched")
         launch {
-            webSocketClient.state.collect {
-//                Log.e("AllCryptoView", it.data?.last.orEmpty())
+            webSocketClient.state.collect { tickerData ->
+                val indexOfCryptoDataToUpdate = _state.value.binanceCryptoData.indexOfFirst {
+                    it.symbol == tickerData.data?.symbol
+                }
+
+                _state.value = _state.value.let {
+                    val updatedList = it.binanceCryptoData.toMutableList()
+                    val itemToUpdate = tickerData.data.ToBinance24DataItem()
+                    if (itemToUpdate != null) {
+                        updatedList[indexOfCryptoDataToUpdate] = itemToUpdate
+                    }
+                    it.copy(binanceCryptoData = updatedList)
+                }
+                Log.e("AllCryptoView", tickerData.data?.last.orEmpty())
             }
         }
     }

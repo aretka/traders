@@ -34,7 +34,7 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
         val slug = FixedCryptoList.valueOf(symbol).slug
 
         holder.binding.root.setOnClickListener { clickListener.onClick(slug, symbol) }
-        holder.binding.cryptoPrice.text = roundNumber(item.lastPrice.toDouble())
+        holder.binding.cryptoPrice.text = roundNumber(item.last.toDouble())
         holder.binding.cryptoNameShortcut.text = item.symbol
         holder.binding.cryptoFullName.text = slug.replaceFirstChar { c -> c.uppercase() }
         getCryptoPriceChangeText(
