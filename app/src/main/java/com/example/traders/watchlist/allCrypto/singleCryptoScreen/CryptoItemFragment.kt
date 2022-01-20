@@ -9,11 +9,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.traders.BaseFragment
 import com.example.traders.R
 import com.example.traders.databinding.FragmentCryptoItemBinding
-import com.example.traders.roundNumber
 import com.example.traders.watchlist.adapters.CryptoViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-
 
 class CryptoItemFragment : BaseFragment() {
 
@@ -24,9 +22,9 @@ class CryptoItemFragment : BaseFragment() {
         val binding = FragmentCryptoItemBinding.inflate(inflater, container, false)
 
         val receivedValues = CryptoItemFragmentArgs.fromBundle(requireArguments())
-        binding.slug.text = receivedValues.symbol.uppercase()
+        binding.slug.text = receivedValues.symbol
 
-        setUpTabs(binding.singleItemViewPager, binding.singleItemTablayout, receivedValues.id)
+        setUpTabs(binding.singleItemViewPager, binding.singleItemTablayout, receivedValues.slug)
 
         binding.backButton.setOnClickListener {
             this.findNavController().navigateUp()
@@ -36,9 +34,9 @@ class CryptoItemFragment : BaseFragment() {
         return binding.root
     }
 
-    private fun setUpTabs(viewPager: ViewPager2, tabLayout: TabLayout, id: String) {
+    private fun setUpTabs(viewPager: ViewPager2, tabLayout: TabLayout, slug: String) {
         val viewPagerAdapter =
-            CryptoViewPagerAdapter(childFragmentManager, lifecycle, id)
+            CryptoViewPagerAdapter(childFragmentManager, lifecycle, slug)
         viewPager.adapter = viewPagerAdapter
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
@@ -54,5 +52,4 @@ class CryptoItemFragment : BaseFragment() {
             }
         }.attach()
     }
-
 }

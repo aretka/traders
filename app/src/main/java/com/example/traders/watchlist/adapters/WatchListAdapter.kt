@@ -2,6 +2,8 @@ package com.example.traders.watchlist.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
@@ -9,11 +11,12 @@ import com.example.traders.R
 import com.example.traders.databinding.ListItemCryptoBinding
 import com.example.traders.getCryptoPriceChangeText
 import com.example.traders.roundNumber
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
+import com.example.traders.watchlist.cryptoData.binance24HourData.Binance24DataItem
 import com.example.traders.watchlist.cryptoData.cryptoPriceData.Data
 
 class WatchListAdapter(private val clickListener: SingleCryptoListener) :
-    RecyclerView.Adapter<SimpleViewHolder<ListItemCryptoBinding>>() {
-    private var list: List<Data> = emptyList()
+    ListAdapter<Binance24DataItem, SimpleViewHolder<ListItemCryptoBinding>>(DiffCallback()) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -24,47 +27,40 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
         return SimpleViewHolder(ListItemCryptoBinding.inflate(layoutInflater, parent, false))
     }
 
+
     override fun onBindViewHolder(holder: SimpleViewHolder<ListItemCryptoBinding>, position: Int) {
-        val item = list[position]
+        val item = currentList[position]
+        val symbol = item.symbol.replace("USDT", "")
+        val slug = FixedCryptoList.valueOf(symbol).slug
 
-        val priceChange = roundNumber(
-            item.metrics.market_data.ohlcv_last_24_hour.close - item.metrics.market_data.ohlcv_last_24_hour.open
-        )
-
-        val percentagePriceChange =
-            roundNumber(item.metrics.market_data.percent_change_usd_last_24_hours)
-
-        holder.binding.root.setOnClickListener {
-            clickListener.onClick(item)
-        }
+        holder.binding.root.setOnClickListener { clickListener.onClick(slug, symbol) }
+        holder.binding.cryptoPrice.text = roundNumber(item.last.toDouble())
         holder.binding.cryptoNameShortcut.text = item.symbol
-        holder.binding.cryptoFullName.text = item.slug?.replaceFirstChar { char -> char.uppercase() }
-        holder.binding.cryptoPrice.text =
-            roundNumber(item.metrics.market_data.ohlcv_last_24_hour.close)
+        holder.binding.cryptoFullName.text = slug.replaceFirstChar { c -> c.uppercase() }
         getCryptoPriceChangeText(
-            priceChange,
-            percentagePriceChange,
+            roundNumber(item.priceChange.toDouble()),
+            roundNumber(item.priceChangePercent.toDouble()),
             holder.binding.cryptoPriceChange
         )
-
-        // Glide downloads and caches image in local storage for later usage
         Glide.with(holder.binding.cryptoLogo)
-            .load("https://cryptologos.cc/logos/${item.slug}-${item.symbol?.lowercase()}-logo.png?v=014")
+            .load(FixedCryptoList.valueOf(item.symbol.replace("USDT", "")).logoUrl)
             .placeholder(R.drawable.ic_download)
             .error(R.drawable.ic_image_error)
             .into(holder.binding.cryptoLogo)
     }
 
-    override fun getItemCount(): Int = list.size
+    private class DiffCallback : DiffUtil.ItemCallback<Binance24DataItem>() {
 
-    fun updateData(list: List<Data>) {
-        this.list = list
-        this.notifyDataSetChanged()
+        override fun areItemsTheSame(oldItem: Binance24DataItem, newItem: Binance24DataItem) =
+            oldItem.symbol == newItem.symbol
+
+        override fun areContentsTheSame(oldItem: Binance24DataItem, newItem: Binance24DataItem) =
+            oldItem == newItem
     }
 }
 
 class SimpleViewHolder<T : ViewBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root)
 
 class SingleCryptoListener(val clickListener: (id: String, symbol: String?) -> Unit) {
-    fun onClick(data: Data) = clickListener(data.id, data.symbol)
+    fun onClick(slug: String, symbol: String) = clickListener(slug, symbol)
 }

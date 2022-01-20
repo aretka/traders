@@ -1,6 +1,8 @@
 package com.example.traders.watchlist.allCrypto.singleCryptoScreen.chartTab
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import com.example.traders.BaseViewModel
 import com.example.traders.repository.CryptoRepository
@@ -25,7 +27,11 @@ class CryptoChartViewModel @Inject constructor(
         get() = _chartState
 
     fun fetchCryptoPriceStatistics(numDays: Long, candleInterval: String) {
-        val startDate = getStartDate(numDays)
+        val startDate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getStartDate(numDays)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
         viewModelScope.launch {
 
             val response = try {
@@ -92,6 +98,7 @@ class CryptoChartViewModel @Inject constructor(
         _chartState.value = _chartState.value.copy(isMonth12BtnActive = false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun getStartDate(daysBefore: Long): String {
         // ISO_LOCAL_DATE formats date to uuuu-mm-dd
         val formatter = DateTimeFormatter.ISO_LOCAL_DATE

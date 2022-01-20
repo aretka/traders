@@ -3,10 +3,8 @@ package com.example.traders.watchlist.allCrypto.singleCryptoScreen.descriptionTa
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.traders.BaseViewModel
-import com.example.traders.network.CryptoApi
 import com.example.traders.repository.CryptoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

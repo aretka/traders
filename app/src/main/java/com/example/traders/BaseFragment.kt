@@ -5,8 +5,21 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import javax.inject.Provider
 
+@AndroidEntryPoint
 open class BaseFragment : Fragment() {
+
+    @Inject
+    lateinit var navControllerProvider: Provider<NavController>
+
+    val navController: NavController by lazy {
+        navControllerProvider.get()
+    }
+
     override fun onStart() {
         super.onStart()
         Log.e(this.javaClass.toString(), "onStart")

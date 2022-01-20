@@ -3,6 +3,7 @@ package com.example.traders.hilt
 import android.app.Activity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.example.traders.MainActivity
 import com.example.traders.R
 import dagger.Module
 import dagger.Provides

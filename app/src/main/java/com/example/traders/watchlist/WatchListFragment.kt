@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.traders.BaseFragment
 import com.example.traders.R
@@ -16,6 +17,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class WatchListFragment : BaseFragment() {
@@ -30,6 +33,7 @@ class WatchListFragment : BaseFragment() {
                 showError(error.e.message.orEmpty())
             }
         }
+
     }
 
     override fun onCreateView(
