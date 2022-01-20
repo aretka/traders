@@ -59,6 +59,8 @@
     <!--  Description tab labels  -->
     <string name="project_info">Project info</string>
     <string name="pre_history">Pre history</string>
+    <string name="live_price">Live price</string>
+    <string name="price_change">Price change</string>
 
 </resources>
 
