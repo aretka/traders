@@ -29,6 +29,10 @@ enum class FixedCryptoList(val slug: String, val logoUrl: String) {
     HBAR("hedera-hashgraph", "https://cryptologos.cc/logos/hedera-hbar-logo.png?v=014"),
     VET("vechain", "https://cryptologos.cc/logos/vechain-vet-logo.png?v=014"),
     SAND("thesandbox", "https://cryptologos.cc/logos/the-sandbox-sand-logo.png?v=014"),
-    ETC("ethereum-classic", "https://cryptologos.cc/logos/ethereum-classic-etc-logo.png?v=014")
+    ETC("ethereum-classic", "https://cryptologos.cc/logos/ethereum-classic-etc-logo.png?v=014");
+
+    companion object {
+        fun getEnumName(value: String): FixedCryptoList? = FixedCryptoList.values().find { it.slug == value }
+    }
 }
 

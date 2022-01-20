@@ -19,7 +19,7 @@
     app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/slug"
+        android:id="@+id/symbol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/extra_large_text_size"

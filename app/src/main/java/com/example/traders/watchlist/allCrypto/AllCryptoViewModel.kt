@@ -5,12 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import com.example.traders.BaseViewModel
 import com.example.traders.ToBinance24DataItem
 import com.example.traders.repository.CryptoRepository
+import com.example.traders.repository.enumContains
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.webSocket.BinanceWSClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.java_websocket.client.WebSocketClient
 import javax.inject.Inject
@@ -25,30 +28,40 @@ class AllCryptoViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        repository.startFetching()
-        collectBinanceData()
-        collectBinanceTickerData()
+        getBinanceData()
+        startCollectingBinanceTickerData()
     }
 
     // This function cannot be called since connection hasnt been established yet at this point
-    // Subscribe and unsubscribe will be called when connection is successfully established or terminated
-    private fun initWebSocket() {
+    // Subscribe and unsubscribe must be called when connection is successfully established or terminated
+    private fun subscribeWebSocket() {
         Log.e("ALlCryptoViewModel", "initWebSocket called")
         webSocketClient.subscribe(listOf("btcusdt", "bnbusdt"), "ticker")
     }
 
-    private fun collectBinanceData() {
-        launch {
-            repository.binanceMarketData.collect { list ->
-                if (list != null) {
-                    _state.value = _state.value?.copy(binanceCryptoData = list)
-                }
-            }
+    private fun getBinanceData() {
+        launchWithProgress {
+            updateCryptoData()
         }
     }
 
-    private fun collectBinanceTickerData() {
-        Log.e("AllCryptoView", "CollectBinanceTickerData launched")
+    fun getCryptoOnRefresh() {
+        launch {
+            _state.update { it.copy(isRefreshing = true) }
+            updateCryptoData()
+            _state.update { it.copy(isCryptoFetched = true) }
+            _state.update { it.copy(isRefreshing = false) }
+        }
+    }
+
+    private suspend fun updateCryptoData() {
+        val cryptoPrices = repository.getBinance24Data().body() ?: return
+        val extractedPricesList = cryptoPrices.filter { el -> enumContains<FixedCryptoList>(el.symbol.replace("USDT", "")) }
+        _state.value = _state.value?.copy(binanceCryptoData = extractedPricesList)
+    }
+
+    // It collects message emitted from websocket sharedFlow and updates list item by reassigning BinanceDataItem to new value
+    private fun startCollectingBinanceTickerData() {
         launch {
             webSocketClient.state.collect { tickerData ->
                 val indexOfCryptoDataToUpdate = _state.value.binanceCryptoData.indexOfFirst {
@@ -63,30 +76,8 @@ class AllCryptoViewModel @Inject constructor(
                     }
                     it.copy(binanceCryptoData = updatedList)
                 }
-                Log.e("AllCryptoView", tickerData.data?.last.orEmpty())
             }
         }
-    }
-
-    // TODO remove this when binance websockets fully implemented
-    private fun getCrypto() {
-        launchWithProgress {
-            updateCryptoData()
-        }
-    }
-
-    fun getCryptoOnRefresh() {
-        launch {
-            _state.value = _state.value?.copy(isRefreshing = true)
-            updateCryptoData()
-            _state.value = _state.value?.copy(isCryptoFetched = true)
-            _state.value = _state.value?.copy(isRefreshing = false)
-        }
-    }
-
-    private suspend fun updateCryptoData() {
-        val cryptoPrices = repository.getCryptoPrices().body()?.data ?: return
-        _state.value = _state.value?.copy(cryptoList = cryptoPrices)
     }
 
 }

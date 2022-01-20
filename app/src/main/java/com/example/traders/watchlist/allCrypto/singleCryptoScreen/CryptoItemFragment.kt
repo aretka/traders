@@ -22,7 +22,7 @@ class CryptoItemFragment : BaseFragment() {
         val binding = FragmentCryptoItemBinding.inflate(inflater, container, false)
 
         val receivedValues = CryptoItemFragmentArgs.fromBundle(requireArguments())
-        binding.slug.text = receivedValues.symbol
+        binding.symbol.text = receivedValues.symbol
 
         setUpTabs(binding.singleItemViewPager, binding.singleItemTablayout, receivedValues.slug)
 
@@ -41,10 +41,10 @@ class CryptoItemFragment : BaseFragment() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
                 0 -> {
-                    tab.setText(R.string.crypto_stats)
+                    tab.setText(R.string.crypto_chart)
                 }
                 1 -> {
-                    tab.setText(R.string.crypto_chart)
+                    tab.setText(R.string.crypto_stats)
                 }
                 2 -> {
                     tab.setText(R.string.crypto_desc)

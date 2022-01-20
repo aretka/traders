@@ -3,15 +3,15 @@ package com.example.traders.watchlist.allCrypto.singleCryptoScreen.chartTab
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.viewModelScope
 import com.example.traders.BaseViewModel
 import com.example.traders.repository.CryptoRepository
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
+import com.example.traders.webSocket.BinanceWSClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -19,46 +19,47 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CryptoChartViewModel @Inject constructor(
-    private val repository: CryptoRepository
+    private val repository: CryptoRepository,
+    private val webSocketClient: BinanceWSClient
 ) : BaseViewModel() {
-    private var id: String = ""
+    private var symbol: String = ""
+    private var slug: String = ""
     private val _chartState = MutableStateFlow(ChartState())
     val chartState: StateFlow<ChartState>
         get() = _chartState
 
+    init {
+        collectBinanceTickerData()
+    }
+
     fun fetchCryptoPriceStatistics(numDays: Long, candleInterval: String) {
         val startDate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getStartDate(numDays)
-        } else {
-            TODO("VERSION.SDK_INT < O")
-        }
-        viewModelScope.launch {
+        } else { TODO("VERSION.SDK_INT < O") }
 
-            val response = try {
-                repository.getCryptoChartData(id, startDate, candleInterval)
-            } catch (e: IOException) {
-                Log.d("Response", "IOException, internet connection interference: ${e}")
-                return@launch
-            } catch (e: HttpException) {
-                Log.d("Response", "HttpException, unexpected response: ${e}")
-                return@launch
-            }
+        launch {
+            val response = repository.getCryptoChartData(slug, startDate, candleInterval).body() ?: return@launch
 
-            if (response.isSuccessful && response.body() != null) {
-                val responseData = response.body()
-                when (numDays.toInt()) {
-                    90 -> _chartState.value =
-                        _chartState.value.copy(chartDataFor90d = responseData!!.data.values)
-                    360 -> _chartState.value =
-                        _chartState.value.copy(chartDataFor360d = responseData!!.data.values)
-                    else -> Log.e(this.javaClass.toString(), "Wrong num of days")
-                }
-            } else {
-                Log.d("Response", "Response not successful")
+            when (numDays.toInt()) {
+                90 -> _chartState.value =
+                    _chartState.value.copy(chartDataFor90d = response.data.values)
+                360 -> _chartState.value =
+                    _chartState.value.copy(chartDataFor360d = response.data.values)
+                else -> Log.e(this.javaClass.toString(), "Wrong num of days")
             }
 
             if (_chartState.value.chartDataFor90d != null && _chartState.value.chartDataFor360d != null) {
                 _chartState.value = _chartState.value.copy(chartBtnsEnabled = true)
+            }
+        }
+    }
+
+    fun collectBinanceTickerData() {
+        launch {
+            webSocketClient.state.collect {
+                if( it.data?.symbol?.replace("USDT", "") == symbol.uppercase()) {
+                    _chartState.value = _chartState.value.copy(tickerData = it)
+                }
             }
         }
     }
@@ -108,7 +109,8 @@ class CryptoChartViewModel @Inject constructor(
     }
 
     fun assignId(slug: String) {
-        this.id = slug
+        this.slug = slug
+        symbol = FixedCryptoList.getEnumName(slug)?.name.toString()
     }
 }
 

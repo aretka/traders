@@ -28,13 +28,15 @@ class AllCryptoFragment : BaseFragment() {
     ): View {
         val binding = FragmentTabAllCryptoBinding.inflate(inflater, container, false)
 
-        lifecycleScope.launch {
-            viewModel.state.collect { state ->
-                binding.pullToRefresh.isRefreshing = state.isRefreshing
-                adapter?.submitList(state.binanceCryptoData)
-            }
-            viewModel.isLoading.observe(viewLifecycleOwner) {
+        with(viewModel) {
+            isLoading.observe(viewLifecycleOwner) {
                 binding.handleLoader(it)
+            }
+            lifecycleScope.launch {
+                state.collect { state ->
+                    binding.pullToRefresh.isRefreshing = state.isRefreshing
+                    adapter?.submitList(state.binanceCryptoData)
+                }
             }
         }
 
@@ -58,7 +60,6 @@ class AllCryptoFragment : BaseFragment() {
                 navController.navigate(direction)
             }
         })
-
         itemsList.adapter = adapter
     }
 

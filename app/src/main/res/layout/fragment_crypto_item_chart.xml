@@ -2,7 +2,65 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/price_and_change_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/white"
+        android:paddingStart="20dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/price_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="@string/live_price"
+            android:textSize="@dimen/extra_small_text_size"
+            android:textStyle="italic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/price_change_text"
+            android:layout_alignParentEnd="true"
+            android:textSize="@dimen/extra_small_text_size"
+            android:textStyle="italic"
+            android:text="@string/price_change"/>
+
+        <TextView
+            android:id="@+id/live_price_text"
+            app:layout_constraintTop_toBottomOf="@id/price_label"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_bold"
+            tools:text="$ 35,635.46"
+            android:textColor="@color/black"
+            android:textSize="@dimen/large_text_size" />
+
+        <TextView
+            android:id="@+id/price_change_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/live_price_text"
+            app:layout_constraintTop_toTopOf="@id/live_price_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:textSize="@dimen/medium_text_size"
+            tools:text="+1,353.73 +1.35%"
+            android:textColor="@color/green" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <com.example.traders.customviews.CandleChart
         android:id="@+id/candle_chart"
@@ -10,9 +68,10 @@
         android:layout_height="300dp"
         android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/price_and_change_container" />
 
     <LinearLayout
+        android:id="@+id/chart_btns_container"
         android:background="@drawable/crypto_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +79,7 @@
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
         android:weightSum="4"
-        app:layout_constraintTop_toBottomOf="@id/candle_chart"
+        app:layout_constraintTop_toBottomOf="@+id/candle_chart"
         app:layout_constraintStart_toStartOf="parent">
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/month1_btn"
@@ -43,5 +102,40 @@
             style="@style/crypto_chart_btn_style"
             android:text="@string/month12"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:weightSum="2"
+        android:paddingStart="35dp"
+        android:paddingEnd="35dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chart_btns_container">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buy_btn"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/buy_btn_layout"
+            android:text="BUY"
+            android:textSize="@dimen/medium_text_size"
+            android:fontFamily="@font/roboto_bold"
+            android:textColor="@color/white"
+            android:layout_margin="30dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/sell_btn"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/sell_btn_layout"
+            android:textSize="@dimen/medium_text_size"
+            android:fontFamily="@font/roboto_bold"
+            android:textColor="@color/white"
+            android:text="SELL"
+            android:layout_margin="30dp"/>
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

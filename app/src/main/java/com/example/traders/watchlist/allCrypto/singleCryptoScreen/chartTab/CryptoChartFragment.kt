@@ -1,6 +1,7 @@
 package com.example.traders.watchlist.allCrypto.singleCryptoScreen.chartTab
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,9 @@ import com.example.traders.BaseFragment
 import com.example.traders.R
 import com.example.traders.customviews.CandleChart
 import com.example.traders.databinding.FragmentCryptoItemChartBinding
+import com.example.traders.getCryptoPriceChangeText
+import com.example.traders.roundNumber
+import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -28,34 +32,32 @@ class CryptoChartFragment(val id: String) : BaseFragment() {
         binding = FragmentCryptoItemChartBinding.inflate(inflater, container, false)
         viewModel.assignId(id)
         viewModel.fetchAllChartData()
-
+        binding.initUi()
+        lifecycleScope.launch {
+            viewModel.chartState.collect { state ->
+                binding.setHeaderPrices(state.tickerData)
+                setBtnStyles(state)
+                updateChart(state)
+            }
+        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initUi()
-        lifecycleScope.launch {
-            viewModel.chartState.collect { state ->
-                setBtnStyles(state)
-                updateChart(state)
-            }
-        }
+
 
     }
 
-    private fun initUi() {
-        binding.month1Btn.setOnClickListener {
-            viewModel.onChartBtnSelected(BtnId.MONTH1_BTN)
-        }
-        binding.month3Btn.setOnClickListener {
-            viewModel.onChartBtnSelected(BtnId.MONTH3_BTN)
-        }
-        binding.month6Btn.setOnClickListener {
-            viewModel.onChartBtnSelected(BtnId.MONTH6_BTN)
-        }
-        binding.month12Btn.setOnClickListener {
-            viewModel.onChartBtnSelected(BtnId.MONTH12_BTN)
+    private fun FragmentCryptoItemChartBinding.setHeaderPrices(priceTicker: PriceTicker?) {
+        Log.e("CryptoChartfragment", "setHeaderPrices called")
+        priceTicker?.data?.let {
+            livePriceText.text = "$ " + roundNumber(priceTicker.data.last.toDouble())
+            getCryptoPriceChangeText(
+                roundNumber(it.priceChange.toDouble()),
+                roundNumber(it.priceChangePercent.toDouble()),
+                priceChangeText
+            )
         }
     }
 
@@ -100,4 +102,13 @@ class CryptoChartFragment(val id: String) : BaseFragment() {
             chartBtn.background = ContextCompat.getDrawable(chartBtn.context, R.drawable.inactive_chart_btn)
         }
     }
+
+    private fun FragmentCryptoItemChartBinding.initUi() {
+        month1Btn.setOnClickListener { viewModel.onChartBtnSelected(BtnId.MONTH1_BTN) }
+        month3Btn.setOnClickListener { viewModel.onChartBtnSelected(BtnId.MONTH3_BTN) }
+        month6Btn.setOnClickListener { viewModel.onChartBtnSelected(BtnId.MONTH6_BTN) }
+        month12Btn.setOnClickListener { viewModel.onChartBtnSelected(BtnId.MONTH12_BTN) }
+    }
 }
+
+
