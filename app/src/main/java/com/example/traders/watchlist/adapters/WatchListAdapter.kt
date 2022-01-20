@@ -28,6 +28,24 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
     }
 
 
+    override fun onBindViewHolder(
+        holder: SimpleViewHolder<ListItemCryptoBinding>,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        // changing only lastPrice, priceChange and priceChangePercent
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads)
+        } else if(payloads[0] is Binance24DataItem){
+            val item = payloads[0] as Binance24DataItem
+            holder.binding.cryptoPrice.text = roundNumber(item.last.toDouble())
+            getCryptoPriceChangeText(
+                roundNumber(item.priceChange.toDouble()),
+                roundNumber(item.priceChangePercent.toDouble()),
+                holder.binding.cryptoPriceChange
+            )
+        }
+    }
     override fun onBindViewHolder(holder: SimpleViewHolder<ListItemCryptoBinding>, position: Int) {
         val item = currentList[position]
         val symbol = item.symbol.replace("USDT", "")
@@ -56,11 +74,19 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
 
         override fun areContentsTheSame(oldItem: Binance24DataItem, newItem: Binance24DataItem) =
             oldItem == newItem
+
+        override fun getChangePayload(
+            oldItem: Binance24DataItem,
+            newItem: Binance24DataItem
+        ): Any? {
+            // this is called when symbols are the same but contents differ
+            return newItem
+        }
     }
 }
 
 class SimpleViewHolder<T : ViewBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root)
 
-class SingleCryptoListener(val clickListener: (id: String, symbol: String?) -> Unit) {
+class SingleCryptoListener(val clickListener: (slug: String, symbol: String?) -> Unit) {
     fun onClick(slug: String, symbol: String) = clickListener(slug, symbol)
 }
