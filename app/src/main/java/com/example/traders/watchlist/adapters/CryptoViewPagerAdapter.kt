@@ -25,10 +25,10 @@ class CryptoViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecy
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             FIRST_POSITION -> {
-                CryptoPriceStatistics(id)
+                CryptoChartFragment(id)
             }
             SECOND_POSITION -> {
-                CryptoChartFragment(id)
+                CryptoPriceStatistics(id)
             }
             THIRD_POSITION -> {
                 CryptoDescriptionFragment(id)
