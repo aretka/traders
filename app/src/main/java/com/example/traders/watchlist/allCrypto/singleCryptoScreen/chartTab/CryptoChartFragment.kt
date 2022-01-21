@@ -19,11 +19,18 @@ import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CryptoChartFragment(val id: String) : BaseFragment() {
-    private val viewModel: CryptoChartViewModel by viewModels()
     private lateinit var binding: FragmentCryptoItemChartBinding
+    @Inject
+    lateinit var viewModelAssistedFactory: CryptoChartViewModel.Factory
+
+    private val viewModel: CryptoChartViewModel by viewModels() {
+        CryptoChartViewModel.provideFactory(viewModelAssistedFactory, id)
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
