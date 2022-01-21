@@ -22,46 +22,16 @@ class CryptoChartViewModel @Inject constructor(
     private val repository: CryptoRepository,
     private val webSocketClient: BinanceWSClient
 ) : BaseViewModel() {
+
     private var symbol: String = ""
     private var slug: String = ""
+
     private val _chartState = MutableStateFlow(ChartState())
     val chartState: StateFlow<ChartState>
         get() = _chartState
 
     init {
         collectBinanceTickerData()
-    }
-
-    fun fetchCryptoPriceStatistics(numDays: Long, candleInterval: String) {
-        val startDate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getStartDate(numDays)
-        } else { TODO("VERSION.SDK_INT < O") }
-
-        launch {
-            val response = repository.getCryptoChartData(slug, startDate, candleInterval).body() ?: return@launch
-
-            when (numDays.toInt()) {
-                90 -> _chartState.value =
-                    _chartState.value.copy(chartDataFor90d = response.data.values)
-                360 -> _chartState.value =
-                    _chartState.value.copy(chartDataFor360d = response.data.values)
-                else -> Log.e(this.javaClass.toString(), "Wrong num of days")
-            }
-
-            if (_chartState.value.chartDataFor90d != null && _chartState.value.chartDataFor360d != null) {
-                _chartState.value = _chartState.value.copy(chartBtnsEnabled = true)
-            }
-        }
-    }
-
-    fun collectBinanceTickerData() {
-        launch {
-            webSocketClient.state.collect {
-                if( it.data?.symbol?.replace("USDT", "") == symbol.uppercase()) {
-                    _chartState.value = _chartState.value.copy(tickerData = it)
-                }
-            }
-        }
     }
 
     fun fetchAllChartData() {
@@ -92,6 +62,46 @@ class CryptoChartViewModel @Inject constructor(
         }
     }
 
+    fun assignId(slug: String) {
+        this.slug = slug
+        symbol = FixedCryptoList.getEnumName(slug)?.name.toString()
+    }
+
+    private fun fetchCryptoPriceStatistics(numDays: Long, candleInterval: String) {
+        val startDate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getStartDate(numDays)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+
+        launch {
+            val response = repository.getCryptoChartData(slug, startDate, candleInterval).body()
+                ?: return@launch
+
+            when (numDays.toInt()) {
+                90 -> _chartState.value =
+                    _chartState.value.copy(chartDataFor90d = response.data.values)
+                360 -> _chartState.value =
+                    _chartState.value.copy(chartDataFor360d = response.data.values)
+                else -> Log.e(this.javaClass.toString(), "Wrong num of days")
+            }
+
+            if (_chartState.value.chartDataFor90d != null && _chartState.value.chartDataFor360d != null) {
+                _chartState.value = _chartState.value.copy(chartBtnsEnabled = true)
+            }
+        }
+    }
+
+    private fun collectBinanceTickerData() {
+        launch {
+            webSocketClient.state.collect {
+                if (it.data?.symbol?.replace("USDT", "") == symbol.uppercase()) {
+                    _chartState.value = _chartState.value.copy(tickerData = it)
+                }
+            }
+        }
+    }
+
     private fun setBtnActiveToFalse() {
         _chartState.value = _chartState.value.copy(isMonth1BtnActive = false)
         _chartState.value = _chartState.value.copy(isMonth3BtnActive = false)
@@ -106,11 +116,6 @@ class CryptoChartViewModel @Inject constructor(
         val date: LocalDate = LocalDate.now().minusDays(daysBefore)
         val text: String = date.format(formatter)
         return text
-    }
-
-    fun assignId(slug: String) {
-        this.slug = slug
-        symbol = FixedCryptoList.getEnumName(slug)?.name.toString()
     }
 }
 

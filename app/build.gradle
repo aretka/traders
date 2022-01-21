@@ -99,4 +99,19 @@ dependencies {
     debugImplementation "com.facebook.flipper:flipper-network-plugin:0.128.4"
     debugImplementation 'com.facebook.soloader:soloader:0.10.1'
 
+    //Turbine
+    testImplementation 'app.cash.turbine:turbine:0.7.0'
+
+    //Mockito
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+    testImplementation "org.mockito:mockito-inline:3.5.13"
+
+    //Coroutines testing
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2"
+
+    testImplementation "org.jetbrains.kotlin:kotlin-test"
+    testImplementation "org.jetbrains.kotlin:kotlin-reflect"
+
+    testImplementation "com.google.testparameterinjector:test-parameter-injector:1.4"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
 }

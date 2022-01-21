@@ -5,24 +5,24 @@ import com.google.gson.annotations.SerializedName
 data class PriceTickerData(
 
     @SerializedName("s")
-    val symbol: String,
+    val symbol: String = "",
 
     @SerializedName("c")
-    val last: String,
+    val last: String = "",
 
     @SerializedName("h")
-    val high: String,
+    val high: String = "",
 
     @SerializedName("l")
-    val low: String,
+    val low: String = "",
 
     @SerializedName("o")
-    val open: String,
+    val open: String = "",
 
     @SerializedName("p")
-    val priceChange: String,
+    val priceChange: String = "",
 
     @SerializedName("P")
-    val priceChangePercent: String,
+    val priceChangePercent: String = "",
 
 )
