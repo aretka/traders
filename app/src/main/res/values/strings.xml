@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">traders</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fragment_watch_list_label">fragment_watch_list</string>
     <string name="navigation_profile_label">Profile</string>
@@ -49,6 +48,12 @@
     <string name="roi_last1_month">Last 1 month:</string>
     <string name="roi_last3_months">Last 3 months:</string>
     <string name="roi_last1_year">Last 1 year:</string>
+
+    <!--  Crypto chart dialog labels  -->
+    <string name="balance_label">Balance</string>
+    <string name="balance_left_label">Balance left</string>
+    <string name="price_of_coin">Price of %1$s</string>
+    <string name="coin_amount">%1$s amount</string>
 
     <!--  Crypto chart buttons  -->
     <string name="month1">1m</string>
