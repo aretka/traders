@@ -13,8 +13,10 @@ import com.example.traders.BaseFragment
 import com.example.traders.R
 import com.example.traders.customviews.CandleChart
 import com.example.traders.databinding.FragmentCryptoItemChartBinding
+import com.example.traders.dialogs.BuyDialog
 import com.example.traders.getCryptoPriceChangeText
 import com.example.traders.roundNumber
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -22,13 +24,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CryptoChartFragment(val id: String) : BaseFragment() {
+class CryptoChartFragment(val slug: String) : BaseFragment() {
     private lateinit var binding: FragmentCryptoItemChartBinding
+
     @Inject
     lateinit var viewModelAssistedFactory: CryptoChartViewModel.Factory
 
     private val viewModel: CryptoChartViewModel by viewModels() {
-        CryptoChartViewModel.provideFactory(viewModelAssistedFactory, id)
+        CryptoChartViewModel.provideFactory(viewModelAssistedFactory, slug)
     }
 
 
@@ -37,7 +40,6 @@ class CryptoChartFragment(val id: String) : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCryptoItemChartBinding.inflate(inflater, container, false)
-        viewModel.assignId(id)
         viewModel.fetchAllChartData()
         binding.initUi()
         lifecycleScope.launch {
@@ -50,10 +52,12 @@ class CryptoChartFragment(val id: String) : BaseFragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
+    private fun showDialog() {
+        val newDialogFragment = BuyDialog(
+            lastPrice = viewModel.chartState.value.tickerData?.data?.last ?: "",
+            symbol = FixedCryptoList.getEnumName(slug)?.name.toString()
+        )
+        newDialogFragment.show(parentFragmentManager, "buy_alog")
     }
 
     private fun FragmentCryptoItemChartBinding.setHeaderPrices(priceTicker: PriceTicker?) {
@@ -69,21 +73,21 @@ class CryptoChartFragment(val id: String) : BaseFragment() {
     }
 
     private fun updateChart(state: ChartState) {
-        if(state.isMonth1BtnActive) {
+        if (state.isMonth1BtnActive) {
             state.chartDataFor90d?.let {
-                importValuesToChart( binding.candleChart, it.subList(it.size - 30, it.size) )
+                importValuesToChart(binding.candleChart, it.subList(it.size - 30, it.size))
             }
-        } else if(state.isMonth3BtnActive) {
+        } else if (state.isMonth3BtnActive) {
             state.chartDataFor90d?.let {
-                importValuesToChart( binding.candleChart, it )
+                importValuesToChart(binding.candleChart, it)
             }
-        } else if(state.isMonth6BtnActive) {
+        } else if (state.isMonth6BtnActive) {
             state.chartDataFor360d?.let {
-                importValuesToChart( binding.candleChart, it.subList(it.size - 25, it.size) )
+                importValuesToChart(binding.candleChart, it.subList(it.size - 25, it.size))
             }
-        } else if(state.isMonth12BtnActive) {
+        } else if (state.isMonth12BtnActive) {
             state.chartDataFor360d?.let {
-                importValuesToChart( binding.candleChart, it )
+                importValuesToChart(binding.candleChart, it)
             }
         }
     }
@@ -97,16 +101,17 @@ class CryptoChartFragment(val id: String) : BaseFragment() {
 
     private fun importValuesToChart(candleChart: CandleChart, values: List<List<Float>>) {
         candleChart.importListValues(values)
-        candleChart.invalidate()
     }
 
     private fun setBtnStyle(chartBtn: Button, active: Boolean) {
-        if(active) {
+        if (active) {
             chartBtn.setTextColor(ContextCompat.getColor(chartBtn.context, R.color.white))
-            chartBtn.background = ContextCompat.getDrawable(chartBtn.context, R.drawable.active_chart_btn)
+            chartBtn.background =
+                ContextCompat.getDrawable(chartBtn.context, R.drawable.active_chart_btn)
         } else {
             chartBtn.setTextColor(ContextCompat.getColor(chartBtn.context, R.color.dark_gray))
-            chartBtn.background = ContextCompat.getDrawable(chartBtn.context, R.drawable.inactive_chart_btn)
+            chartBtn.background =
+                ContextCompat.getDrawable(chartBtn.context, R.drawable.inactive_chart_btn)
         }
     }
 
@@ -115,6 +120,8 @@ class CryptoChartFragment(val id: String) : BaseFragment() {
         month3Btn.setOnClickListener { viewModel.onChartBtnSelected(BtnId.MONTH3_BTN) }
         month6Btn.setOnClickListener { viewModel.onChartBtnSelected(BtnId.MONTH6_BTN) }
         month12Btn.setOnClickListener { viewModel.onChartBtnSelected(BtnId.MONTH12_BTN) }
+        buyBtn.setOnClickListener { showDialog() }
+//        sellBtn.setOnClickListener { showDialog() }
     }
 }
 

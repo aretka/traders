@@ -22,7 +22,6 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
-//@HiltViewModel
 class CryptoChartViewModel @AssistedInject constructor(
     private val repository: CryptoRepository,
     private val webSocketClient: BinanceWSClient,
@@ -65,10 +64,6 @@ class CryptoChartViewModel @AssistedInject constructor(
                 }
             }
         }
-    }
-
-    fun assignId(slug: String) {
-//        this.slug = slug
     }
 
     private fun fetchCryptoPriceStatistics(numDays: Long, candleInterval: String) {
