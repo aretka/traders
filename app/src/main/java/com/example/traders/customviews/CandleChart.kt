@@ -37,15 +37,15 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
     fun importListValues(list: List<List<Float>>) {
         //listof([volume, open, high, low, close], [], ..., [])
-        Log.e("CryptoChart", "importListValues called")
+        if(list == cryptoData) return
         cryptoData = list
         minVal = list.minOf { it[3] }
         maxVal = list.maxOf { it[2] }
         calculateVals()
+        this.invalidate()
     }
 
     fun calculateVals() {
-        Log.e("CryptoChart", "calculateVals called")
         calculateSizeVals()
         calculatePaintVals()
         calculateCoords()
