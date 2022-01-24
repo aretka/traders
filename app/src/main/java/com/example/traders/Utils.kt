@@ -7,8 +7,8 @@ import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTicker
 import com.google.gson.annotations.SerializedName
 import kotlin.reflect.KClass
 
-fun roundNumber(numToRound: Double): String {
-    return String.format("%,.2f", numToRound)
+fun roundNumber(numToRound: Double, digitsRounded: Int = 2): String {
+    return String.format("%,.${digitsRounded}f", numToRound)
 }
 
 fun getCryptoPriceChangeText(
