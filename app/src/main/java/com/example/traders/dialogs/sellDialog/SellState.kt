@@ -3,6 +3,7 @@ package com.example.traders.dialogs.sellDialog
 import com.example.traders.dialogs.DialogValidationMessage
 
 data class SellState(
+    val cryptoBalance: Double = 0.0,
     val usdCryptoBalance: Double = 0.0,
     val inputVal: Double = 0.0,
     val minInputVal: Double = 0.01,

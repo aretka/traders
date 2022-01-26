@@ -128,7 +128,7 @@ class CryptoChartFragment(val slug: String) : BaseFragment() {
             lastPrice = viewModel.chartState.value.tickerData?.data?.last?.toDouble() ?: 0.0,
             symbol = FixedCryptoList.getEnumName(slug)?.name.toString()
         )
-        newBuyFragment.show(parentFragmentManager, "buy_alog")
+        newBuyFragment.show(parentFragmentManager, "buy_dialog")
     }
 }
 

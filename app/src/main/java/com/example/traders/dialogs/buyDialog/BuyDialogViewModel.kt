@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 class BuyDialogViewModel @AssistedInject constructor(
     val repository: CryptoRepository,
     @Assisted val symbol: String,
-    @Assisted val lastPrice: Double,
+    @Assisted val lastPrice: Double
 ) : ViewModel() {
     // TODO update roundNumber() function to round to provided int which equals to numOfDigits after comma
     private val priceToRound = FixedCryptoList.valueOf(symbol).priceToRound

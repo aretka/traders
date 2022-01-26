@@ -2,22 +2,37 @@ package com.example.traders.dialogs.sellDialog
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.example.traders.dialogs.Constants
 import com.example.traders.dialogs.DialogValidationMessage
+import com.example.traders.dialogs.buyDialog.BuyDialogViewModel
+import com.example.traders.repository.CryptoRepository
 import com.example.traders.roundNumber
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.internal.Contexts.getApplication
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlin.math.round
 
-class SellDialogViewModel(
-    private val symbol: String,
-    private val lastPrice: Double,
-    private val cryptoBalance: Double
-): ViewModel() {
-//    private val cryptoBalance = getApplication()?.getSharedPreferences()
-    private val cryptoUsdBalance = roundNumber(lastPrice * cryptoBalance).toDouble()
-    private val _state = MutableStateFlow(SellState(usdCryptoBalance = cryptoUsdBalance))
+class SellDialogViewModel @AssistedInject constructor(
+    val repository: CryptoRepository,
+    @Assisted val symbol: String,
+    @Assisted val lastPrice: Double
+) : ViewModel() {
+    private val cryptoBalance = getCryptoBalance()
+    private val cryptoUsdBalance = getUsdCryptoBalance()
+    private val minCryptoToSell = getMinCryptoToSell()
+
+    private val _state = MutableStateFlow(SellState(
+        usdCryptoBalance = cryptoUsdBalance,
+        cryptoBalance = cryptoBalance,
+        cryptoLeft = cryptoBalance,
+        minInputVal = minCryptoToSell
+    ))
+
     val state = _state.asStateFlow()
-
     fun validateInput(enteredVal: String) {
         if (enteredVal.isBlank()) {
             _state.value = _state.value.copy(
@@ -48,11 +63,32 @@ class SellDialogViewModel(
         calculateNewBalance()
     }
 
+    fun updateBalance() {
+//         updates crypto balance
+        repository.setStoredPrice(symbol, _state.value.cryptoLeft.toFloat())
+
+//         updates usd balance
+        val newUsdBalance = repository.getStoredTag(Constants.USD_BALANCE_KEY) + _state.value.usdToGet.toFloat()
+        repository.setStoredPrice(Constants.USD_BALANCE_KEY, newUsdBalance)
+    }
+
+    private fun getMinCryptoToSell(): Double {
+        return 10.0 / lastPrice
+    }
+
+    private fun getUsdCryptoBalance(): Double {
+        return lastPrice * cryptoBalance
+    }
+
+    private fun getCryptoBalance(): Double {
+        return repository.getStoredTag(symbol).toDouble()
+    }
+
     private fun calculateNewBalance() {
-        var cryptoLeft = this.cryptoBalance
+        var cryptoLeft = cryptoBalance
         var usdToGet = 0.0
         if(_state.value.messageType == DialogValidationMessage.IS_VALID) {
-            cryptoLeft = this.cryptoBalance - _state.value.inputVal
+            cryptoLeft = cryptoBalance - _state.value.inputVal
             usdToGet = _state.value.inputVal * lastPrice
         }
         _state.value = _state.value.copy(
@@ -65,4 +101,23 @@ class SellDialogViewModel(
         Log.e("DialogViewModel", "onCleared called")
         super.onCleared()
     }
+
+
+    @AssistedFactory
+    interface Factory {
+        fun create(symbol: String, lastPrice: Double): SellDialogViewModel
+    }
+
+    companion object {
+        fun provideFactory(
+            assistedFactory: Factory,
+            symbol: String,
+            lastPrice: Double
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(symbol, lastPrice) as T
+            }
+        }
+    }
+
 }

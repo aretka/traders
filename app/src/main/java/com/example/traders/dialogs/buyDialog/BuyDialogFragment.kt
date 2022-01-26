@@ -29,7 +29,7 @@ class BuyDialogFragment(val lastPrice: Double, val symbol: String) : DialogFragm
     private val viewModel: BuyDialogViewModel by viewModels() {
         BuyDialogViewModel.provideFactory(viewModelAssistedFactory, symbol, lastPrice)
     }
-    lateinit var binding: FragmentBuyDialogBinding
+//    lateinit var binding: FragmentBuyDialogBinding
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
@@ -37,7 +37,7 @@ class BuyDialogFragment(val lastPrice: Double, val symbol: String) : DialogFragm
             val builder = AlertDialog.Builder(it)
             val inflater = requireActivity().layoutInflater
 
-            binding = FragmentBuyDialogBinding.inflate(inflater)
+            val binding = FragmentBuyDialogBinding.inflate(inflater)
             val dialog = builder.setView(binding.root)
                 .setCancelable(true)
                 .create()
