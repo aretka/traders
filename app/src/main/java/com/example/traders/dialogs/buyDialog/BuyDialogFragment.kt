@@ -1,74 +1,66 @@
-package com.example.traders.dialogs
+package com.example.traders.dialogs.buyDialog
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
+import android.view.ContextMenu
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
 import com.example.traders.databinding.FragmentBuyDialogBinding
+import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.roundNumber
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
-class BuyDialogFragment(val lastPrice: String, val symbol: String): DialogFragment() {
+@AndroidEntryPoint
+class BuyDialogFragment(val lastPrice: Double, val symbol: String) : DialogFragment() {
 
-    // usdAccBalance will receive val from shared prefs which are stored in activity
-    private val usdAccBalance = 1525.0
-    private val viewModel: BuyDialogViewModel by viewModels()
+    @Inject
+    lateinit var viewModelAssistedFactory: BuyDialogViewModel.Factory
+
+    private val viewModel: BuyDialogViewModel by viewModels() {
+        BuyDialogViewModel.provideFactory(viewModelAssistedFactory, symbol, lastPrice)
+    }
+    lateinit var binding: FragmentBuyDialogBinding
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
 
             val builder = AlertDialog.Builder(it)
-            val inflater =  requireActivity().layoutInflater
+            val inflater = requireActivity().layoutInflater
 
-            val view = FragmentBuyDialogBinding.inflate(inflater)
-            val dialog = builder.setView(view.root)
+            binding = FragmentBuyDialogBinding.inflate(inflater)
+            val dialog = builder.setView(binding.root)
                 .setCancelable(true)
                 .create()
-            view.initUI()
-            view.addListeners(dialog)
+            binding.initUI()
+            binding.addListeners(dialog)
+
             lifecycleScope.launchWhenCreated {
                 viewModel.state.collect {
-                    view.updateValues(it)
+                    binding.updateValues(it)
                 }
             }
 
             dialog
-        }?: throw IllegalStateException("Activity cannot be null")
-    }
-
-//    private fun enteredValIsValid(enteredVal: String): Boolean {
-//        return if(enteredVal.isBlank()) {
-//            messageType = DialogValidationMessage.IS_EMPTY
-//            false
-//        } else if(enteredVal.toDouble() > usdAccBalance) {
-//            messageType = DialogValidationMessage.IS_TOO_HIGH
-//            false
-//        } else if(enteredVal.toDouble() in MIN_INPUT_VAL..usdAccBalance) {
-//            messageType = DialogValidationMessage.IS_VALID
-//            true
-//        } else if(enteredVal.toDouble() < MIN_INPUT_VAL) {
-//            messageType = DialogValidationMessage.IS_TOO_LOW
-//            false
-//        } else {
-//            messageType = DialogValidationMessage.IS_TOO_HIGH
-//            false
-//        }
-//    }
-
-    companion object {
-        val MIN_INPUT_VAL = 10.0
-        var messageType = DialogValidationMessage.IS_VALID
+        } ?: throw IllegalStateException("Activity cannot be null")
     }
 
     private fun FragmentBuyDialogBinding.initUI() {
         header.text = header.context.getString(R.string.buy_crypto, symbol)
-        usdBalance.text = usdBalance.context.getString(R.string.usd_sign, roundNumber(usdAccBalance))
+        usdBalance.text =
+            usdBalance.context.getString(R.string.usd_sign, roundNumber(viewModel.state.value.usdBalance))
 
-        cryptoPrice.text = cryptoPrice.context.getString(R.string.usd_sign, roundNumber(lastPrice.toDouble()))
+        cryptoPrice.text =
+            cryptoPrice.context.getString(R.string.usd_sign, roundNumber(lastPrice))
         cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, symbol)
         cryptoAmountLabel.text = cryptoAmountLabel.context.getString(R.string.coin_amount, symbol)
     }
@@ -76,25 +68,30 @@ class BuyDialogFragment(val lastPrice: String, val symbol: String): DialogFragme
     private fun FragmentBuyDialogBinding.addListeners(dialog: AlertDialog) {
         priceInputField.addTextChangedListener { enteredVal ->
             viewModel.validateInput(enteredVal.toString())
-//            buyBtn.isEnabled = enteredValIsValid(enteredVal.toString())
-//            validationMessage.text = messageType.message
         }
 
         cancelBtn.setOnClickListener {
+            // TODO remove this function later
+            viewModel.add1000UsdToBalance()
             dialog.dismiss()
         }
 
         buyBtn.setOnClickListener {
+            viewModel.updateBalance()
             dialog.dismiss()
         }
 
         maxBtn.setOnClickListener {
-            priceInputField.setText(usdAccBalance.toString())
+            priceInputField.setText(viewModel.state.value.usdBalance.toString())
         }
     }
 
     private fun FragmentBuyDialogBinding.updateValues(state: BuyState) {
-        validationMessage.text = state.messageType.message
+        if(state.messageType == DialogValidationMessage.IS_TOO_LOW) {
+            validationMessage.text = state.messageType.message + viewModel.state.value.minInputVal.toString()
+        } else {
+            validationMessage.text = state.messageType.message
+        }
         usdBalanceLeft.text = state.usdLeft.toString()
         cryptoToGet.text = state.cryptoToGet.toString()
         buyBtn.isEnabled = state.isBtnEnabled
