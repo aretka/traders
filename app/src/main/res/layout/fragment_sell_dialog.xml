@@ -10,7 +10,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Buy BTC"
+        tools:text="Buy BTC"
         android:textAlignment="center"
         android:textSize="@dimen/large_text_size"
         android:fontFamily="@font/roboto_bold"
@@ -20,36 +20,45 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-        android:id="@+id/balance_label"
+        android:id="@+id/crypto_balance_label"
         style="@style/DialogLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header"
-        android:text="@string/balance_label"/>
+        tools:text="BTC balance"/>
 
     <TextView
         android:id="@+id/crypto_price_label"
         style="@style/DialogLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header"
-        android:text="Price of BTC"/>
+        tools:text="Price of BTC"/>
 
     <TextView
-        android:id="@+id/usd_balance"
+        android:id="@+id/crypto_balance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/balance_label"
+        app:layout_constraintTop_toBottomOf="@id/crypto_balance_label"
         android:fontFamily="@font/roboto_bold"
         android:textSize="@dimen/small_text_size"
         android:textColor="@color/dark_gray"
-        android:text="$ 1533.00"/>
+        android:text="0.0352"/>
+    <TextView
+        android:id="@+id/crypto_usd_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/very_small_text_size"
+        android:textColor="@color/light_gray"
+        app:layout_constraintTop_toBottomOf="@+id/crypto_balance"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="$ 352.53"/>
 
     <TextView
         android:id="@+id/crypto_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/balance_label"
+        app:layout_constraintTop_toBottomOf="@id/crypto_balance_label"
         android:fontFamily="@font/roboto_bold"
         android:textSize="@dimen/small_text_size"
         android:textColor="@color/dark_gray"
@@ -59,10 +68,10 @@
     <TextView
         android:id="@+id/price_input_label"
         style="@style/DialogLabel"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usd_balance"
-        android:text="@string/usd_input_label"/>
+        app:layout_constraintTop_toBottomOf="@+id/crypto_balance"
+        tools:text=""/>
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/price_input_field"
@@ -96,38 +105,38 @@
         tools:text="This is validation message"/>
 
     <TextView
-        android:id="@+id/crypto_amount_label"
+        android:id="@+id/usd_to_get_label"
         style="@style/DialogLabel"
         android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/price_input_field"
-        android:text="BTC amount"/>
+        android:text="@string/usd_to_get_label"/>
 
     <TextView
-        android:id="@+id/crypto_to_get"
+        android:id="@+id/usd_to_get"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/crypto_amount_label"
+        app:layout_constraintTop_toBottomOf="@id/usd_to_get_label"
         android:fontFamily="@font/roboto_bold"
         android:textSize="@dimen/small_text_size"
         android:textColor="@color/dark_gray"
         android:text="0.3323"/>
 
     <TextView
-        android:id="@+id/usd_balance_left_label"
+        android:id="@+id/crypto_balance_left_label"
         style="@style/DialogLabel"
         android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/price_input_field"
-        android:text="@string/balance_left_label"/>
+        tools:text="BTC left"/>
 
     <TextView
-        android:id="@+id/usd_balance_left"
+        android:id="@+id/crypto_balance_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/usd_balance_left_label"
+        app:layout_constraintTop_toBottomOf="@id/crypto_balance_left_label"
         android:fontFamily="@font/roboto_bold"
         android:textSize="@dimen/small_text_size"
         android:textColor="@color/dark_gray"
@@ -137,21 +146,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/usd_balance_left"
+        app:layout_constraintTop_toBottomOf="@id/crypto_balance_left"
         android:weightSum="2"
         android:layout_marginTop="15dp">
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buy_btn"
+            android:id="@+id/sell_btn"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="10dp"
-            android:background="@drawable/buy_btn_layout"
+            android:background="@drawable/sell_btn_layout"
             android:fontFamily="@font/roboto_bold"
             android:textSize="@dimen/medium_text_size"
             android:textColor="@color/white"
             android:enabled="false"
-            android:text="@string/buy"
+            android:text="@string/sell"
             android:layout_weight="1"/>
 
         <androidx.appcompat.widget.AppCompatButton

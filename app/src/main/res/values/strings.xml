@@ -50,10 +50,17 @@
     <string name="roi_last1_year">Last 1 year:</string>
 
     <!--  Crypto chart dialog labels  -->
+    <!--  Buy dialog  -->
     <string name="balance_label">Balance</string>
     <string name="balance_left_label">Balance left</string>
     <string name="price_of_coin">Price of %1$s</string>
-    <string name="coin_amount">%1$s amount</string>
+    <string name="coin_amount">%1$s amount to get</string>
+
+    <!--  Sell dialog  -->
+    <string name="crypto_balance_label">%1$s balance</string>
+    <string name="crypto_input_label">Enter %1$s to sell</string>
+    <string name="usd_to_get_label">USD to get</string>
+    <string name="crypto_balance_left_label">%1$s left</string>
 
     <!--  Crypto chart buttons  -->
     <string name="month1">1m</string>
@@ -66,6 +73,17 @@
     <string name="pre_history">Pre history</string>
     <string name="live_price">Live price</string>
     <string name="price_change">Price change</string>
+
+    <string name="sell">SELL</string>
+    <string name="buy">BUY</string>
+    <string name="usd_input_label">Enter USD amount to spend</string>
+    <string name="buy_crypto">Buy %1$s</string>
+    <string name="sell_crypto">Sell %1$s</string>
+    <string name="sell_input_label">Enter %1$s amount to sell</string>
+    <string name="max">MAX</string>
+    <string name="usd_sign">$ %1$s</string>
+
+    <string name="usd_balance_key">usd_balance_key</string>
 
 </resources>
 
