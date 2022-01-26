@@ -13,7 +13,8 @@ import com.example.traders.BaseFragment
 import com.example.traders.R
 import com.example.traders.customviews.CandleChart
 import com.example.traders.databinding.FragmentCryptoItemChartBinding
-import com.example.traders.dialogs.BuyDialog
+import com.example.traders.dialogs.buyDialog.BuyDialogFragment
+import com.example.traders.dialogs.sellDialog.SellDialogFragment
 import com.example.traders.getCryptoPriceChangeText
 import com.example.traders.roundNumber
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
@@ -34,7 +35,6 @@ class CryptoChartFragment(val slug: String) : BaseFragment() {
         CryptoChartViewModel.provideFactory(viewModelAssistedFactory, slug)
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,16 +52,7 @@ class CryptoChartFragment(val slug: String) : BaseFragment() {
         return binding.root
     }
 
-    private fun showDialog() {
-        val newDialogFragment = BuyDialog(
-            lastPrice = viewModel.chartState.value.tickerData?.data?.last ?: "",
-            symbol = FixedCryptoList.getEnumName(slug)?.name.toString()
-        )
-        newDialogFragment.show(parentFragmentManager, "buy_alog")
-    }
-
     private fun FragmentCryptoItemChartBinding.setHeaderPrices(priceTicker: PriceTicker?) {
-        Log.e("CryptoChartfragment", "setHeaderPrices called")
         priceTicker?.data?.let {
             livePriceText.text = "$ " + roundNumber(priceTicker.data.last.toDouble())
             getCryptoPriceChangeText(
@@ -120,8 +111,24 @@ class CryptoChartFragment(val slug: String) : BaseFragment() {
         month3Btn.setOnClickListener { viewModel.onChartBtnSelected(BtnId.MONTH3_BTN) }
         month6Btn.setOnClickListener { viewModel.onChartBtnSelected(BtnId.MONTH6_BTN) }
         month12Btn.setOnClickListener { viewModel.onChartBtnSelected(BtnId.MONTH12_BTN) }
-        buyBtn.setOnClickListener { showDialog() }
-//        sellBtn.setOnClickListener { showDialog() }
+        buyBtn.setOnClickListener { showBuyDialog() }
+        sellBtn.setOnClickListener { showSellDialog() }
+    }
+
+    private fun showSellDialog() {
+        val newSellFragment = SellDialogFragment(
+            lastPrice = viewModel.chartState.value.tickerData?.data?.last?.toDouble() ?: 0.0,
+            symbol = FixedCryptoList.getEnumName(slug)?.name.toString()
+        )
+        newSellFragment.show(parentFragmentManager, "sell_dialog")
+    }
+
+    private fun showBuyDialog() {
+        val newBuyFragment = BuyDialogFragment(
+            lastPrice = viewModel.chartState.value.tickerData?.data?.last?.toDouble() ?: 0.0,
+            symbol = FixedCryptoList.getEnumName(slug)?.name.toString()
+        )
+        newBuyFragment.show(parentFragmentManager, "buy_alog")
     }
 }
 
