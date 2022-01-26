@@ -1,5 +1,6 @@
 package com.example.traders.repository
 
+import android.content.SharedPreferences
 import android.util.Log
 import com.example.traders.network.BinanceApi
 import com.example.traders.network.MessariApi
@@ -11,11 +12,14 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.onErrorResume
 import javax.inject.Inject
+import javax.inject.Singleton
 
-//@Module
-//@InstallIn(ActivityRetainedComponent::class)
-
-class CryptoRepository @Inject constructor(private val api: MessariApi, private val binanceApi: BinanceApi) {
+@Singleton
+class CryptoRepository @Inject constructor(
+    private val api: MessariApi,
+    private val binanceApi: BinanceApi,
+    private val sharedPrefs: SharedPreferences
+) {
 
     var isFetching = false
 
@@ -46,6 +50,13 @@ class CryptoRepository @Inject constructor(private val api: MessariApi, private 
     suspend fun getCryptoDescriptionData(id: String) = api.getCryptoDescriptionData(id)
     suspend fun checkServerTime() = binanceApi.checkServerTime()
     suspend fun getBinance24Data() = binanceApi.get24HourData()
+
+    fun getStoredTag(symbol: String): Float {
+        return sharedPrefs.getFloat(symbol, 0F)
+    }
+    fun setStoredPrice(symbol: String, newPrice: Float) {
+        sharedPrefs.edit().putFloat(symbol, newPrice).apply()
+    }
 
     companion object {
         const val REFRESH_INTERVAL_MS = 10000L
