@@ -50,18 +50,18 @@ class CryptoChartViewModelTest : TestCoroutineScope by TestCoroutineScope() {
         priceTicker = PriceTicker(PriceTickerData(symbol = FixedCryptoList.BTC.name + "USDT"))
         whenever(webSocketClient.state).thenReturn(createSharedFlowWithFirstEmit())
 
-        val fixture = initFixture()
-        fixture.assignId(FixedCryptoList.BTC.slug)
+        val fixture = initFixture("bitcoin")
 
         fixture.chartState.test {
             assertEquals(ChartState(tickerData = priceTicker), awaitItem())
         }
     }
 
-    private fun initFixture(): CryptoChartViewModel {
+    private fun initFixture(slug: String = ""): CryptoChartViewModel {
         return CryptoChartViewModel(
             repository = repository,
-            webSocketClient = webSocketClient
+            webSocketClient = webSocketClient,
+            slug = slug
         )
     }
 
