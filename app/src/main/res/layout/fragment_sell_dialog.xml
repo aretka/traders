@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Buy BTC"
+        android:textAlignment="center"
+        android:textSize="@dimen/large_text_size"
+        android:fontFamily="@font/roboto_bold"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/crypto_balance_label"
+        style="@style/DialogLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header"
+        tools:text="BTC balance"/>
+
+    <TextView
+        android:id="@+id/crypto_price_label"
+        style="@style/DialogLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        tools:text="Price of BTC"/>
+
+    <TextView
+        android:id="@+id/crypto_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/crypto_balance_label"
+        android:fontFamily="@font/roboto_bold"
+        android:textSize="@dimen/small_text_size"
+        android:textColor="@color/dark_gray"
+        android:text="0.0352"/>
+    <TextView
+        android:id="@+id/crypto_usd_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/very_small_text_size"
+        android:textColor="@color/light_gray"
+        app:layout_constraintTop_toBottomOf="@+id/crypto_balance"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="$ 352.53"/>
+
+    <TextView
+        android:id="@+id/crypto_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/crypto_balance_label"
+        android:fontFamily="@font/roboto_bold"
+        android:textSize="@dimen/small_text_size"
+        android:textColor="@color/dark_gray"
+        android:text="$ 46,242.64"
+        />
+
+    <TextView
+        android:id="@+id/price_input_label"
+        style="@style/DialogLabel"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/crypto_balance"
+        tools:text=""/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/price_input_field"
+        android:inputType="numberDecimal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/price_input_label"
+        android:digits="0123456789."/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/max_btn"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:padding="0dp"
+        android:text="@string/max"
+        android:textColor="@color/orange"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/price_input_field"
+        app:layout_constraintBottom_toBottomOf="@id/price_input_field"/>
+
+    <TextView
+        android:id="@+id/validation_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/price_input_field"
+        android:textSize="@dimen/very_small_text_size"
+        android:textColor="@color/red"
+        tools:text="This is validation message"/>
+
+    <TextView
+        android:id="@+id/usd_to_get_label"
+        style="@style/DialogLabel"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/price_input_field"
+        android:text="@string/usd_to_get_label"/>
+
+    <TextView
+        android:id="@+id/usd_to_get"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/usd_to_get_label"
+        android:fontFamily="@font/roboto_bold"
+        android:textSize="@dimen/small_text_size"
+        android:textColor="@color/dark_gray"
+        android:text="0.3323"/>
+
+    <TextView
+        android:id="@+id/crypto_balance_left_label"
+        style="@style/DialogLabel"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/price_input_field"
+        tools:text="BTC left"/>
+
+    <TextView
+        android:id="@+id/crypto_balance_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/crypto_balance_left_label"
+        android:fontFamily="@font/roboto_bold"
+        android:textSize="@dimen/small_text_size"
+        android:textColor="@color/dark_gray"
+        android:text="$ 300.10"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/crypto_balance_left"
+        android:weightSum="2"
+        android:layout_marginTop="15dp">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/sell_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/sell_btn_layout"
+            android:fontFamily="@font/roboto_bold"
+            android:textSize="@dimen/medium_text_size"
+            android:textColor="@color/white"
+            android:enabled="false"
+            android:text="@string/sell"
+            android:layout_weight="1"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/cancel_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/light_gray"
+            android:fontFamily="@font/roboto_medium"
+            android:text="cancel"
+            android:textSize="@dimen/small_text_size"
+            android:background="@drawable/cancel_btn_layout"
+            android:layout_weight="1"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

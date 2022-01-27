@@ -6,8 +6,10 @@ import androidx.annotation.RequiresApi
 import androidx.compose.ui.text.toLowerCase
 import com.example.traders.enumConstantNames
 import com.example.traders.paramsToJson
+import com.example.traders.returnTickerWithRoundedPrice
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTicker
+import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
 import com.google.gson.Gson
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,13 +23,13 @@ import kotlin.reflect.KClass
 
 class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
 
-    private val _state = MutableSharedFlow<PriceTicker>(
+    private val _state = MutableSharedFlow<PriceTickerData>(
         replay = 1,
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
 
-    override val state: SharedFlow<PriceTicker>
+    override val state: SharedFlow<PriceTickerData>
         get() = _state.asSharedFlow()
 
     override fun onOpen(handshakedata: ServerHandshake?) {
@@ -45,7 +47,9 @@ class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
 
     override fun onMessage(message: String?) {
         val crypto = gson.fromJson(message, PriceTicker::class.java)
-        _state.tryEmit(crypto)
+        crypto.data?.let {
+            _state.tryEmit(returnTickerWithRoundedPrice(it))
+        }
     }
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {

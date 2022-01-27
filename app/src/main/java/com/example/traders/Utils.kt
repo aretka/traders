@@ -2,13 +2,27 @@ package com.example.traders
 
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24HourData.Binance24DataItem
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
-import com.google.gson.annotations.SerializedName
+import java.lang.Math.round
+import java.math.RoundingMode
+import java.text.DecimalFormat
 import kotlin.reflect.KClass
 
-fun roundNumber(numToRound: Double): String {
-    return String.format("%,.2f", numToRound)
+fun roundAndFormatNum(numToRound: Double, digitsRounded: Int = 2): String {
+    return String.format("%,.${digitsRounded}f", numToRound)
+}
+
+fun Double.roundNum(digitsRounded: Int = 2): Double {
+    var multiplier = 1.0
+    repeat(digitsRounded) { multiplier *= 10 }
+    return round(this * multiplier) / multiplier
+//    val df = DecimalFormat("#." + "#".repeat(digitsRounded))
+//    df.roundingMode = RoundingMode.DOWN
+//    return df.format(numToRound)
+//    return "%.${digitsRounded}f".format(numToRound)
+//    return String.format("%.${digitsRounded}f", numToRound)
 }
 
 fun getCryptoPriceChangeText(
@@ -65,3 +79,11 @@ fun PriceTickerData?.ToBinance24DataItem(): Binance24DataItem? {
 // Converts enum names to String array
 fun KClass<out Enum<*>>.enumConstantNames() =
     this.java.enumConstants.map(Enum<*>::name)
+
+// Rounds last number and returns PriceTickerData
+fun returnTickerWithRoundedPrice(tickerData: PriceTickerData): PriceTickerData {
+    val symbol = tickerData.symbol.replace("USDT", "")
+    val numToRound = FixedCryptoList.valueOf(symbol).priceToRound
+    val last = tickerData.last.toDouble().roundNum(numToRound).toString()
+    return tickerData.copy(last = last)
+}

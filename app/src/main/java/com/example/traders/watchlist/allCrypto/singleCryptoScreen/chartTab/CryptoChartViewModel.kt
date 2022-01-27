@@ -3,10 +3,15 @@ package com.example.traders.watchlist.allCrypto.singleCryptoScreen.chartTab
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.traders.BaseViewModel
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.webSocket.BinanceWSClient
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,16 +22,16 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
-@HiltViewModel
-class CryptoChartViewModel @Inject constructor(
+class CryptoChartViewModel @AssistedInject constructor(
     private val repository: CryptoRepository,
-    private val webSocketClient: BinanceWSClient
+    private val webSocketClient: BinanceWSClient,
+    @Assisted private val slug: String
 ) : BaseViewModel() {
 
-    private var symbol: String = ""
-    private var slug: String = ""
+    private val symbol = getSymbol()
+    private val priceNumToRound = getPriceRoundNum()
 
-    private val _chartState = MutableStateFlow(ChartState())
+    private val _chartState = MutableStateFlow(ChartState(priceNumToRound = priceNumToRound))
     val chartState: StateFlow<ChartState>
         get() = _chartState
 
@@ -62,9 +67,12 @@ class CryptoChartViewModel @Inject constructor(
         }
     }
 
-    fun assignId(slug: String) {
-        this.slug = slug
-        symbol = FixedCryptoList.getEnumName(slug)?.name.toString()
+    private fun getSymbol() : String {
+        return FixedCryptoList.getEnumName(slug)?.name.toString()
+    }
+
+    private fun getPriceRoundNum() : Int {
+        return FixedCryptoList.valueOf(symbol).priceToRound
     }
 
     private fun fetchCryptoPriceStatistics(numDays: Long, candleInterval: String) {
@@ -95,7 +103,7 @@ class CryptoChartViewModel @Inject constructor(
     private fun collectBinanceTickerData() {
         launch {
             webSocketClient.state.collect {
-                if (it.data?.symbol?.replace("USDT", "") == symbol.uppercase()) {
+                if (it.symbol.replace("USDT", "") == symbol.uppercase()) {
                     _chartState.value = _chartState.value.copy(tickerData = it)
                 }
             }
@@ -117,8 +125,25 @@ class CryptoChartViewModel @Inject constructor(
         val text: String = date.format(formatter)
         return text
     }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(someVal: String): CryptoChartViewModel
+    }
+
+    companion object {
+        fun provideFactory(
+            assistedFactory: Factory,
+            someVal: String
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(someVal) as T
+            }
+        }
+    }
 }
 
 enum class BtnId {
     MONTH1_BTN, MONTH3_BTN, MONTH6_BTN, MONTH12_BTN
 }
+

@@ -40,4 +40,15 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <!--  Dialog styles  -->
+    <style name="DialogLabel" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/very_small_text_size</item>
+        <item name="android:textColor">@color/light_gray</item>
+    </style>
+    // Cancel button style
+<!--    <style name="CancelButtonAppearance" parent="Widget.AppCompat.Button">-->
+<!--        <item></item>-->
+<!--    </style>-->
 </resources>

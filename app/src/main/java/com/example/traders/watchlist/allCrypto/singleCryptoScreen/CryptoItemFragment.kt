@@ -18,7 +18,7 @@ class CryptoItemFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentCryptoItemBinding.inflate(inflater, container, false)
 
         val receivedValues = CryptoItemFragmentArgs.fromBundle(requireArguments())
@@ -29,7 +29,6 @@ class CryptoItemFragment : BaseFragment() {
         binding.backButton.setOnClickListener {
             this.findNavController().navigateUp()
         }
-
 
         return binding.root
     }
