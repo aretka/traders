@@ -6,13 +6,11 @@ import android.os.Bundle
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
 import com.example.traders.databinding.FragmentSellDialogBinding
 import com.example.traders.dialogs.DialogValidationMessage
-import com.example.traders.dialogs.buyDialog.BuyDialogViewModel
-import com.example.traders.roundNumber
+import com.example.traders.roundAndFormatNum
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
@@ -54,7 +52,7 @@ class SellDialogFragment(val lastPrice: Double, val symbol: String) : DialogFrag
         header.text = header.context.getString(R.string.sell_crypto, symbol)
 
         cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, symbol)
-        cryptoPrice.text = "$ " + roundNumber(lastPrice.toDouble())
+        cryptoPrice.text = "$ " + roundAndFormatNum(lastPrice.toDouble())
 
         cryptoBalanceLabel.text = cryptoBalanceLabel.context.getString(R.string.crypto_balance_label, symbol)
         cryptoBalance.text = viewModel.state.value.cryptoBalance.toString()
@@ -87,7 +85,7 @@ class SellDialogFragment(val lastPrice: Double, val symbol: String) : DialogFrag
 
     private fun FragmentSellDialogBinding.updateFields(state: SellState) {
         if(state.messageType == DialogValidationMessage.IS_TOO_LOW) {
-            validationMessage.text = state.messageType.message + roundNumber(viewModel.state.value.minInputVal, 6)
+            validationMessage.text = state.messageType.message + roundAndFormatNum(viewModel.state.value.minInputVal, 6)
         } else {
             validationMessage.text = state.messageType.message
         }

@@ -5,16 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.traders.dialogs.Constants
 import com.example.traders.dialogs.DialogValidationMessage
-import com.example.traders.dialogs.buyDialog.BuyDialogViewModel
 import com.example.traders.repository.CryptoRepository
-import com.example.traders.roundNumber
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.internal.Contexts.getApplication
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlin.math.round
 
 class SellDialogViewModel @AssistedInject constructor(
     val repository: CryptoRepository,

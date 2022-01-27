@@ -6,6 +6,7 @@ import com.example.traders.BaseViewModel
 import com.example.traders.ToBinance24DataItem
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.repository.enumContains
+import com.example.traders.returnTickerWithRoundedPrice
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.webSocket.BinanceWSClient
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,7 +58,7 @@ class AllCryptoViewModel @Inject constructor(
     private suspend fun updateCryptoData() {
         val cryptoPrices = repository.getBinance24Data().body() ?: return
         val extractedPricesList = cryptoPrices.filter { el -> enumContains<FixedCryptoList>(el.symbol.replace("USDT", "")) }
-        _state.value = _state.value?.copy(binanceCryptoData = extractedPricesList)
+        _state.value = _state.value.copy(binanceCryptoData = extractedPricesList)
     }
 
     // It collects message emitted from websocket sharedFlow and updates list item by reassigning BinanceDataItem to new value
@@ -70,7 +71,9 @@ class AllCryptoViewModel @Inject constructor(
 
                 _state.value = _state.value.let {
                     val updatedList = it.binanceCryptoData.toMutableList()
-                    val itemToUpdate = tickerData.data.ToBinance24DataItem()
+                    val itemToUpdate = tickerData.data?.let { it1 ->
+                        returnTickerWithRoundedPrice(it1).ToBinance24DataItem()
+                    }
                     if (itemToUpdate != null) {
                         updatedList[indexOfCryptoDataToUpdate] = itemToUpdate
                     }

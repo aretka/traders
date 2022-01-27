@@ -1,7 +1,6 @@
 package com.example.traders.watchlist.allCrypto.singleCryptoScreen.chartTab
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,7 @@ import com.example.traders.databinding.FragmentCryptoItemChartBinding
 import com.example.traders.dialogs.buyDialog.BuyDialogFragment
 import com.example.traders.dialogs.sellDialog.SellDialogFragment
 import com.example.traders.getCryptoPriceChangeText
-import com.example.traders.roundNumber
+import com.example.traders.roundAndFormatNum
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTicker
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,10 +53,10 @@ class CryptoChartFragment(val slug: String) : BaseFragment() {
 
     private fun FragmentCryptoItemChartBinding.setHeaderPrices(priceTicker: PriceTicker?) {
         priceTicker?.data?.let {
-            livePriceText.text = "$ " + roundNumber(priceTicker.data.last.toDouble())
+            livePriceText.text = "$ " + roundAndFormatNum(priceTicker.data.last.toDouble())
             getCryptoPriceChangeText(
-                roundNumber(it.priceChange.toDouble()),
-                roundNumber(it.priceChangePercent.toDouble()),
+                roundAndFormatNum(it.priceChange.toDouble()),
+                roundAndFormatNum(it.priceChangePercent.toDouble()),
                 priceChangeText
             )
         }

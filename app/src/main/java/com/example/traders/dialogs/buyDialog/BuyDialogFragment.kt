@@ -2,12 +2,7 @@ package com.example.traders.dialogs.buyDialog
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
-import android.view.ContextMenu
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -15,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
 import com.example.traders.databinding.FragmentBuyDialogBinding
 import com.example.traders.dialogs.DialogValidationMessage
-import com.example.traders.roundNumber
+import com.example.traders.roundAndFormatNum
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
@@ -57,10 +52,10 @@ class BuyDialogFragment(val lastPrice: Double, val symbol: String) : DialogFragm
     private fun FragmentBuyDialogBinding.initUI() {
         header.text = header.context.getString(R.string.buy_crypto, symbol)
         usdBalance.text =
-            usdBalance.context.getString(R.string.usd_sign, roundNumber(viewModel.state.value.usdBalance))
+            usdBalance.context.getString(R.string.usd_sign, roundAndFormatNum(viewModel.state.value.usdBalance))
 
         cryptoPrice.text =
-            cryptoPrice.context.getString(R.string.usd_sign, roundNumber(lastPrice))
+            cryptoPrice.context.getString(R.string.usd_sign, roundAndFormatNum(lastPrice))
         cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, symbol)
         cryptoAmountLabel.text = cryptoAmountLabel.context.getString(R.string.coin_amount, symbol)
     }

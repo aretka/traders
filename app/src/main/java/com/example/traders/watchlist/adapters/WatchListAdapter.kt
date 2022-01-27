@@ -10,10 +10,9 @@ import com.bumptech.glide.Glide
 import com.example.traders.R
 import com.example.traders.databinding.ListItemCryptoBinding
 import com.example.traders.getCryptoPriceChangeText
-import com.example.traders.roundNumber
+import com.example.traders.roundAndFormatNum
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24HourData.Binance24DataItem
-import com.example.traders.watchlist.cryptoData.cryptoPriceData.Data
 
 class WatchListAdapter(private val clickListener: SingleCryptoListener) :
     ListAdapter<Binance24DataItem, SimpleViewHolder<ListItemCryptoBinding>>(DiffCallback()) {
@@ -38,10 +37,10 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
             super.onBindViewHolder(holder, position, payloads)
         } else if(payloads[0] is Binance24DataItem){
             val item = payloads[0] as Binance24DataItem
-            holder.binding.cryptoPrice.text = roundNumber(item.last.toDouble())
+            holder.binding.cryptoPrice.text = roundAndFormatNum(item.last.toDouble())
             getCryptoPriceChangeText(
-                roundNumber(item.priceChange.toDouble()),
-                roundNumber(item.priceChangePercent.toDouble()),
+                roundAndFormatNum(item.priceChange.toDouble()),
+                roundAndFormatNum(item.priceChangePercent.toDouble()),
                 holder.binding.cryptoPriceChange
             )
         }
@@ -52,12 +51,12 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
         val slug = FixedCryptoList.valueOf(symbol).slug
 
         holder.binding.root.setOnClickListener { clickListener.onClick(slug, symbol) }
-        holder.binding.cryptoPrice.text = roundNumber(item.last.toDouble())
+        holder.binding.cryptoPrice.text = roundAndFormatNum(item.last.toDouble())
         holder.binding.cryptoNameShortcut.text = item.symbol
         holder.binding.cryptoFullName.text = slug.replaceFirstChar { c -> c.uppercase() }
         getCryptoPriceChangeText(
-            roundNumber(item.priceChange.toDouble()),
-            roundNumber(item.priceChangePercent.toDouble()),
+            roundAndFormatNum(item.priceChange.toDouble()),
+            roundAndFormatNum(item.priceChangePercent.toDouble()),
             holder.binding.cryptoPriceChange
         )
         Glide.with(holder.binding.cryptoLogo)
