@@ -15,7 +15,6 @@ fun roundNum(numToRound: Double, digitsRounded: Int = 2): String {
     return String.format("%.${digitsRounded}f", numToRound)
 }
 
-
 fun getCryptoPriceChangeText(
     priceChange: String,
     percentagePriceChange: String,
@@ -71,15 +70,11 @@ fun PriceTickerData?.ToBinance24DataItem(): Binance24DataItem? {
 fun KClass<out Enum<*>>.enumConstantNames() =
     this.java.enumConstants.map(Enum<*>::name)
 
-// Rounds last number and returns
+// Rounds last number and returns PriceTickerData
 fun returnTickerWithRoundedPrice(tickerData: PriceTickerData?): PriceTickerData? {
     if (tickerData == null) return null
     val symbol = tickerData.symbol.replace("USDT", "")
     val numToRound = FixedCryptoList.valueOf(symbol).priceToRound
     val last = roundNum(tickerData.last.toDouble(), numToRound)
-    val priceChange = roundNum(tickerData.priceChange.toDouble(), numToRound)
-    return tickerData.copy(
-        last = last,
-        priceChange = priceChange
-    )
+    return tickerData.copy(last = last)
 }
