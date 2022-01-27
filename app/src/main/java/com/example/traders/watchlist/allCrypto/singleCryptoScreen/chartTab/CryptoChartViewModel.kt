@@ -28,9 +28,10 @@ class CryptoChartViewModel @AssistedInject constructor(
     @Assisted private val slug: String
 ) : BaseViewModel() {
 
-    private var symbol: String = FixedCryptoList.getEnumName(slug)?.name.toString()
+    private val symbol = getSymbol()
+    private val priceNumToRound = getPriceRoundNum()
 
-    private val _chartState = MutableStateFlow(ChartState())
+    private val _chartState = MutableStateFlow(ChartState(priceNumToRound = priceNumToRound))
     val chartState: StateFlow<ChartState>
         get() = _chartState
 
@@ -66,6 +67,14 @@ class CryptoChartViewModel @AssistedInject constructor(
         }
     }
 
+    private fun getSymbol() : String {
+        return FixedCryptoList.getEnumName(slug)?.name.toString()
+    }
+
+    private fun getPriceRoundNum() : Int {
+        return FixedCryptoList.valueOf(symbol).priceToRound
+    }
+
     private fun fetchCryptoPriceStatistics(numDays: Long, candleInterval: String) {
         val startDate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getStartDate(numDays)
@@ -94,7 +103,7 @@ class CryptoChartViewModel @AssistedInject constructor(
     private fun collectBinanceTickerData() {
         launch {
             webSocketClient.state.collect {
-                if (it.data?.symbol?.replace("USDT", "") == symbol.uppercase()) {
+                if (it.symbol.replace("USDT", "") == symbol.uppercase()) {
                     _chartState.value = _chartState.value.copy(tickerData = it)
                 }
             }

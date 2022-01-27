@@ -3,6 +3,8 @@ package com.example.traders.dialogs.buyDialog
 import com.example.traders.dialogs.DialogValidationMessage
 
 data class BuyState(
+    val amountToRound: Int = 2,
+    val priceNumToRound: Int = 2,
     val usdBalance: Double = 0.0,
     val inputVal: Double = 0.0,
     val minInputVal: Double = 10.0,

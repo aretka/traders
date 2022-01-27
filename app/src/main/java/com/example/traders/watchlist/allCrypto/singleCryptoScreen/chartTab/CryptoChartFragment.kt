@@ -18,6 +18,7 @@ import com.example.traders.getCryptoPriceChangeText
 import com.example.traders.roundAndFormatNum
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTicker
+import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -51,11 +52,11 @@ class CryptoChartFragment(val slug: String) : BaseFragment() {
         return binding.root
     }
 
-    private fun FragmentCryptoItemChartBinding.setHeaderPrices(priceTicker: PriceTicker?) {
-        priceTicker?.data?.let {
-            livePriceText.text = "$ " + roundAndFormatNum(priceTicker.data.last.toDouble())
+    private fun FragmentCryptoItemChartBinding.setHeaderPrices(priceTicker: PriceTickerData?) {
+        priceTicker?.let {
+            livePriceText.text = "$ " + roundAndFormatNum(it.last.toDouble(), viewModel.chartState.value.priceNumToRound)
             getCryptoPriceChangeText(
-                roundAndFormatNum(it.priceChange.toDouble()),
+                roundAndFormatNum(it.priceChange.toDouble(), viewModel.chartState.value.priceNumToRound),
                 roundAndFormatNum(it.priceChangePercent.toDouble()),
                 priceChangeText
             )
@@ -116,7 +117,7 @@ class CryptoChartFragment(val slug: String) : BaseFragment() {
 
     private fun showSellDialog() {
         val newSellFragment = SellDialogFragment(
-            lastPrice = viewModel.chartState.value.tickerData?.data?.last?.toDouble() ?: 0.0,
+            lastPrice = viewModel.chartState.value.tickerData?.last?.toDouble() ?: 0.0,
             symbol = FixedCryptoList.getEnumName(slug)?.name.toString()
         )
         newSellFragment.show(parentFragmentManager, "sell_dialog")
@@ -124,7 +125,7 @@ class CryptoChartFragment(val slug: String) : BaseFragment() {
 
     private fun showBuyDialog() {
         val newBuyFragment = BuyDialogFragment(
-            lastPrice = viewModel.chartState.value.tickerData?.data?.last?.toDouble() ?: 0.0,
+            lastPrice = viewModel.chartState.value.tickerData?.last?.toDouble() ?: 0.0,
             symbol = FixedCryptoList.getEnumName(slug)?.name.toString()
         )
         newBuyFragment.show(parentFragmentManager, "buy_dialog")

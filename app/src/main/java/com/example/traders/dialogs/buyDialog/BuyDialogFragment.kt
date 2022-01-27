@@ -11,6 +11,7 @@ import com.example.traders.R
 import com.example.traders.databinding.FragmentBuyDialogBinding
 import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.roundAndFormatNum
+import com.example.traders.roundNum
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
@@ -52,10 +53,17 @@ class BuyDialogFragment(val lastPrice: Double, val symbol: String) : DialogFragm
     private fun FragmentBuyDialogBinding.initUI() {
         header.text = header.context.getString(R.string.buy_crypto, symbol)
         usdBalance.text =
-            usdBalance.context.getString(R.string.usd_sign, roundAndFormatNum(viewModel.state.value.usdBalance))
+            usdBalance.context.getString(
+                R.string.usd_sign,
+                roundAndFormatNum(viewModel.state.value.usdBalance)
+            )
 
         cryptoPrice.text =
-            cryptoPrice.context.getString(R.string.usd_sign, roundAndFormatNum(lastPrice))
+            cryptoPrice.context.getString(
+                R.string.usd_sign,
+                roundAndFormatNum(lastPrice, viewModel.state.value.priceNumToRound)
+            )
+
         cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, symbol)
         cryptoAmountLabel.text = cryptoAmountLabel.context.getString(R.string.coin_amount, symbol)
     }
@@ -87,8 +95,8 @@ class BuyDialogFragment(val lastPrice: Double, val symbol: String) : DialogFragm
         } else {
             validationMessage.text = state.messageType.message
         }
-        usdBalanceLeft.text = state.usdLeft.toString()
-        cryptoToGet.text = state.cryptoToGet.toString()
+        usdBalanceLeft.text = roundAndFormatNum(state.usdLeft)
+        cryptoToGet.text = roundAndFormatNum(state.cryptoToGet, state.amountToRound)
         buyBtn.isEnabled = state.isBtnEnabled
     }
 }

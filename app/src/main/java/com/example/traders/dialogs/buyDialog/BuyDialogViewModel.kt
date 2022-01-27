@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.traders.dialogs.Constants
 import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.repository.CryptoRepository
+import com.example.traders.roundNum
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -17,13 +18,15 @@ class BuyDialogViewModel @AssistedInject constructor(
     @Assisted val symbol: String,
     @Assisted val lastPrice: Double
 ) : ViewModel() {
-    // TODO update roundNumber() function to round to provided int which equals to numOfDigits after comma
-    private val priceToRound = FixedCryptoList.valueOf(symbol).priceToRound
-    private val amountToRound = FixedCryptoList.valueOf(symbol).amountToRound
+    private val priceToRound = getPriceToRound()
+    private val amountToRound = getAmountToRound()
+    private val usdBalance = getBalance()
 
-    private val usdBalance: Double = getBalance()
-
-    private val _state = MutableStateFlow(BuyState(usdBalance = usdBalance))
+    private val _state = MutableStateFlow(BuyState(
+        usdBalance = usdBalance,
+        priceNumToRound = priceToRound,
+        amountToRound = amountToRound
+    ))
     val state = _state.asStateFlow()
 
     fun updateBalance() {
@@ -69,6 +72,9 @@ class BuyDialogViewModel @AssistedInject constructor(
         calculateNewBalance()
     }
 
+    private fun getPriceToRound() = FixedCryptoList.valueOf(symbol).priceToRound
+    private fun getAmountToRound() = FixedCryptoList.valueOf(symbol).amountToRound
+
     private fun calculateNewBalance() {
         var usdLeft = usdBalance
         var cryptoToGet = 0.0
@@ -80,8 +86,8 @@ class BuyDialogViewModel @AssistedInject constructor(
         }
 
         _state.value = _state.value.copy(
-            usdLeft = usdLeft,
-            cryptoToGet = cryptoToGet
+            usdLeft = usdLeft.roundNum(),
+            cryptoToGet = cryptoToGet.roundNum(_state.value.amountToRound)
         )
     }
 

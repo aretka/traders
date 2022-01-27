@@ -9,7 +9,6 @@ import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.example.traders.R
 import com.example.traders.databinding.ListItemCryptoBinding
-import com.example.traders.formatNum
 import com.example.traders.getCryptoPriceChangeText
 import com.example.traders.roundAndFormatNum
 import com.example.traders.watchlist.cryptoData.FixedCryptoList

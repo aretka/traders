@@ -66,14 +66,12 @@ class AllCryptoViewModel @Inject constructor(
         launch {
             webSocketClient.state.collect { tickerData ->
                 val indexOfCryptoDataToUpdate = _state.value.binanceCryptoData.indexOfFirst {
-                    it.symbol == tickerData.data?.symbol
+                    it.symbol == tickerData.symbol
                 }
 
                 _state.value = _state.value.let {
                     val updatedList = it.binanceCryptoData.toMutableList()
-                    val itemToUpdate = tickerData.data?.let { it1 ->
-                        returnTickerWithRoundedPrice(it1).ToBinance24DataItem()
-                    }
+                    val itemToUpdate = tickerData.ToBinance24DataItem()
                     if (itemToUpdate != null) {
                         updatedList[indexOfCryptoDataToUpdate] = itemToUpdate
                     }

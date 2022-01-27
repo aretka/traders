@@ -11,9 +11,11 @@ import com.example.traders.R
 import com.example.traders.databinding.FragmentSellDialogBinding
 import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.roundAndFormatNum
+import com.example.traders.roundNum
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
+import kotlin.math.round
 
 @AndroidEntryPoint
 class SellDialogFragment(val lastPrice: Double, val symbol: String) : DialogFragment() {
@@ -52,15 +54,15 @@ class SellDialogFragment(val lastPrice: Double, val symbol: String) : DialogFrag
         header.text = header.context.getString(R.string.sell_crypto, symbol)
 
         cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, symbol)
-        cryptoPrice.text = "$ " + roundAndFormatNum(lastPrice.toDouble())
+        cryptoPrice.text = "$ " + roundAndFormatNum(lastPrice, viewModel.state.value.priceToRound)
 
         cryptoBalanceLabel.text = cryptoBalanceLabel.context.getString(R.string.crypto_balance_label, symbol)
-        cryptoBalance.text = viewModel.state.value.cryptoBalance.toString()
+        cryptoBalance.text = roundAndFormatNum(viewModel.state.value.cryptoBalance, viewModel.state.value.amountToRound)
 
         usdToGetLabel.text = usdToGetLabel.context.getString(R.string.usd_to_get_label)
-        usdToGet.text = viewModel.state.value.usdToGet.toString()
+        usdToGet.text = roundAndFormatNum(viewModel.state.value.usdToGet)
 
-        cryptoBalanceLeft.text = viewModel.state.value.cryptoLeft.toString()
+        cryptoBalanceLeft.text = roundAndFormatNum(viewModel.state.value.cryptoLeft, viewModel.state.value.amountToRound)
         cryptoBalanceLeftLabel.text = cryptoBalanceLeftLabel.context.getString(R.string.crypto_balance_left_label, symbol)
     }
 
@@ -85,13 +87,13 @@ class SellDialogFragment(val lastPrice: Double, val symbol: String) : DialogFrag
 
     private fun FragmentSellDialogBinding.updateFields(state: SellState) {
         if(state.messageType == DialogValidationMessage.IS_TOO_LOW) {
-            validationMessage.text = state.messageType.message + roundAndFormatNum(viewModel.state.value.minInputVal, 6)
+            validationMessage.text = state.messageType.message + roundAndFormatNum(viewModel.state.value.minInputVal, viewModel.state.value.amountToRound)
         } else {
             validationMessage.text = state.messageType.message
         }
         sellBtn.isEnabled = state.isBtnEnabled
-        usdToGet.text = state.usdToGet.toString()
-        cryptoBalanceLeft.text = state.cryptoLeft.toString()
+        usdToGet.text = roundAndFormatNum(state.usdToGet)
+        cryptoBalanceLeft.text = roundAndFormatNum(state.cryptoLeft, state.amountToRound)
     }
 }
 

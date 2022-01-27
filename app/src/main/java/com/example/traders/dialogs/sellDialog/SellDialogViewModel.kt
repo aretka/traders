@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.traders.dialogs.Constants
 import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.repository.CryptoRepository
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -17,6 +18,8 @@ class SellDialogViewModel @AssistedInject constructor(
     @Assisted val symbol: String,
     @Assisted val lastPrice: Double
 ) : ViewModel() {
+    private val priceToRound = getPriceToRound()
+    private val amountToRound = getAmountToRound()
     private val cryptoBalance = getCryptoBalance()
     private val cryptoUsdBalance = getUsdCryptoBalance()
     private val minCryptoToSell = getMinCryptoToSell()
@@ -25,7 +28,9 @@ class SellDialogViewModel @AssistedInject constructor(
         usdCryptoBalance = cryptoUsdBalance,
         cryptoBalance = cryptoBalance,
         cryptoLeft = cryptoBalance,
-        minInputVal = minCryptoToSell
+        minInputVal = minCryptoToSell,
+        priceToRound = priceToRound,
+        amountToRound = amountToRound
     ))
 
     val state = _state.asStateFlow()
@@ -67,6 +72,9 @@ class SellDialogViewModel @AssistedInject constructor(
         val newUsdBalance = repository.getStoredTag(Constants.USD_BALANCE_KEY) + _state.value.usdToGet.toFloat()
         repository.setStoredPrice(Constants.USD_BALANCE_KEY, newUsdBalance)
     }
+
+    private fun getPriceToRound() = FixedCryptoList.valueOf(symbol).priceToRound
+    private fun getAmountToRound() = FixedCryptoList.valueOf(symbol).amountToRound
 
     private fun getMinCryptoToSell(): Double {
         return 10.0 / lastPrice
