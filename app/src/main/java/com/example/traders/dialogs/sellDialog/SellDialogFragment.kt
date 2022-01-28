@@ -8,14 +8,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
-import com.example.traders.databinding.FragmentSellDialogBinding
+import com.example.traders.databinding.DialogFragmentSellBinding
 import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.roundAndFormatNum
-import com.example.traders.roundNum
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
-import kotlin.math.round
 
 @AndroidEntryPoint
 class SellDialogFragment(val lastPrice: Double, val symbol: String) : DialogFragment() {
@@ -33,7 +31,7 @@ class SellDialogFragment(val lastPrice: Double, val symbol: String) : DialogFrag
             val builder = AlertDialog.Builder(it)
             val inflater = requireActivity().layoutInflater
 
-            val view = FragmentSellDialogBinding.inflate(inflater)
+            val view = DialogFragmentSellBinding.inflate(inflater)
             val dialog = builder.setView(view.root)
                 .setCancelable(true)
                 .create()
@@ -50,23 +48,29 @@ class SellDialogFragment(val lastPrice: Double, val symbol: String) : DialogFrag
         } ?: throw IllegalStateException("Activity cannot be null")
     }
 
-    private fun FragmentSellDialogBinding.initUI() {
+    private fun DialogFragmentSellBinding.initUI() {
         header.text = header.context.getString(R.string.sell_crypto, symbol)
 
         cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, symbol)
         cryptoPrice.text = "$ " + roundAndFormatNum(lastPrice, viewModel.state.value.priceToRound)
 
-        cryptoBalanceLabel.text = cryptoBalanceLabel.context.getString(R.string.crypto_balance_label, symbol)
-        cryptoBalance.text = roundAndFormatNum(viewModel.state.value.cryptoBalance, viewModel.state.value.amountToRound)
+        cryptoBalanceLabel.text =
+            cryptoBalanceLabel.context.getString(R.string.crypto_balance_label, symbol)
+        cryptoBalance.text = roundAndFormatNum(
+            viewModel.state.value.cryptoBalance,
+            viewModel.state.value.amountToRound
+        )
 
         usdToGetLabel.text = usdToGetLabel.context.getString(R.string.usd_to_get_label)
         usdToGet.text = roundAndFormatNum(viewModel.state.value.usdToGet)
 
-        cryptoBalanceLeft.text = roundAndFormatNum(viewModel.state.value.cryptoLeft, viewModel.state.value.amountToRound)
-        cryptoBalanceLeftLabel.text = cryptoBalanceLeftLabel.context.getString(R.string.crypto_balance_left_label, symbol)
+        cryptoBalanceLeft.text =
+            roundAndFormatNum(viewModel.state.value.cryptoLeft, viewModel.state.value.amountToRound)
+        cryptoBalanceLeftLabel.text =
+            cryptoBalanceLeftLabel.context.getString(R.string.crypto_balance_left_label, symbol)
     }
 
-    private fun FragmentSellDialogBinding.addListeners(dialog: AlertDialog) {
+    private fun DialogFragmentSellBinding.addListeners(dialog: AlertDialog) {
         priceInputField.addTextChangedListener { enteredVal ->
             viewModel.validateInput(enteredVal.toString())
         }
@@ -85,9 +89,12 @@ class SellDialogFragment(val lastPrice: Double, val symbol: String) : DialogFrag
         }
     }
 
-    private fun FragmentSellDialogBinding.updateFields(state: SellState) {
-        if(state.messageType == DialogValidationMessage.IS_TOO_LOW) {
-            validationMessage.text = state.messageType.message + roundAndFormatNum(viewModel.state.value.minInputVal, viewModel.state.value.amountToRound)
+    private fun DialogFragmentSellBinding.updateFields(state: SellState) {
+        if (state.messageType == DialogValidationMessage.IS_TOO_LOW) {
+            validationMessage.text = state.messageType.message + roundAndFormatNum(
+                viewModel.state.value.minInputVal,
+                viewModel.state.value.amountToRound
+            )
         } else {
             validationMessage.text = state.messageType.message
         }

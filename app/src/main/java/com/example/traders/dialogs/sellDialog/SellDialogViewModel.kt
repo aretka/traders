@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.traders.dialogs.Constants
 import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.repository.CryptoRepository
+import com.example.traders.roundNum
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -96,8 +97,8 @@ class SellDialogViewModel @AssistedInject constructor(
             usdToGet = _state.value.inputVal * lastPrice
         }
         _state.value = _state.value.copy(
-            cryptoLeft = cryptoLeft,
-            usdToGet = usdToGet
+            cryptoLeft = cryptoLeft.roundNum(_state.value.amountToRound),
+            usdToGet = usdToGet.roundNum()
         )
     }
 

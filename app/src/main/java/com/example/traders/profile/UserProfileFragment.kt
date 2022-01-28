@@ -16,7 +16,7 @@ class UserProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentUserProfileBinding.inflate(inflater, container, false)
-        
+
         return binding.root
     }
 }
