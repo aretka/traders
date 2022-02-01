@@ -6,23 +6,17 @@ import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24HourData.Binance24DataItem
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
 import java.lang.Math.round
+import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import kotlin.reflect.KClass
 
-fun roundAndFormatNum(numToRound: Double, digitsRounded: Int = 2): String {
+fun roundAndFormatDouble(numToRound: Double, digitsRounded: Int = 2): String {
     return String.format("%,.${digitsRounded}f", numToRound)
 }
 
-fun Double.roundNum(digitsRounded: Int = 2): Double {
-    var multiplier = 1.0
-    repeat(digitsRounded) { multiplier *= 10 }
-    return round(this * multiplier) / multiplier
-//    val df = DecimalFormat("#." + "#".repeat(digitsRounded))
-//    df.roundingMode = RoundingMode.DOWN
-//    return df.format(numToRound)
-//    return "%.${digitsRounded}f".format(numToRound)
-//    return String.format("%.${digitsRounded}f", numToRound)
+fun BigDecimal.roundNum(digitsRounded: Int = 2): BigDecimal {
+    return this.setScale(digitsRounded, RoundingMode.UP)
 }
 
 fun getCryptoPriceChangeText(
@@ -84,6 +78,6 @@ fun KClass<out Enum<*>>.enumConstantNames() =
 fun returnTickerWithRoundedPrice(tickerData: PriceTickerData): PriceTickerData {
     val symbol = tickerData.symbol.replace("USDT", "")
     val numToRound = FixedCryptoList.valueOf(symbol).priceToRound
-    val last = tickerData.last.toDouble().roundNum(numToRound).toString()
+    val last = BigDecimal(tickerData.last).setScale(numToRound, RoundingMode.HALF_UP).toString()
     return tickerData.copy(last = last)
 }
