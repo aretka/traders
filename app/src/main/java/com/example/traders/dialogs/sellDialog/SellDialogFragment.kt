@@ -10,13 +10,15 @@ import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
 import com.example.traders.databinding.DialogFragmentSellBinding
 import com.example.traders.dialogs.DialogValidationMessage
-import com.example.traders.roundAndFormatNum
+import com.example.traders.roundAndFormatDouble
+import com.example.traders.roundNum
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SellDialogFragment(val lastPrice: Double, val symbol: String) : DialogFragment() {
+class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogFragment() {
 
     @Inject
     lateinit var assistedViewModelFactory: SellDialogViewModel.Factory
@@ -52,20 +54,16 @@ class SellDialogFragment(val lastPrice: Double, val symbol: String) : DialogFrag
         header.text = header.context.getString(R.string.sell_crypto, symbol)
 
         cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, symbol)
-        cryptoPrice.text = "$ " + roundAndFormatNum(lastPrice, viewModel.state.value.priceToRound)
+        cryptoPrice.text = "$ " + lastPrice.toString()
 
         cryptoBalanceLabel.text =
             cryptoBalanceLabel.context.getString(R.string.crypto_balance_label, symbol)
-        cryptoBalance.text = roundAndFormatNum(
-            viewModel.state.value.cryptoBalance,
-            viewModel.state.value.amountToRound
-        )
+        cryptoBalance.text = viewModel.state.value.cryptoBalance.toString()
 
         usdToGetLabel.text = usdToGetLabel.context.getString(R.string.usd_to_get_label)
-        usdToGet.text = roundAndFormatNum(viewModel.state.value.usdToGet)
+        usdToGet.text = viewModel.state.value.usdToGet.toString()
 
-        cryptoBalanceLeft.text =
-            roundAndFormatNum(viewModel.state.value.cryptoLeft, viewModel.state.value.amountToRound)
+        cryptoBalanceLeft.text = viewModel.state.value.cryptoLeft.toString()
         cryptoBalanceLeftLabel.text =
             cryptoBalanceLeftLabel.context.getString(R.string.crypto_balance_left_label, symbol)
     }
@@ -91,16 +89,13 @@ class SellDialogFragment(val lastPrice: Double, val symbol: String) : DialogFrag
 
     private fun DialogFragmentSellBinding.updateFields(state: SellState) {
         if (state.messageType == DialogValidationMessage.IS_TOO_LOW) {
-            validationMessage.text = state.messageType.message + roundAndFormatNum(
-                viewModel.state.value.minInputVal,
-                viewModel.state.value.amountToRound
-            )
+            validationMessage.text = state.messageType.message + viewModel.state.value.minInputVal.toString()
         } else {
             validationMessage.text = state.messageType.message
         }
         sellBtn.isEnabled = state.isBtnEnabled
-        usdToGet.text = roundAndFormatNum(state.usdToGet)
-        cryptoBalanceLeft.text = roundAndFormatNum(state.cryptoLeft, state.amountToRound)
+        usdToGet.text = state.usdToGet.toString()
+        cryptoBalanceLeft.text = state.cryptoLeft.toString()
     }
 }
 

@@ -1,5 +1,6 @@
 package com.example.traders.dialogs.buyDialog
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.traders.dialogs.Constants
@@ -12,11 +13,13 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class BuyDialogViewModel @AssistedInject constructor(
     val repository: CryptoRepository,
     @Assisted val symbol: String,
-    @Assisted val lastPrice: Double
+    @Assisted val lastPrice: BigDecimal
 ) : ViewModel() {
     private val priceToRound = getPriceToRound()
     private val amountToRound = getAmountToRound()
@@ -42,17 +45,18 @@ class BuyDialogViewModel @AssistedInject constructor(
     }
 
     fun validateInput(enteredVal: String) {
+        val decimalEnteredVal = BigDecimal(enteredVal)
         if (enteredVal.isBlank()) {
             _state.value = _state.value.copy(
                 isBtnEnabled = false,
                 messageType = DialogValidationMessage.IS_EMPTY
             )
-        } else if (enteredVal.toDouble() > usdBalance) {
+        } else if (decimalEnteredVal > usdBalance) {
             _state.value = _state.value.copy(
                 isBtnEnabled = false,
                 messageType = DialogValidationMessage.IS_TOO_HIGH
             )
-        } else if (enteredVal.toDouble() < _state.value.minInputVal) {
+        } else if (decimalEnteredVal < _state.value.minInputVal) {
             _state.value = _state.value.copy(
                 isBtnEnabled = false,
                 messageType = DialogValidationMessage.IS_TOO_LOW
@@ -64,10 +68,11 @@ class BuyDialogViewModel @AssistedInject constructor(
             )
         }
 
+        // Input val is set to 0 if nothing entered
         if (enteredVal.isBlank()) {
-            _state.value = _state.value.copy(inputVal = 0.0)
+            _state.value = _state.value.copy(inputVal = BigDecimal(0))
         } else {
-            _state.value = _state.value.copy(inputVal = enteredVal.toDouble())
+            _state.value = _state.value.copy(inputVal = decimalEnteredVal)
         }
         calculateNewBalance()
     }
@@ -77,13 +82,20 @@ class BuyDialogViewModel @AssistedInject constructor(
 
     private fun calculateNewBalance() {
         var usdLeft = usdBalance
-        var cryptoToGet = 0.0
+        var cryptoToGet = BigDecimal(0.0)
 
         if (_state.value.messageType == DialogValidationMessage.IS_VALID) {
             usdLeft = usdBalance - _state.value.inputVal
             // TODO apply updated roundFunction() and provide numOfDigits(int) from fixedCryptoList by symbol to round
-            cryptoToGet = _state.value.inputVal / lastPrice
+            cryptoToGet = _state.value.inputVal.divide(lastPrice, amountToRound, BigDecimal.ROUND_HALF_UP)
         }
+
+        Log.e("TAG", "USD LEFT $cryptoToGet, ${_state.value.inputVal.toString()}, ${lastPrice.toString()}")
+        Log.e("TAG", "USD LEFT ${cryptoToGet.toFloat()}")
+//        Log.e("TAG", "USD LEFT ${cryptoToGet.roundNum(_state.value.amountToRound)}")
+//        Log.e("TAG", "USD LEFT ${cryptoToGet.roundNum(_state.value.amountToRound).toFloat()}")
+//        Log.e("TAG", "USD LEFT ${cryptoToGet.roundNum(_state.value.amountToRound).toFloat().toDouble()}")
+//        Log.e("TAG", "USD LEFT ${cryptoToGet.roundNum(_state.value.amountToRound).toFloat().toString().toDouble()}")
 
         _state.value = _state.value.copy(
             usdLeft = usdLeft.roundNum(),
@@ -91,18 +103,18 @@ class BuyDialogViewModel @AssistedInject constructor(
         )
     }
 
-    private fun getBalance() = repository.getStoredTag(Constants.USD_BALANCE_KEY).toDouble()
+    private fun getBalance() = repository.getStoredTag(Constants.USD_BALANCE_KEY).toBigDecimal().roundNum()
 
     @AssistedFactory
     interface Factory {
-        fun create(symbol: String, lastPrice: Double): BuyDialogViewModel
+        fun create(symbol: String, lastPrice: BigDecimal): BuyDialogViewModel
     }
 
     companion object {
         fun provideFactory(
             assistedFactory: Factory,
             symbol: String,
-            lastPrice: Double
+            lastPrice: BigDecimal
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(symbol, lastPrice) as T

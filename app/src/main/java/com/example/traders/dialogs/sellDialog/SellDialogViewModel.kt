@@ -13,11 +13,12 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.math.BigDecimal
 
 class SellDialogViewModel @AssistedInject constructor(
     val repository: CryptoRepository,
     @Assisted val symbol: String,
-    @Assisted val lastPrice: Double
+    @Assisted val lastPrice: BigDecimal
 ) : ViewModel() {
     private val priceToRound = getPriceToRound()
     private val amountToRound = getAmountToRound()
@@ -33,34 +34,35 @@ class SellDialogViewModel @AssistedInject constructor(
         priceToRound = priceToRound,
         amountToRound = amountToRound
     ))
-
     val state = _state.asStateFlow()
+
     fun validateInput(enteredVal: String) {
+        val decimalInputVal = BigDecimal(enteredVal)
         if (enteredVal.isBlank()) {
             _state.value = _state.value.copy(
                 isBtnEnabled = false,
                 messageType = DialogValidationMessage.IS_EMPTY
             )
-        } else if (enteredVal.toDouble() > this.cryptoBalance) {
+        } else if (decimalInputVal > this.cryptoBalance) {
             _state.value = _state.value.copy(
                 isBtnEnabled = false,
                 messageType = DialogValidationMessage.IS_TOO_HIGH
             )
-        }  else if (enteredVal.toDouble() < _state.value.minInputVal) {
+        }  else if (decimalInputVal < _state.value.minInputVal) {
             _state.value = _state.value.copy(
                 isBtnEnabled = false,
                 messageType = DialogValidationMessage.IS_TOO_LOW
             )
-        } else if (enteredVal.toDouble() in _state.value.minInputVal..this.cryptoBalance) {
+        } else if (decimalInputVal in _state.value.minInputVal..this.cryptoBalance) {
             _state.value = _state.value.copy(
                 isBtnEnabled = true,
                 messageType = DialogValidationMessage.IS_VALID
             )
         }
         if(enteredVal.isBlank()) {
-            _state.value = _state.value.copy(inputVal = 0.0)
+            _state.value = _state.value.copy(inputVal = BigDecimal(0))
         } else {
-            _state.value = _state.value.copy(inputVal = enteredVal.toDouble())
+            _state.value = _state.value.copy(inputVal = decimalInputVal)
         }
         calculateNewBalance()
     }
@@ -76,22 +78,13 @@ class SellDialogViewModel @AssistedInject constructor(
 
     private fun getPriceToRound() = FixedCryptoList.valueOf(symbol).priceToRound
     private fun getAmountToRound() = FixedCryptoList.valueOf(symbol).amountToRound
-
-    private fun getMinCryptoToSell(): Double {
-        return 10.0 / lastPrice
-    }
-
-    private fun getUsdCryptoBalance(): Double {
-        return lastPrice * cryptoBalance
-    }
-
-    private fun getCryptoBalance(): Double {
-        return repository.getStoredTag(symbol).toDouble()
-    }
+    private fun getUsdCryptoBalance() = lastPrice * cryptoBalance
+    private fun getCryptoBalance() = repository.getStoredTag(symbol).toBigDecimal().roundNum(amountToRound)
+    private fun getMinCryptoToSell() = (BigDecimal(10) / lastPrice).roundNum(amountToRound)
 
     private fun calculateNewBalance() {
         var cryptoLeft = cryptoBalance
-        var usdToGet = 0.0
+        var usdToGet = BigDecimal(0)
         if(_state.value.messageType == DialogValidationMessage.IS_VALID) {
             cryptoLeft = cryptoBalance - _state.value.inputVal
             usdToGet = _state.value.inputVal * lastPrice
@@ -107,17 +100,16 @@ class SellDialogViewModel @AssistedInject constructor(
         super.onCleared()
     }
 
-
     @AssistedFactory
     interface Factory {
-        fun create(symbol: String, lastPrice: Double): SellDialogViewModel
+        fun create(symbol: String, lastPrice: BigDecimal): SellDialogViewModel
     }
 
     companion object {
         fun provideFactory(
             assistedFactory: Factory,
             symbol: String,
-            lastPrice: Double
+            lastPrice: BigDecimal
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(symbol, lastPrice) as T

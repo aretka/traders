@@ -10,13 +10,15 @@ import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
 import com.example.traders.databinding.DialogFragmentBuyBinding
 import com.example.traders.dialogs.DialogValidationMessage
-import com.example.traders.roundAndFormatNum
+import com.example.traders.roundAndFormatDouble
+import com.example.traders.roundNum
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class BuyDialogFragment(val lastPrice: Double, val symbol: String) : DialogFragment() {
+class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogFragment() {
 
     @Inject
     lateinit var viewModelAssistedFactory: BuyDialogViewModel.Factory
@@ -24,7 +26,6 @@ class BuyDialogFragment(val lastPrice: Double, val symbol: String) : DialogFragm
     private val viewModel: BuyDialogViewModel by viewModels() {
         BuyDialogViewModel.provideFactory(viewModelAssistedFactory, symbol, lastPrice)
     }
-//    lateinit var binding: FragmentBuyDialogBinding
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
@@ -54,13 +55,13 @@ class BuyDialogFragment(val lastPrice: Double, val symbol: String) : DialogFragm
         usdBalance.text =
             usdBalance.context.getString(
                 R.string.usd_sign,
-                roundAndFormatNum(viewModel.state.value.usdBalance)
+                viewModel.state.value.usdBalance.toString()
             )
 
         cryptoPrice.text =
             cryptoPrice.context.getString(
                 R.string.usd_sign,
-                roundAndFormatNum(lastPrice, viewModel.state.value.priceNumToRound)
+                lastPrice.toString()
             )
 
         cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, symbol)
@@ -95,8 +96,8 @@ class BuyDialogFragment(val lastPrice: Double, val symbol: String) : DialogFragm
         } else {
             validationMessage.text = state.messageType.message
         }
-        usdBalanceLeft.text = roundAndFormatNum(state.usdLeft)
-        cryptoToGet.text = roundAndFormatNum(state.cryptoToGet, state.amountToRound)
+        usdBalanceLeft.text = state.usdLeft.toString()
+        cryptoToGet.text = state.cryptoToGet.toString()
         buyBtn.isEnabled = state.isBtnEnabled
     }
 }
