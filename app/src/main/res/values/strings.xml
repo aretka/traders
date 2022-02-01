@@ -85,5 +85,9 @@
 
     <string name="usd_balance_key">usd_balance_key</string>
 
+    <!--  User profile  -->
+    <string name="portfolio">Portfolio</string>
+    <string name="history">History</string>
+
 </resources>
 

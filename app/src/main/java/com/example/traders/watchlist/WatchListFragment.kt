@@ -23,19 +23,6 @@ import javax.inject.Provider
 @AndroidEntryPoint
 class WatchListFragment : BaseFragment() {
 
-    private val viewModel: WatchListViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        lifecycleScope.launch {
-            viewModel.errorEvent.collect { error ->
-                showError(error.e.message.orEmpty())
-            }
-        }
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,7 +31,6 @@ class WatchListFragment : BaseFragment() {
         val binding = FragmentWatchListBinding.inflate(layoutInflater, container, false)
         setUpTabs(binding.cryptoPageViewer, binding.cryptoTab)
 
-        // Inflate the layout for this fragment
         return binding.root
     }
 
