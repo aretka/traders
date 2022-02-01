@@ -1,22 +1,18 @@
 package com.example.traders.watchlist.allCrypto
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.example.traders.BaseViewModel
 import com.example.traders.ToBinance24DataItem
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.repository.enumContains
-import com.example.traders.returnTickerWithRoundedPrice
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.webSocket.BinanceWSClient
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.java_websocket.client.WebSocketClient
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,7 +53,14 @@ class AllCryptoViewModel @Inject constructor(
 
     private suspend fun updateCryptoData() {
         val cryptoPrices = repository.getBinance24Data().body() ?: return
-        val extractedPricesList = cryptoPrices.filter { el -> enumContains<FixedCryptoList>(el.symbol.replace("USDT", "")) }
+        val extractedPricesList = cryptoPrices.filter { el ->
+            enumContains<FixedCryptoList>(
+                el.symbol.replace(
+                    "USDT",
+                    ""
+                )
+            )
+        }
         _state.value = _state.value.copy(binanceCryptoData = extractedPricesList)
     }
 

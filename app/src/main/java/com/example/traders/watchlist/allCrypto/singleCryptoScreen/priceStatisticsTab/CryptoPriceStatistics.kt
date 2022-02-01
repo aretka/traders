@@ -14,7 +14,7 @@ import com.example.traders.BaseFragment
 import com.example.traders.R
 import com.example.traders.databinding.FragmentCryptoItemPriceStatisticsBinding
 import com.example.traders.getCryptoPriceChangeText
-import com.example.traders.roundAndFormatNum
+import com.example.traders.roundAndFormatDouble
 import com.example.traders.watchlist.cryptoData.cryptoStatsData.*
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -81,17 +81,17 @@ class CryptoPriceStatistics(val id: String) : BaseFragment() {
 
     private fun fillMainSectionData(binding: FragmentCryptoItemPriceStatisticsBinding, data: Data) {
         val priceChange =
-            roundAndFormatNum(data.market_data.ohlcv_last_24_hour.open - data.market_data.ohlcv_last_24_hour.close)
-        binding.cryptoPrice.text = "$ ${roundAndFormatNum(data.market_data.price_usd)}"
+            roundAndFormatDouble(data.market_data.ohlcv_last_24_hour.open - data.market_data.ohlcv_last_24_hour.close)
+        binding.cryptoPrice.text = "$ ${roundAndFormatDouble(data.market_data.price_usd)}"
         getCryptoPriceChangeText(
             priceChange,
-            roundAndFormatNum(data.market_data.percent_change_usd_last_24_hours),
+            roundAndFormatDouble(data.market_data.percent_change_usd_last_24_hours),
             binding.cryptoPriceChange
         )
-        binding.marketDominance.text = "${roundAndFormatNum(data.marketcap.marketcap_dominance_percent)}%"
-        binding.marketCap.text = "$ ${roundAndFormatNum(data.marketcap.current_marketcap_usd)}"
-        binding.volume1h.text = "$ ${roundAndFormatNum(data.market_data.ohlcv_last_1_hour.volume)}"
-        binding.volume24h.text = "$ ${roundAndFormatNum(data.market_data.ohlcv_last_24_hour.volume)}"
+        binding.marketDominance.text = "${roundAndFormatDouble(data.marketcap.marketcap_dominance_percent)}%"
+        binding.marketCap.text = "$ ${roundAndFormatDouble(data.marketcap.current_marketcap_usd)}"
+        binding.volume1h.text = "$ ${roundAndFormatDouble(data.market_data.ohlcv_last_1_hour.volume)}"
+        binding.volume24h.text = "$ ${roundAndFormatDouble(data.market_data.ohlcv_last_24_hour.volume)}"
         Glide.with(binding.cryptoImage)
             .load("https://cryptologos.cc/logos/${data.slug}-${data.symbol.lowercase()}-logo.png?v=014")
             .placeholder(R.drawable.ic_image_error)
@@ -106,10 +106,10 @@ class CryptoPriceStatistics(val id: String) : BaseFragment() {
         roiDataLast1Year: TextView,
         roiData: RoiData
     ) {
-        roiDataLast1Week.text = roundAndFormatNum(roiData.percent_change_last_1_week)
-        roiDataLast1Month.text = roundAndFormatNum(roiData.percent_change_last_1_month)
-        roiDataLast3Months.text = roundAndFormatNum(roiData.percent_change_last_3_months)
-        roiDataLast1Year.text = roundAndFormatNum(roiData.percent_change_last_1_year)
+        roiDataLast1Week.text = roundAndFormatDouble(roiData.percent_change_last_1_week)
+        roiDataLast1Month.text = roundAndFormatDouble(roiData.percent_change_last_1_month)
+        roiDataLast3Months.text = roundAndFormatDouble(roiData.percent_change_last_3_months)
+        roiDataLast1Year.text = roundAndFormatDouble(roiData.percent_change_last_1_year)
     }
 
     private fun fillATH(
@@ -120,11 +120,11 @@ class CryptoPriceStatistics(val id: String) : BaseFragment() {
         athBreakEvenMultiple: TextView,
         athData: AllTimeHigh
     ) {
-        athPrice.text = roundAndFormatNum(athData.price) + '$'
+        athPrice.text = roundAndFormatDouble(athData.price) + '$'
         athDate.text = athData.at
         athDaysSince.text = athData.days_since.toString()
-        athPercentDown.text = roundAndFormatNum(athData.percent_down) + '%'
-        athBreakEvenMultiple.text = roundAndFormatNum(athData.breakeven_multiple)
+        athPercentDown.text = roundAndFormatDouble(athData.percent_down) + '%'
+        athBreakEvenMultiple.text = roundAndFormatDouble(athData.breakeven_multiple)
     }
 
     private fun fillLast24Hour(
@@ -135,11 +135,11 @@ class CryptoPriceStatistics(val id: String) : BaseFragment() {
         last24hourVolume: TextView,
         cryptoStats: OhlcvLast24Hour
     ) {
-        last24hourOpen.text = roundAndFormatNum(cryptoStats.open) + '$'
-        last24hourHigh.text = roundAndFormatNum(cryptoStats.high) + '$'
-        last24hourLow.text = roundAndFormatNum(cryptoStats.low) + '$'
-        last24hourClose.text = roundAndFormatNum(cryptoStats.close) + '$'
-        last24hourVolume.text = roundAndFormatNum(cryptoStats.volume) + '$'
+        last24hourOpen.text = roundAndFormatDouble(cryptoStats.open) + '$'
+        last24hourHigh.text = roundAndFormatDouble(cryptoStats.high) + '$'
+        last24hourLow.text = roundAndFormatDouble(cryptoStats.low) + '$'
+        last24hourClose.text = roundAndFormatDouble(cryptoStats.close) + '$'
+        last24hourVolume.text = roundAndFormatDouble(cryptoStats.volume) + '$'
     }
 
     private fun fillLast1Hour(
@@ -150,11 +150,11 @@ class CryptoPriceStatistics(val id: String) : BaseFragment() {
         last1hourVolume: TextView,
         cryptoStats: OhlcvLast1Hour
     ) {
-        last1hourOpen.text = roundAndFormatNum(cryptoStats.open) + '$'
-        last1hourHigh.text = roundAndFormatNum(cryptoStats.high) + '$'
-        last1hourLow.text = roundAndFormatNum(cryptoStats.low) + '$'
-        last1hourClose.text = roundAndFormatNum(cryptoStats.close) + '$'
-        last1hourVolume.text = roundAndFormatNum(cryptoStats.volume) + '$'
+        last1hourOpen.text = roundAndFormatDouble(cryptoStats.open) + '$'
+        last1hourHigh.text = roundAndFormatDouble(cryptoStats.high) + '$'
+        last1hourLow.text = roundAndFormatDouble(cryptoStats.low) + '$'
+        last1hourClose.text = roundAndFormatDouble(cryptoStats.close) + '$'
+        last1hourVolume.text = roundAndFormatDouble(cryptoStats.volume) + '$'
     }
 
     private fun expand(v: View) {
