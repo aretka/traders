@@ -53,19 +53,20 @@ class CryptoRepository @Inject constructor(
     // Binance api
     suspend fun checkServerTime() = binanceApi.checkServerTime()
     suspend fun getBinance24Data() = binanceApi.get24HourData()
+    suspend fun getBinanceTickerBySymbol(symbol: String) = binanceApi.getBinanceTickerBySymbol(symbol)
 
     // Shared preferences
-    fun getStoredTag(symbol: String): Float {
-        return sharedPrefs.getFloat(symbol, 0F)
-    }
+    fun getStoredTag(symbol: String) = sharedPrefs.getFloat(symbol, 0F)
     fun setStoredPrice(symbol: String, newPrice: Float) {
         sharedPrefs.edit().putFloat(symbol, newPrice).apply()
     }
 
     // Room Database
     suspend fun insertCrypto(crypto: Crypto) = cryptoDao.insertCrypto(crypto)
+    suspend fun deleteCrypto(crypto: Crypto) = cryptoDao.deleteCrypto(crypto)
     suspend fun getAllCryptoPortfolio() = cryptoDao.getAllCrypto()
     suspend fun getCryptoBySymbol(symbol: String) = cryptoDao.getCryptoBySymbol(symbol)
+    suspend fun deleteAllCryptoFromDb() = cryptoDao.deleteAllCryptoFromDb()
 
     companion object {
         const val REFRESH_INTERVAL_MS = 10000L
