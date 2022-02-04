@@ -88,6 +88,10 @@
     <!--  User profile  -->
     <string name="portfolio">Portfolio</string>
     <string name="history">History</string>
+    <string name="asset_allocation">Asset allocation</string>
+    <string name="deposit">Deposit</string>
+    <string name="withdraw">Withdraw</string>
+    <string name="total_balance">Total balance:</string>
 
 </resources>
 
