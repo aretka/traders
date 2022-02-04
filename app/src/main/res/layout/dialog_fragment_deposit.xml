@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="20dp">
+    <TextView
+        android:id="@+id/title"
+        android:paddingBottom="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/deposit_usd"
+        android:textAlignment="center"
+        android:textSize="@dimen/medium_text_size"
+        android:fontFamily="@font/roboto_bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        style="@style/DialogLabel"
+        app:layout_constraintBottom_toTopOf="@id/usd_input"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/deposit_input_label" />
+    
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/usd_input"
+        android:inputType="numberDecimal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        android:digits="0123456789." />
+
+    <TextView
+        android:id="@+id/validation_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/usd_input"
+        tools:text="Something is wrong"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/validation_message"
+        android:weightSum="2"
+        android:layout_marginTop="15dp">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/deposit_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/deposit_btn_layout"
+            android:fontFamily="@font/roboto_bold"
+            android:textSize="@dimen/medium_text_size"
+            android:textColor="@color/white"
+            android:enabled="false"
+            android:text="@string/deposit"
+            android:layout_weight="1"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/cancel_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/light_gray"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/cancel"
+            android:textSize="@dimen/small_text_size"
+            android:background="@drawable/cancel_btn_layout"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

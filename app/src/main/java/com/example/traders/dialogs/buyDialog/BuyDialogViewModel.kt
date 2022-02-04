@@ -57,7 +57,14 @@ class BuyDialogViewModel @AssistedInject constructor(
     }
 
     fun validateInput(enteredVal: String) {
-        val decimalEnteredVal = BigDecimal(enteredVal)
+        val decimalEnteredVal: BigDecimal
+
+        if(enteredVal.isNotBlank()) {
+            decimalEnteredVal = BigDecimal(enteredVal)
+        } else {
+            decimalEnteredVal = BigDecimal(0)
+        }
+
         if (enteredVal.isBlank()) {
             _state.value = _state.value.copy(
                 isBtnEnabled = false,

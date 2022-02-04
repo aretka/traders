@@ -40,7 +40,14 @@ class SellDialogViewModel @AssistedInject constructor(
     }
 
     fun validateInput(enteredVal: String) {
-        val decimalInputVal = BigDecimal(enteredVal)
+        val decimalInputVal: BigDecimal
+
+        if(enteredVal.isNotBlank()) {
+            decimalInputVal = BigDecimal(enteredVal)
+        } else {
+            decimalInputVal = BigDecimal(0)
+        }
+
         if (enteredVal.isBlank()) {
             _state.value = _state.value.copy(
                 isBtnEnabled = false,
@@ -68,6 +75,7 @@ class SellDialogViewModel @AssistedInject constructor(
         } else {
             _state.value = _state.value.copy(inputVal = decimalInputVal)
         }
+
         calculateNewBalance()
     }
 

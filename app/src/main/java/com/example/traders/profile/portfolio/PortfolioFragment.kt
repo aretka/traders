@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.traders.BaseFragment
 import com.example.traders.R
 import com.example.traders.databinding.FragmentPortfolioBinding
+import com.example.traders.dialogs.depositDialog.DepositDialogFragment
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -30,6 +31,7 @@ class PortfolioFragment: BaseFragment() {
         Log.e("TAG", "PARENT FRAGMENT ${parentFragment}")
         val binding = FragmentPortfolioBinding.inflate(inflater, container, false)
         binding.setUpPieChart()
+        binding.setUpClickListeners()
         lifecycleScope.launch {
             viewModel.state.collect {
                 binding.updateData(it)
@@ -67,5 +69,15 @@ class PortfolioFragment: BaseFragment() {
         }
     }
 
+    private fun FragmentPortfolioBinding.setUpClickListeners() {
+        depositBtn.setOnClickListener {
+            openDialog()
+        }
+    }
+
+    private fun openDialog() {
+        val depositDialog = DepositDialogFragment()
+        depositDialog.show(parentFragmentManager, "deposit_dialog")
+    }
 }
 

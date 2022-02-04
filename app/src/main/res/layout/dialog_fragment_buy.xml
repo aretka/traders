@@ -162,7 +162,7 @@
             android:layout_marginEnd="10dp"
             android:textColor="@color/light_gray"
             android:fontFamily="@font/roboto_medium"
-            android:text="cancel"
+            android:text="@string/cancel"
             android:textSize="@dimen/small_text_size"
             android:background="@drawable/cancel_btn_layout"
             android:layout_weight="1"/>
