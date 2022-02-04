@@ -58,7 +58,6 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
 
         cryptoBalanceLabel.text =
             cryptoBalanceLabel.context.getString(R.string.crypto_balance_label, symbol)
-        cryptoBalance.text = viewModel.state.value.cryptoBalance.toString()
 
         usdToGetLabel.text = usdToGetLabel.context.getString(R.string.usd_to_get_label)
         usdToGet.text = viewModel.state.value.usdToGet.toString()
@@ -83,7 +82,7 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
         }
 
         maxBtn.setOnClickListener {
-            priceInputField.setText(viewModel.state.value.cryptoBalance.toString())
+            priceInputField.setText(viewModel.state.value.cryptoBalance?.amount.toString() ?: "0")
         }
     }
 
@@ -93,6 +92,7 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
         } else {
             validationMessage.text = state.messageType.message
         }
+        cryptoBalance.text = viewModel.state.value.cryptoBalance?.amount.toString() ?: ""
         sellBtn.isEnabled = state.isBtnEnabled
         usdToGet.text = state.usdToGet.toString()
         cryptoBalanceLeft.text = state.cryptoLeft.toString()
