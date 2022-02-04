@@ -1,12 +1,14 @@
 package com.example.traders.dialogs.buyDialog
 
+import com.example.traders.database.Crypto
 import com.example.traders.dialogs.DialogValidationMessage
 import java.math.BigDecimal
 
 data class BuyState(
     val amountToRound: Int = 2,
     val priceNumToRound: Int = 2,
-    val usdBalance: BigDecimal = BigDecimal(0.0),
+    val usdBalance: Crypto = Crypto(symbol = "USD"),
+    val cryptoBalance: Crypto? = null,
     val inputVal: BigDecimal = BigDecimal(0.0),
     val minInputVal: BigDecimal = BigDecimal(10.0),
     val isBtnEnabled: Boolean = false,

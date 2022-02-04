@@ -1,9 +1,9 @@
 package com.example.traders.dialogs.buyDialog
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.traders.dialogs.Constants
+import com.example.traders.BaseViewModel
+import com.example.traders.database.Crypto
 import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.roundNum
@@ -13,35 +13,47 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
-import java.math.RoundingMode
 
 class BuyDialogViewModel @AssistedInject constructor(
     val repository: CryptoRepository,
     @Assisted val symbol: String,
     @Assisted val lastPrice: BigDecimal
-) : ViewModel() {
+) : BaseViewModel() {
     private val priceToRound = getPriceToRound()
     private val amountToRound = getAmountToRound()
-    private val usdBalance = getBalance()
 
     private val _state = MutableStateFlow(BuyState(
-        usdBalance = usdBalance,
         priceNumToRound = priceToRound,
         amountToRound = amountToRound
     ))
     val state = _state.asStateFlow()
 
+    init {
+        getUsdBalance()
+        getCryptoBalance()
+    }
+
     fun updateBalance() {
-//         updates crypto balance
-        repository.setStoredPrice(Constants.USD_BALANCE_KEY, _state.value.usdLeft.toFloat())
-//         updates usd balance
-        val newCryptoBalance = repository.getStoredTag(symbol) + _state.value.cryptoToGet.toFloat()
-        repository.setStoredPrice(symbol, newCryptoBalance)
+        //Update Crypto balance
+        launch{
+            _state.value.cryptoBalance?.let {
+                val newCryptoBalance = _state.value.cryptoToGet + it.amount
+                repository.insertCrypto(it.copy(amount = newCryptoBalance))
+            }
+        }
+
+        //Update USD balance
+        launch {
+            repository.insertCrypto(_state.value.usdBalance.copy(amount = _state.value.usdLeft))
+        }
     }
 
     fun add1000UsdToBalance() {
-        repository.setStoredPrice(Constants.USD_BALANCE_KEY, 1000F)
+        launch {
+            repository.insertCrypto(_state.value.usdBalance.copy(amount = BigDecimal(1000)))
+        }
     }
 
     fun validateInput(enteredVal: String) {
@@ -51,7 +63,7 @@ class BuyDialogViewModel @AssistedInject constructor(
                 isBtnEnabled = false,
                 messageType = DialogValidationMessage.IS_EMPTY
             )
-        } else if (decimalEnteredVal > usdBalance) {
+        } else if (decimalEnteredVal > _state.value.usdBalance.amount) {
             _state.value = _state.value.copy(
                 isBtnEnabled = false,
                 messageType = DialogValidationMessage.IS_TOO_HIGH
@@ -81,21 +93,14 @@ class BuyDialogViewModel @AssistedInject constructor(
     private fun getAmountToRound() = FixedCryptoList.valueOf(symbol).amountToRound
 
     private fun calculateNewBalance() {
-        var usdLeft = usdBalance
+        var usdLeft = _state.value.usdBalance.amount
         var cryptoToGet = BigDecimal(0.0)
 
         if (_state.value.messageType == DialogValidationMessage.IS_VALID) {
-            usdLeft = usdBalance - _state.value.inputVal
+            usdLeft -= _state.value.inputVal
             // TODO apply updated roundFunction() and provide numOfDigits(int) from fixedCryptoList by symbol to round
             cryptoToGet = _state.value.inputVal.divide(lastPrice, amountToRound, BigDecimal.ROUND_HALF_UP)
         }
-
-        Log.e("TAG", "USD LEFT $cryptoToGet, ${_state.value.inputVal.toString()}, ${lastPrice.toString()}")
-        Log.e("TAG", "USD LEFT ${cryptoToGet.toFloat()}")
-//        Log.e("TAG", "USD LEFT ${cryptoToGet.roundNum(_state.value.amountToRound)}")
-//        Log.e("TAG", "USD LEFT ${cryptoToGet.roundNum(_state.value.amountToRound).toFloat()}")
-//        Log.e("TAG", "USD LEFT ${cryptoToGet.roundNum(_state.value.amountToRound).toFloat().toDouble()}")
-//        Log.e("TAG", "USD LEFT ${cryptoToGet.roundNum(_state.value.amountToRound).toFloat().toString().toDouble()}")
 
         _state.value = _state.value.copy(
             usdLeft = usdLeft.roundNum(),
@@ -103,7 +108,19 @@ class BuyDialogViewModel @AssistedInject constructor(
         )
     }
 
-    private fun getBalance() = repository.getStoredTag(Constants.USD_BALANCE_KEY).toBigDecimal().roundNum()
+    private fun getUsdBalance() {
+        launch {
+            val usdBalance = repository.getCryptoBySymbol("USD") ?: return@launch
+            _state.value = _state.value.copy(usdBalance = usdBalance)
+        }
+    }
+
+    private fun getCryptoBalance() {
+        launch {
+            val cryptoBalance = repository.getCryptoBySymbol(symbol) ?: Crypto(symbol = symbol)
+            _state.value = _state.value.copy(cryptoBalance = cryptoBalance)
+        }
+    }
 
     @AssistedFactory
     interface Factory {

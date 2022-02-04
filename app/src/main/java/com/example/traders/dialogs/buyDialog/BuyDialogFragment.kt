@@ -52,11 +52,6 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogF
 
     private fun DialogFragmentBuyBinding.initUI() {
         header.text = header.context.getString(R.string.buy_crypto, symbol)
-        usdBalance.text =
-            usdBalance.context.getString(
-                R.string.usd_sign,
-                viewModel.state.value.usdBalance.toString()
-            )
 
         cryptoPrice.text =
             cryptoPrice.context.getString(
@@ -85,7 +80,7 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogF
         }
 
         maxBtn.setOnClickListener {
-            priceInputField.setText(viewModel.state.value.usdBalance.toString())
+            priceInputField.setText(viewModel.state.value.usdBalance.amount.toString())
         }
     }
 
@@ -96,6 +91,11 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogF
         } else {
             validationMessage.text = state.messageType.message
         }
+        usdBalance.text =
+            usdBalance.context.getString(
+                R.string.usd_sign,
+                viewModel.state.value.usdBalance.amount.toString()
+            )
         usdBalanceLeft.text = state.usdLeft.toString()
         cryptoToGet.text = state.cryptoToGet.toString()
         buyBtn.isEnabled = state.isBtnEnabled
