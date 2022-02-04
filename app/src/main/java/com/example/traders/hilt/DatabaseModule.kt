@@ -2,6 +2,7 @@ package com.example.traders.hilt
 
 import android.content.Context
 import androidx.room.Room
+import com.example.traders.database.Converters
 import com.example.traders.database.CryptoDatabase
 import com.example.traders.database.CryptoDatabaseDao
 import dagger.Module
@@ -23,13 +24,20 @@ class DatabaseModule {
 
     @Singleton
     @Provides
+    fun provideConverters() = Converters()
+
+    @Singleton
+    @Provides
     fun provideYourDatabase(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
+        convertersInstance: Converters
     ): CryptoDatabase {
         return Room.databaseBuilder(
             context,
             CryptoDatabase::class.java,
             "traders_database"
-        ).build()
+        ).fallbackToDestructiveMigration()
+         .addTypeConverter(convertersInstance)
+         .build()
     }
 }

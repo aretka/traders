@@ -1,15 +1,17 @@
 package com.example.traders.database
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 import java.io.Serializable
+import java.math.BigDecimal
 
 @Entity
 data class Crypto(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
 
+    @ColumnInfo(name = "symbol")
     val symbol: String,
-    val amount: Double = 0.0
+
+    @ColumnInfo(name = "amount")
+    val amount: BigDecimal = BigDecimal(0),
 )
