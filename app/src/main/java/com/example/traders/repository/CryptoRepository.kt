@@ -62,9 +62,10 @@ class CryptoRepository @Inject constructor(
     }
 
     // Room Database
+    suspend fun getAllCryptoPortfolio() = cryptoDao.getAllCrypto()
+    fun getLiveAllCryptoPortfolio() = cryptoDao.getAllCryptoLive()
     suspend fun insertCrypto(crypto: Crypto) = cryptoDao.insertCrypto(crypto)
     suspend fun deleteCrypto(crypto: Crypto) = cryptoDao.deleteCrypto(crypto)
-    suspend fun getAllCryptoPortfolio() = cryptoDao.getAllCrypto()
     suspend fun getCryptoBySymbol(symbol: String) = cryptoDao.getCryptoBySymbol(symbol)
     suspend fun deleteAllCryptoFromDb() = cryptoDao.deleteAllCryptoFromDb()
 
