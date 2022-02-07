@@ -50,12 +50,6 @@ class BuyDialogViewModel @AssistedInject constructor(
         }
     }
 
-    fun add1000UsdToBalance() {
-        launch {
-            repository.insertCrypto(_state.value.usdBalance.copy(amount = BigDecimal(1000)))
-        }
-    }
-
     fun validateInput(enteredVal: String) {
         val decimalEnteredVal: BigDecimal
 
@@ -88,11 +82,8 @@ class BuyDialogViewModel @AssistedInject constructor(
         }
 
         // Input val is set to 0 if nothing entered
-        if (enteredVal.isBlank()) {
-            _state.value = _state.value.copy(inputVal = BigDecimal(0))
-        } else {
-            _state.value = _state.value.copy(inputVal = decimalEnteredVal)
-        }
+        _state.value = _state.value.copy(inputVal = decimalEnteredVal)
+
         calculateNewBalance()
     }
 

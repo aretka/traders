@@ -69,8 +69,6 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogF
         }
 
         cancelBtn.setOnClickListener {
-            // TODO remove this function later
-            viewModel.add1000UsdToBalance()
             dialog.dismiss()
         }
 

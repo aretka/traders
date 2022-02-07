@@ -70,11 +70,7 @@ class SellDialogViewModel @AssistedInject constructor(
             )
         }
 
-        if(enteredVal.isBlank()) {
-            _state.value = _state.value.copy(inputVal = BigDecimal(0))
-        } else {
-            _state.value = _state.value.copy(inputVal = decimalInputVal)
-        }
+        _state.value = _state.value.copy(inputVal = decimalInputVal)
 
         calculateNewBalance()
     }
