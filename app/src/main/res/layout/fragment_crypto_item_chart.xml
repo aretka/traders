@@ -107,34 +107,34 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:weightSum="2"
-        android:paddingStart="35dp"
-        android:paddingEnd="35dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chart_btns_container">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buy_btn"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="35dp"
             android:layout_weight="1"
             android:background="@drawable/buy_btn_layout"
             android:text="BUY"
             android:textSize="@dimen/medium_text_size"
             android:fontFamily="@font/roboto_bold"
             android:textColor="@color/white"
-            android:layout_margin="30dp"/>
+            android:layout_margin="20dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/sell_btn"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="35dp"
             android:layout_weight="1"
             android:background="@drawable/sell_btn_layout"
             android:textSize="@dimen/medium_text_size"
             android:fontFamily="@font/roboto_bold"
             android:textColor="@color/white"
             android:text="SELL"
-            android:layout_margin="30dp"/>
+            android:layout_margin="20dp"/>
     </LinearLayout>
 
 

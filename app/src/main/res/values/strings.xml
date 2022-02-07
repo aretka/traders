@@ -90,7 +90,7 @@
     <string name="history">History</string>
     <string name="asset_allocation">Asset allocation</string>
     <string name="deposit">Deposit</string>
-    <string name="withdraw">Withdraw</string>
+    <string name="reset_db">Reset balance</string>
     <string name="total_balance">Total balance:</string>
     <string name="deposit_usd">Deposit USD</string>
     <string name="deposit_input_label">Enter USD amount to deposit</string>

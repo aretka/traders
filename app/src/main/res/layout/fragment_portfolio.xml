@@ -91,7 +91,7 @@
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:textColor="@color/white"
-                android:text="@string/withdraw"
+                android:text="@string/reset_db"
                 android:layout_weight="1"
                 android:layout_margin="15dp"
                 android:background="@drawable/withdraw_btn_layout"/>

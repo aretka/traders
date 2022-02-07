@@ -45,12 +45,14 @@ class CryptoChartFragment(val slug: String) : BaseFragment() {
         lifecycleScope.launch {
             viewModel.chartState.collect { state ->
                 binding.setHeaderPrices(state.tickerData)
+                binding.updateBuySellBtnAccessibility(state)
                 setBtnStyles(state)
                 updateChart(state)
             }
         }
         return binding.root
     }
+
 
     private fun FragmentCryptoItemChartBinding.setHeaderPrices(priceTicker: PriceTickerData?) {
         priceTicker?.let {
@@ -113,6 +115,16 @@ class CryptoChartFragment(val slug: String) : BaseFragment() {
         month12Btn.setOnClickListener { viewModel.onChartBtnSelected(BtnId.MONTH12_BTN) }
         buyBtn.setOnClickListener { showBuyDialog() }
         sellBtn.setOnClickListener { showSellDialog() }
+    }
+
+    private fun FragmentCryptoItemChartBinding.updateBuySellBtnAccessibility(state: ChartState) {
+        if(state.tickerData != null) {
+            buyBtn.isEnabled = true
+            sellBtn.isEnabled = true
+        } else {
+            buyBtn.isEnabled = false
+            sellBtn.isEnabled = false
+        }
     }
 
     private fun showSellDialog() {
