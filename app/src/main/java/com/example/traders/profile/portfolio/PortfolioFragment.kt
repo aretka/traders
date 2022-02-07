@@ -32,9 +32,18 @@ class PortfolioFragment: BaseFragment() {
         val binding = FragmentPortfolioBinding.inflate(inflater, container, false)
         binding.setUpPieChart()
         binding.setUpClickListeners()
+
+        // Update portfolio on list change
+        viewModel.livePortfolioList.observe(this) {
+            it?.let {
+                viewModel.updateData()
+                Log.e("ROOM_LIVE_DATA", "Size: ${it.size}")
+            }
+        }
+
         lifecycleScope.launch {
             viewModel.state.collect {
-                binding.updateData(it)
+                binding.updateUiData(it)
             }
         }
         return binding.root
@@ -51,7 +60,7 @@ class PortfolioFragment: BaseFragment() {
         secondPiechart.legend.orientation = Legend.LegendOrientation.VERTICAL
     }
 
-    private fun FragmentPortfolioBinding.updateData(state: PortfolioState) {
+    private fun FragmentPortfolioBinding.updateUiData(state: PortfolioState) {
         if(state.chartReadyForUpdate) {
             val pieDataSet = PieDataSet(state.chartData, "Portfolio")
             pieDataSet.setColors(state.colors)
@@ -61,10 +70,10 @@ class PortfolioFragment: BaseFragment() {
             viewModel.chartUpdated()
         }
 
-        state.portfolioInUsd?.let {
+        state.totalPortfolioBalance?.let {
             totalBalance.text = totalBalance.context.getString(
                 R.string.usd_sign,
-                state.portfolioInUsd.toString()
+                state.totalPortfolioBalance.toString()
             )
         }
     }
@@ -72,6 +81,9 @@ class PortfolioFragment: BaseFragment() {
     private fun FragmentPortfolioBinding.setUpClickListeners() {
         depositBtn.setOnClickListener {
             openDialog()
+        }
+        withdrawBtn.setOnClickListener {
+            viewModel.deleteAllDbRows()
         }
     }
 

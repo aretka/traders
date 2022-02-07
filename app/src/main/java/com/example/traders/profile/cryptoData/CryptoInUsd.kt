@@ -4,5 +4,6 @@ import java.math.BigDecimal
 
 data class CryptoInUsd(
     val symbol: String,
-    val usdVal: BigDecimal
+    val amount: BigDecimal,
+    val amountInUsd: BigDecimal
 )
