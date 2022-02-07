@@ -8,14 +8,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.traders.databinding.DialogFragmentDepositBinding
-import com.example.traders.databinding.DialogFragmentSellBinding
-import com.example.traders.dialogs.DialogValidationMessage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class DepositDialogFragment: DialogFragment() {
-    private val viewModel: DialogViewModel by viewModels()
+    private val viewModel: DepositViewModel by viewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
@@ -27,7 +25,7 @@ class DepositDialogFragment: DialogFragment() {
             val dialog = builder.setView(view.root)
                 .setCancelable(true)
                 .create()
-            view.setUpListeners()
+            view.setUpListeners(dialog)
             lifecycleScope.launchWhenCreated {
                 viewModel.state.collect {
                     view.updateFields(it)
@@ -38,9 +36,18 @@ class DepositDialogFragment: DialogFragment() {
         } ?: throw IllegalStateException("Activity cannot be null")
     }
 
-    private fun DialogFragmentDepositBinding.setUpListeners() {
+    private fun DialogFragmentDepositBinding.setUpListeners(dialog: AlertDialog) {
         usdInput.addTextChangedListener { enteredVal ->
             viewModel.validateInput(enteredVal.toString())
+        }
+
+        depositBtn.setOnClickListener {
+            viewModel.updateBalance()
+            dialog.dismiss()
+        }
+
+        cancelBtn.setOnClickListener {
+            dialog.dismiss()
         }
     }
 
