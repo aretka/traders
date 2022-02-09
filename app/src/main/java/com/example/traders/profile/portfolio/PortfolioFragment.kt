@@ -11,6 +11,7 @@ import com.example.traders.BaseFragment
 import com.example.traders.R
 import com.example.traders.databinding.FragmentPortfolioBinding
 import com.example.traders.dialogs.depositDialog.DepositDialogFragment
+import com.example.traders.profile.adapters.PortfolioListAdapter
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class PortfolioFragment: BaseFragment() {
     val viewModel: PortfolioViewModel by viewModels()
+    private lateinit var adapter: PortfolioListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,12 +34,12 @@ class PortfolioFragment: BaseFragment() {
         val binding = FragmentPortfolioBinding.inflate(inflater, container, false)
         binding.setUpPieChart()
         binding.setUpClickListeners()
+        binding.setUpAdapter()
 
         // Update portfolio on list change
         viewModel.livePortfolioList.observe(this) {
             it?.let {
                 viewModel.updateData()
-                Log.e("ROOM_LIVE_DATA", "Size: ${it.size}")
             }
         }
 
@@ -68,6 +70,7 @@ class PortfolioFragment: BaseFragment() {
             secondPiechart.invalidate()
             secondPiechart.animate()
             viewModel.chartUpdated()
+            adapter.submitList(state.cryptoListInUsd)
         }
 
         state.totalPortfolioBalance?.let {
@@ -90,6 +93,11 @@ class PortfolioFragment: BaseFragment() {
     private fun openDialog() {
         val depositDialog = DepositDialogFragment()
         depositDialog.show(parentFragmentManager, "deposit_dialog")
+    }
+
+    private fun FragmentPortfolioBinding.setUpAdapter() {
+        adapter = PortfolioListAdapter()
+        portfolioList.adapter = adapter
     }
 }
 

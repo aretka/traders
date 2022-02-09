@@ -29,7 +29,8 @@ enum class FixedCryptoList(val slug: String, val logoUrl: String, val amountToRo
     HBAR("hedera-hashgraph", "https://cryptologos.cc/logos/hedera-hbar-logo.png?v=014", 2, 3),
     VET("vechain", "https://cryptologos.cc/logos/vechain-vet-logo.png?v=014", 1, 4),
     SAND("thesandbox", "https://cryptologos.cc/logos/the-sandbox-sand-logo.png?v=014", 2, 3),
-    ETC("ethereum-classic", "https://cryptologos.cc/logos/ethereum-classic-etc-logo.png?v=014");
+    ETC("ethereum-classic", "https://cryptologos.cc/logos/ethereum-classic-etc-logo.png?v=014"),
+    USD("US-dollars", "https://cdn-icons.flaticon.com/png/512/1140/premium/1140418.png?token=exp=1644242774~hmac=df443bdc0ba0807b1d59e4cf02d8209b");
 
     companion object {
         fun getEnumName(value: String): FixedCryptoList? = values().find { it.slug == value }
