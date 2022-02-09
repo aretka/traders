@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.traders.database.Converters
 import com.example.traders.database.CryptoDatabase
 import com.example.traders.database.CryptoDatabaseDao
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +15,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class DatabaseModule {
+object DatabaseModule {
 
     @Singleton
     @Provides

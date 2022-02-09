@@ -6,10 +6,10 @@ import androidx.room.*
 @Dao
 interface CryptoDatabaseDao {
     @Query("SELECT * FROM crypto")
-    suspend fun getAllCrypto(): List<Crypto>
+    fun getAllCryptoLive(): LiveData<List<Crypto>>
 
     @Query("SELECT * FROM crypto")
-    fun getAllCryptoLive(): LiveData<List<Crypto>>
+    suspend fun getAllCrypto(): List<Crypto>
 
     @Query("SELECT * FROM crypto WHERE symbol=:symbol")
     suspend fun getCryptoBySymbol(symbol: String): Crypto?
