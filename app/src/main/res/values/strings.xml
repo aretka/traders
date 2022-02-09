@@ -97,6 +97,7 @@
     <string name="cancel">Cancel</string>
     <string name="portfolio_list_header">Crypto portfolio list</string>
     <string name="empty_list_message">Deposit USD to begin trading</string>
+    <string name="empty_transaction_list_message">No transactions yet</string>
 
 </resources>
 

@@ -38,8 +38,8 @@ class PortfolioFragment: BaseFragment() {
         // Update portfolio on list change
         viewModel.livePortfolioList.observe(this) {
             it?.let {
-                viewModel.updateStateData()
                 binding.updateMessageVisibility(it)
+                viewModel.updateStateData()
             }
         }
 
