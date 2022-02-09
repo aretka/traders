@@ -2,7 +2,9 @@ package com.example.traders.dialogs.depositDialog
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
+import androidx.annotation.RequiresApi
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -15,6 +17,7 @@ import kotlinx.coroutines.flow.collect
 class DepositDialogFragment: DialogFragment() {
     private val viewModel: DepositViewModel by viewModels()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
 
@@ -36,6 +39,7 @@ class DepositDialogFragment: DialogFragment() {
         } ?: throw IllegalStateException("Activity cannot be null")
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun DialogFragmentDepositBinding.setUpListeners(dialog: AlertDialog) {
         usdInput.addTextChangedListener { enteredVal ->
             viewModel.validateInput(enteredVal.toString())
@@ -43,6 +47,7 @@ class DepositDialogFragment: DialogFragment() {
 
         depositBtn.setOnClickListener {
             viewModel.updateBalance()
+            viewModel.insertTransaction()
             dialog.dismiss()
         }
 

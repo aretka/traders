@@ -1,8 +1,13 @@
 package com.example.traders.dialogs.depositDialog
 
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import com.example.traders.BaseViewModel
 import com.example.traders.database.Crypto
+import com.example.traders.database.Transaction
+import com.example.traders.database.TransactionType
 import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.watchlist.allCrypto.singleCryptoScreen.priceStatisticsTab.Hilt_CryptoPriceStatistics
@@ -11,6 +16,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -62,5 +69,29 @@ class DepositViewModel @Inject constructor(
 
             repository.insertCrypto(currBalance.copy(amount = newBalance))
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun insertTransaction() {
+        launch {
+            repository.insertTransaction(getTransaction())
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getTransaction(): Transaction {
+        return Transaction(
+            symbol = "USD",
+            amount = _state.value.currentInputVal,
+            time = getCurrentTime(),
+            transactionType = TransactionType.DEPOSIT
+        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getCurrentTime(): String {
+        val date = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        return date.format(formatter)
     }
 }
