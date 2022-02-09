@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.example.traders.database.Crypto
 import com.example.traders.database.CryptoDatabaseDao
+import com.example.traders.database.Transaction
 import com.example.traders.network.BinanceApi
 import com.example.traders.network.MessariApi
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
@@ -68,6 +69,8 @@ class CryptoRepository @Inject constructor(
     suspend fun deleteCrypto(crypto: Crypto) = cryptoDao.deleteCrypto(crypto)
     suspend fun getCryptoBySymbol(symbol: String) = cryptoDao.getCryptoBySymbol(symbol)
     suspend fun deleteAllCryptoFromDb() = cryptoDao.deleteAllCryptoFromDb()
+    suspend fun insertTransaction(transaction: Transaction) = cryptoDao.insertTransaction(transaction)
+    fun getAllTransactionsLive() = cryptoDao.getAllTransactionsLive()
 
     companion object {
         const val REFRESH_INTERVAL_MS = 10000L

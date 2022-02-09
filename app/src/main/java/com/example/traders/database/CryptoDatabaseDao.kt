@@ -22,4 +22,13 @@ interface CryptoDatabaseDao {
 
     @Query("DELETE FROM crypto")
     suspend fun deleteAllCryptoFromDb()
+
+    @Query("SELECT * FROM `transaction`")
+    fun getAllTransactionsLive(): LiveData<List<Transaction>>
+
+    @Insert
+    suspend fun insertTransaction(transaction: Transaction)
+
+    @Query("DELETE FROM `transaction`")
+    suspend fun removeAllTransactions()
 }

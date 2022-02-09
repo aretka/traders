@@ -1,9 +1,8 @@
 package com.example.traders.database
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.sql.Date
+import java.math.BigDecimal
 
 @Entity
 data class Transaction(
@@ -11,8 +10,9 @@ data class Transaction(
     val id: Long = 0L,
 
     val symbol: String,
-    val amount: Double = 0.0,
-    val lastPrice: Double? = null,
-    val time: Date,
-    val transactionType: String
+    val amount: BigDecimal,
+    val usdAmount: BigDecimal = BigDecimal(0),
+    val lastPrice: BigDecimal = BigDecimal(0),
+    val time: String,
+    val transactionType: TransactionType
 )
