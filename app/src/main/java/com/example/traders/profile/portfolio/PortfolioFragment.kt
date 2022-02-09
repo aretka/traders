@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.traders.BaseFragment
 import com.example.traders.R
+import com.example.traders.database.Crypto
 import com.example.traders.databinding.FragmentPortfolioBinding
 import com.example.traders.dialogs.depositDialog.DepositDialogFragment
 import com.example.traders.profile.adapters.PortfolioListAdapter
@@ -38,6 +39,7 @@ class PortfolioFragment: BaseFragment() {
         viewModel.livePortfolioList.observe(this) {
             it?.let {
                 viewModel.updateStateData()
+                binding.updateMessageVisibility(it)
             }
         }
 
@@ -71,11 +73,6 @@ class PortfolioFragment: BaseFragment() {
             adapter.addHeaderAndSubmitList(state.cryptoListInUsd)
         }
 
-        emptyListMessage.visibility = when(state.cryptoListInUsd) {
-            emptyList<CryptoInUsd>() -> View.VISIBLE
-            else -> View.GONE
-        }
-
         state.totalPortfolioBalance?.let {
             totalBalance.text = totalBalance.context.getString(
                 R.string.usd_sign,
@@ -101,6 +98,13 @@ class PortfolioFragment: BaseFragment() {
     private fun FragmentPortfolioBinding.setUpAdapter() {
         adapter = PortfolioListAdapter()
         portfolioList.adapter = adapter
+    }
+
+    private fun FragmentPortfolioBinding.updateMessageVisibility(list: List<Crypto>) {
+        emptyListMessage.visibility = when(list) {
+            emptyList<Crypto>() -> View.VISIBLE
+            else -> View.GONE
+        }
     }
 }
 
