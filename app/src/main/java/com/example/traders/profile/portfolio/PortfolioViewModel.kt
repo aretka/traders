@@ -40,7 +40,7 @@ class PortfolioViewModel @Inject constructor(
         }
     }
 
-    fun updateData() {
+    fun updateStateData() {
         // filters sublist of new crypto
         if (livePortfolioList.value?.isNotEmpty() ?: false) {
             val listToFetch = livePortfolioList.value?.filter { newState ->

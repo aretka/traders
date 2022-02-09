@@ -1,7 +1,6 @@
 package com.example.traders.profile.portfolio
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,8 +29,6 @@ class PortfolioFragment: BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val parentFragment = parentFragment
-        Log.e("TAG", "PARENT FRAGMENT ${parentFragment}")
         val binding = FragmentPortfolioBinding.inflate(inflater, container, false)
         binding.setUpPieChart()
         binding.setUpClickListeners()
@@ -40,7 +37,7 @@ class PortfolioFragment: BaseFragment() {
         // Update portfolio on list change
         viewModel.livePortfolioList.observe(this) {
             it?.let {
-                viewModel.updateData()
+                viewModel.updateStateData()
             }
         }
 

@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.example.traders.R
 import com.example.traders.databinding.ListItemCryptoBinding
@@ -17,7 +16,7 @@ class PortfolioListAdapter :
     ListAdapter<DataItem, RecyclerView.ViewHolder>(CryptoDiffCallback()) {
 
     fun addHeaderAndSubmitList(list: List<CryptoInUsd>) {
-        val items = when(list) {
+        val items = when (list) {
             null -> emptyList()
             emptyList<CryptoInUsd>() -> emptyList()
             else -> listOf(DataItem.Header) + list.map { DataItem.CryptoItem(it) }
@@ -29,7 +28,7 @@ class PortfolioListAdapter :
         parent: ViewGroup,
         viewType: Int
     ): RecyclerView.ViewHolder {
-        return when(viewType) {
+        return when (viewType) {
             VIEW_TYPE_HEADER -> HeaderViewHolder.from(parent)
             VIEW_TYPE_CRYPTO -> CryptoViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType $viewType")
@@ -37,7 +36,7 @@ class PortfolioListAdapter :
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when(getItem(position)) {
+        return when (getItem(position)) {
             is DataItem.Header -> VIEW_TYPE_HEADER
             is DataItem.CryptoItem -> VIEW_TYPE_CRYPTO
         }
@@ -55,7 +54,8 @@ class PortfolioListAdapter :
         }
     }
 
-    class HeaderViewHolder(val binding: ListPortfolioHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
+    class HeaderViewHolder(val binding: ListPortfolioHeaderBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(parent: ViewGroup): HeaderViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
@@ -65,7 +65,8 @@ class PortfolioListAdapter :
         }
     }
 
-    class CryptoViewHolder(val binding: ListItemCryptoBinding) : RecyclerView.ViewHolder(binding.root) {
+    class CryptoViewHolder(val binding: ListItemCryptoBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(item: CryptoInUsd) {
             binding.cryptoNameShortcut.text = item.symbol
             binding.cryptoFullName.text = FixedCryptoList.valueOf(item.symbol).slug
@@ -108,11 +109,12 @@ class PortfolioListAdapter :
 
 sealed class DataItem {
     abstract val id: String
-    data class CryptoItem(val cryptoInUsd: CryptoInUsd): DataItem() {
+
+    data class CryptoItem(val cryptoInUsd: CryptoInUsd) : DataItem() {
         override val id = cryptoInUsd.symbol
     }
 
-    object Header: DataItem() {
+    object Header : DataItem() {
         override val id = "Header"
     }
 }
