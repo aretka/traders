@@ -95,6 +95,8 @@
     <string name="deposit_usd">Deposit USD</string>
     <string name="deposit_input_label">Enter USD amount to deposit</string>
     <string name="cancel">Cancel</string>
+    <string name="portfolio_list_header">Crypto portfolio list</string>
+    <string name="empty_list_message">Deposit USD to begin trading</string>
 
 </resources>
 

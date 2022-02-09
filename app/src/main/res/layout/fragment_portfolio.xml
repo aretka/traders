@@ -105,8 +105,19 @@
                 android:background="@drawable/top_bot_rounded"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/list_item_crypto"/>
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <TextView
+                android:id="@+id/empty_list_message"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/medium_text_size"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/dark_gray"
+                android:textAlignment="center"
+                android:padding="20dp"
+                android:text="@string/empty_list_message"/>
 
             <Space
                 android:layout_width="match_parent"

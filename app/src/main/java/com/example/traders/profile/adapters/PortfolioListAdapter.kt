@@ -9,51 +9,95 @@ import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.example.traders.R
 import com.example.traders.databinding.ListItemCryptoBinding
+import com.example.traders.databinding.ListPortfolioHeaderBinding
 import com.example.traders.profile.cryptoData.CryptoInUsd
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 
 class PortfolioListAdapter :
-    ListAdapter<CryptoInUsd, CustomViewHolder<ListItemCryptoBinding>>(DiffCallback()) {
+    ListAdapter<DataItem, RecyclerView.ViewHolder>(CryptoDiffCallback()) {
+
+    fun addHeaderAndSubmitList(list: List<CryptoInUsd>) {
+        val items = when(list) {
+            null -> emptyList()
+            emptyList<CryptoInUsd>() -> emptyList()
+            else -> listOf(DataItem.Header) + list.map { DataItem.CryptoItem(it) }
+        }
+        submitList(items)
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): CustomViewHolder<ListItemCryptoBinding> {
-        return CustomViewHolder.from(parent)
+    ): RecyclerView.ViewHolder {
+        return when(viewType) {
+            VIEW_TYPE_HEADER -> HeaderViewHolder.from(parent)
+            VIEW_TYPE_CRYPTO -> CryptoViewHolder.from(parent)
+            else -> throw ClassCastException("Unknown viewType $viewType")
+        }
     }
 
-//    override fun getItemViewType(position: Int): Int {
-//        return when(getItem(position)) {
-//            is DataItem.Header -> VIEW_TYPE_HEADER
-//            is DataItem.CryptoItem -> VIEW_TYPE_HEADER
-//        }
-//    }
+    override fun getItemViewType(position: Int): Int {
+        return when(getItem(position)) {
+            is DataItem.Header -> VIEW_TYPE_HEADER
+            is DataItem.CryptoItem -> VIEW_TYPE_CRYPTO
+        }
+    }
 
     override fun onBindViewHolder(
-        holder: CustomViewHolder<ListItemCryptoBinding>,
+        holder: RecyclerView.ViewHolder,
         position: Int
     ) {
-        val item = currentList[position]
-        holder.binding.cryptoNameShortcut.text = item.symbol
-        holder.binding.cryptoFullName.text = FixedCryptoList.valueOf(item.symbol).slug
-        holder.binding.cryptoPrice.text = item.amount.toString()
-        holder.binding.cryptoPriceChange.text = holder.binding.cryptoPriceChange.context.getString(
-            R.string.usd_sign,
-            item.amountInUsd.toString()
-        )
-        Glide.with(holder.binding.cryptoLogo)
-            .load(FixedCryptoList.valueOf(item.symbol).logoUrl)
-            .placeholder(R.drawable.ic_download)
-            .error(R.drawable.ic_image_error)
-            .into(holder.binding.cryptoLogo)
+        when (holder) {
+            is CryptoViewHolder -> {
+                val item = currentList[position] as DataItem.CryptoItem
+                holder.bind(item.cryptoInUsd)
+            }
+        }
     }
 
-    private class DiffCallback : DiffUtil.ItemCallback<CryptoInUsd>() {
-        override fun areItemsTheSame(oldItem: CryptoInUsd, newItem: CryptoInUsd) =
-            oldItem.symbol == newItem.symbol
+    class HeaderViewHolder(val binding: ListPortfolioHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
+        companion object {
+            fun from(parent: ViewGroup): HeaderViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val view = ListPortfolioHeaderBinding.inflate(layoutInflater, parent, false)
+                return HeaderViewHolder(view)
+            }
+        }
+    }
 
-        override fun areContentsTheSame(oldItem: CryptoInUsd, newItem: CryptoInUsd) =
-            oldItem == newItem
+    class CryptoViewHolder(val binding: ListItemCryptoBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: CryptoInUsd) {
+            binding.cryptoNameShortcut.text = item.symbol
+            binding.cryptoFullName.text = FixedCryptoList.valueOf(item.symbol).slug
+            binding.cryptoPrice.text = item.amount.toString()
+            binding.cryptoPriceChange.text = binding.cryptoPriceChange.context.getString(
+                R.string.usd_sign,
+                item.amountInUsd.toString()
+            )
+            Glide.with(binding.cryptoLogo)
+                .load(FixedCryptoList.valueOf(item.symbol).logoUrl)
+                .placeholder(R.drawable.ic_download)
+                .error(R.drawable.ic_image_error)
+                .into(binding.cryptoLogo)
+        }
+
+        companion object {
+            fun from(parent: ViewGroup): CryptoViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val view = ListItemCryptoBinding.inflate(layoutInflater, parent, false)
+                return CryptoViewHolder(view)
+            }
+        }
+    }
+
+    private class CryptoDiffCallback : DiffUtil.ItemCallback<DataItem>() {
+        override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
+            return oldItem == newItem
+        }
     }
 
     companion object {
@@ -64,20 +108,11 @@ class PortfolioListAdapter :
 
 sealed class DataItem {
     abstract val id: String
-    data class CryptoItem(val cryptoItem: CryptoInUsd): DataItem()      {
-        override val id = cryptoItem.symbol
+    data class CryptoItem(val cryptoInUsd: CryptoInUsd): DataItem() {
+        override val id = cryptoInUsd.symbol
     }
 
     object Header: DataItem() {
         override val id = "Header"
-    }
-}
-
-class CustomViewHolder<T : ViewBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root) {
-    companion object {
-        fun from(parent: ViewGroup): CustomViewHolder<ListItemCryptoBinding> {
-            val layoutInflater = LayoutInflater.from(parent.context)
-            return CustomViewHolder(ListItemCryptoBinding.inflate(layoutInflater, parent, false))
-        }
     }
 }

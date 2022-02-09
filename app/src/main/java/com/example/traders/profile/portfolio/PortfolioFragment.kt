@@ -12,6 +12,7 @@ import com.example.traders.R
 import com.example.traders.databinding.FragmentPortfolioBinding
 import com.example.traders.dialogs.depositDialog.DepositDialogFragment
 import com.example.traders.profile.adapters.PortfolioListAdapter
+import com.example.traders.profile.cryptoData.CryptoInUsd
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -70,7 +71,12 @@ class PortfolioFragment: BaseFragment() {
             secondPiechart.invalidate()
             secondPiechart.animate()
             viewModel.chartUpdated()
-            adapter.submitList(state.cryptoListInUsd)
+            adapter.addHeaderAndSubmitList(state.cryptoListInUsd)
+        }
+
+        emptyListMessage.visibility = when(state.cryptoListInUsd) {
+            emptyList<CryptoInUsd>() -> View.VISIBLE
+            else -> View.GONE
         }
 
         state.totalPortfolioBalance?.let {
