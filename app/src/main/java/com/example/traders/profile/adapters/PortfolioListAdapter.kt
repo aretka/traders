@@ -75,11 +75,16 @@ class PortfolioListAdapter :
                 R.string.usd_sign,
                 item.amountInUsd.toString()
             )
-            Glide.with(binding.cryptoLogo)
-                .load(FixedCryptoList.valueOf(item.symbol).logoUrl)
-                .placeholder(R.drawable.ic_download)
-                .error(R.drawable.ic_image_error)
-                .into(binding.cryptoLogo)
+            when(item.symbol) {
+                "USD" -> binding.cryptoLogo.setImageResource(R.drawable.ic_dollar)
+                else -> {
+                    Glide.with(binding.cryptoLogo)
+                        .load(FixedCryptoList.valueOf(item.symbol).logoUrl)
+                        .placeholder(R.drawable.ic_download)
+                        .error(R.drawable.ic_image_error)
+                        .into(binding.cryptoLogo)
+                }
+            }
         }
 
         companion object {
