@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".profile.ProfileFragment"
+    android:background="@color/very_light_gray">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/main_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/chart_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:fontFamily="@font/roboto_bold"
+                    android:padding="15dp"
+                    android:text="@string/asset_allocation"
+                    android:textAlignment="center"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="@dimen/medium_text_size"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2"
+                    android:background="@color/white"
+                    android:paddingBottom="15dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="30dp"
+                        android:textSize="@dimen/medium_text_size"
+                        android:fontFamily="@font/roboto_medium"
+                        android:text="@string/total_balance"/>
+                    <TextView
+                        android:id="@+id/total_balance"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingRight="20dp"
+                        android:textAlignment="textEnd"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text_size"
+                        android:fontFamily="@font/roboto_bold"
+                        tools:text="$ 124,124.45"/>
+                </LinearLayout>
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/second_piechart"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_container"
+                    android:background="@color/white"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:background="@drawable/crypto_layout"/>
+
+                <LinearLayout
+                    android:id="@+id/btn_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:weightSum="2">
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/deposit_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:text="@string/deposit"
+                        android:textColor="@color/white"
+                        android:layout_weight="1"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/deposit_btn_layout"/>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/withdraw_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:textColor="@color/white"
+                        android:text="@string/reset_db"
+                        android:layout_weight="1"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/withdraw_btn_layout"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/portfolio_list"
+                android:background="@drawable/top_bot_rounded"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <TextView
+                android:id="@+id/empty_list_message"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/medium_text_size"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/dark_gray"
+                android:textAlignment="center"
+                android:padding="20dp"
+                android:text="@string/empty_list_message"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="80dp"/>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

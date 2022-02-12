@@ -9,7 +9,7 @@ enum class FixedCryptoList(val slug: String, val logoUrl: String, val amountToRo
     XRP("xrp", "https://cryptologos.cc/logos/xrp-xrp-logo.png?v=014",2,3),
     DOT("polkadot", "https://cryptologos.cc/logos/polkadot-new-dot-logo.png?v=014"),
     LUNA("terra", "https://cryptologos.cc/logos/terra-luna-luna-logo.png?v=014"),
-    DOGE("dogecoin", "https://cryptologos.cc/logos/dogecoin-doge-logo.png?v=014"),
+    DOGE("dogecoin", "https://cryptologos.cc/logos/dogecoin-doge-logo.png?v=014", 2, 3),
     AVAX("avalanche", "https://cryptologos.cc/logos/avalanche-avax-logo.png?v=014"),
     MATIC("polygon", "https://cryptologos.cc/logos/polygon-matic-logo.png?v=014", 2,3),
     SHIB("shiba-inu", "https://cryptologos.cc/logos/shiba-inu-shib-logo.png?v=014", 0, 7),
@@ -29,7 +29,8 @@ enum class FixedCryptoList(val slug: String, val logoUrl: String, val amountToRo
     HBAR("hedera-hashgraph", "https://cryptologos.cc/logos/hedera-hbar-logo.png?v=014", 2, 3),
     VET("vechain", "https://cryptologos.cc/logos/vechain-vet-logo.png?v=014", 1, 4),
     SAND("thesandbox", "https://cryptologos.cc/logos/the-sandbox-sand-logo.png?v=014", 2, 3),
-    ETC("ethereum-classic", "https://cryptologos.cc/logos/ethereum-classic-etc-logo.png?v=014");
+    ETC("ethereum-classic", "https://cryptologos.cc/logos/ethereum-classic-etc-logo.png?v=014"),
+    USD("US-dollars", "https://cdn-icons.flaticon.com/png/512/1140/premium/1140418.png?token=exp=1644242774~hmac=df443bdc0ba0807b1d59e4cf02d8209b");
 
     companion object {
         fun getEnumName(value: String): FixedCryptoList? = values().find { it.slug == value }

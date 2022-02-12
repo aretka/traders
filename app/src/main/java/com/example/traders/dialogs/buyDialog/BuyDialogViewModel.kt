@@ -1,9 +1,15 @@
 package com.example.traders.dialogs.buyDialog
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.traders.dialogs.Constants
+import com.example.traders.BaseViewModel
+import com.example.traders.database.Crypto
+import com.example.traders.database.Transaction
+import com.example.traders.database.TransactionType
 import com.example.traders.dialogs.DialogValidationMessage
+import com.example.traders.getCurrentTime
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.roundNum
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
@@ -12,47 +18,74 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import java.math.BigDecimal
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class BuyDialogViewModel @AssistedInject constructor(
     val repository: CryptoRepository,
     @Assisted val symbol: String,
-    @Assisted val lastPrice: Double
-) : ViewModel() {
+    @Assisted val lastPrice: BigDecimal
+) : BaseViewModel() {
     private val priceToRound = getPriceToRound()
     private val amountToRound = getAmountToRound()
-    private val usdBalance = getBalance()
 
-    private val _state = MutableStateFlow(BuyState(
-        usdBalance = usdBalance,
-        priceNumToRound = priceToRound,
-        amountToRound = amountToRound
-    ))
+    private val _state = MutableStateFlow(
+        BuyState(
+            priceNumToRound = priceToRound,
+            amountToRound = amountToRound
+        )
+    )
     val state = _state.asStateFlow()
 
-    fun updateBalance() {
-//         updates crypto balance
-        repository.setStoredPrice(Constants.USD_BALANCE_KEY, _state.value.usdLeft.toFloat())
-//         updates usd balance
-        val newCryptoBalance = repository.getStoredTag(symbol) + _state.value.cryptoToGet.toFloat()
-        repository.setStoredPrice(symbol, newCryptoBalance)
+    init {
+        getUsdBalance()
+        getCryptoBalance()
     }
 
-    fun add1000UsdToBalance() {
-        repository.setStoredPrice(Constants.USD_BALANCE_KEY, 1000F)
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun saveTransactionToDb() {
+        launch {
+            repository.insertTransaction(createTransaction())
+        }
+    }
+
+    fun updateBalance() {
+        //Update Crypto balance
+        launch {
+            _state.value.cryptoBalance?.let {
+                val newCryptoBalance = _state.value.cryptoToGet + it.amount
+                repository.insertCrypto(it.copy(amount = newCryptoBalance))
+            }
+        }
+
+        //Update USD balance
+        launch {
+            repository.insertCrypto(_state.value.usdBalance.copy(amount = _state.value.usdLeft))
+        }
     }
 
     fun validateInput(enteredVal: String) {
+        val decimalEnteredVal: BigDecimal
+
+        if (enteredVal.isNotBlank()) {
+            decimalEnteredVal = BigDecimal(enteredVal)
+        } else {
+            decimalEnteredVal = BigDecimal(0)
+        }
+
         if (enteredVal.isBlank()) {
             _state.value = _state.value.copy(
                 isBtnEnabled = false,
                 messageType = DialogValidationMessage.IS_EMPTY
             )
-        } else if (enteredVal.toDouble() > usdBalance) {
+        } else if (decimalEnteredVal > _state.value.usdBalance.amount) {
             _state.value = _state.value.copy(
                 isBtnEnabled = false,
                 messageType = DialogValidationMessage.IS_TOO_HIGH
             )
-        } else if (enteredVal.toDouble() < _state.value.minInputVal) {
+        } else if (decimalEnteredVal < _state.value.minInputVal) {
             _state.value = _state.value.copy(
                 isBtnEnabled = false,
                 messageType = DialogValidationMessage.IS_TOO_LOW
@@ -64,11 +97,9 @@ class BuyDialogViewModel @AssistedInject constructor(
             )
         }
 
-        if (enteredVal.isBlank()) {
-            _state.value = _state.value.copy(inputVal = 0.0)
-        } else {
-            _state.value = _state.value.copy(inputVal = enteredVal.toDouble())
-        }
+        // Input val is set to 0 if nothing entered
+        _state.value = _state.value.copy(inputVal = decimalEnteredVal)
+
         calculateNewBalance()
     }
 
@@ -76,13 +107,14 @@ class BuyDialogViewModel @AssistedInject constructor(
     private fun getAmountToRound() = FixedCryptoList.valueOf(symbol).amountToRound
 
     private fun calculateNewBalance() {
-        var usdLeft = usdBalance
-        var cryptoToGet = 0.0
+        var usdLeft = _state.value.usdBalance.amount
+        var cryptoToGet = BigDecimal(0.0)
 
         if (_state.value.messageType == DialogValidationMessage.IS_VALID) {
-            usdLeft = usdBalance - _state.value.inputVal
+            usdLeft -= _state.value.inputVal
             // TODO apply updated roundFunction() and provide numOfDigits(int) from fixedCryptoList by symbol to round
-            cryptoToGet = _state.value.inputVal / lastPrice
+            cryptoToGet =
+                _state.value.inputVal.divide(lastPrice, amountToRound, BigDecimal.ROUND_HALF_UP)
         }
 
         _state.value = _state.value.copy(
@@ -91,18 +123,42 @@ class BuyDialogViewModel @AssistedInject constructor(
         )
     }
 
-    private fun getBalance() = repository.getStoredTag(Constants.USD_BALANCE_KEY).toDouble()
+    private fun getUsdBalance() {
+        launch {
+            val usdBalance = repository.getCryptoBySymbol("USD") ?: return@launch
+            _state.value = _state.value.copy(usdBalance = usdBalance)
+        }
+    }
+
+    private fun getCryptoBalance() {
+        launch {
+            val cryptoBalance = repository.getCryptoBySymbol(symbol) ?: Crypto(symbol = symbol)
+            _state.value = _state.value.copy(cryptoBalance = cryptoBalance)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createTransaction(): Transaction {
+        return Transaction(
+            symbol = symbol,
+            amount = _state.value.cryptoToGet,
+            usdAmount = _state.value.inputVal,
+            lastPrice = lastPrice,
+            time = getCurrentTime(),
+            transactionType = TransactionType.PURCHASE
+        )
+    }
 
     @AssistedFactory
     interface Factory {
-        fun create(symbol: String, lastPrice: Double): BuyDialogViewModel
+        fun create(symbol: String, lastPrice: BigDecimal): BuyDialogViewModel
     }
 
     companion object {
         fun provideFactory(
             assistedFactory: Factory,
             symbol: String,
-            lastPrice: Double
+            lastPrice: BigDecimal
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(symbol, lastPrice) as T

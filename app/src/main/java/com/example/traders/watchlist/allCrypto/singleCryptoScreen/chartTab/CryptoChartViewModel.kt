@@ -12,7 +12,6 @@ import com.example.traders.webSocket.BinanceWSClient
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -20,7 +19,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
-import javax.inject.Inject
 
 class CryptoChartViewModel @AssistedInject constructor(
     private val repository: CryptoRepository,
@@ -67,11 +65,11 @@ class CryptoChartViewModel @AssistedInject constructor(
         }
     }
 
-    private fun getSymbol() : String {
+    private fun getSymbol(): String {
         return FixedCryptoList.getEnumName(slug)?.name.toString()
     }
 
-    private fun getPriceRoundNum() : Int {
+    private fun getPriceRoundNum(): Int {
         return FixedCryptoList.valueOf(symbol).priceToRound
     }
 

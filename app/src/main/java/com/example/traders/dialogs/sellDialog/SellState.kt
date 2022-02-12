@@ -1,16 +1,19 @@
 package com.example.traders.dialogs.sellDialog
 
+import com.example.traders.database.Crypto
 import com.example.traders.dialogs.DialogValidationMessage
+import java.math.BigDecimal
 
 data class SellState(
     val priceToRound: Int = 2,
     val amountToRound: Int = 2,
-    val cryptoBalance: Double = 0.0,
-    val usdCryptoBalance: Double = 0.0,
-    val inputVal: Double = 0.0,
-    val minInputVal: Double = 0.01,
+    val cryptoBalance: Crypto? = null,
+    val cryptoUsdBalance: BigDecimal? = null,
+    val usdBalance: Crypto = Crypto(symbol = "USD"),
+    val inputVal: BigDecimal = BigDecimal(0.0),
+    val minInputVal: BigDecimal = BigDecimal(0.01),
     val isBtnEnabled: Boolean = false,
-    val cryptoLeft: Double = 0.0,
-    val usdToGet: Double = 0.0,
+    val cryptoLeft: BigDecimal = BigDecimal(0.0),
+    val usdToGet: BigDecimal = BigDecimal(0.0),
     val messageType: DialogValidationMessage = DialogValidationMessage.IS_EMPTY
 )

@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.example.traders.R
 import com.example.traders.databinding.ListItemCryptoBinding
 import com.example.traders.getCryptoPriceChangeText
-import com.example.traders.roundAndFormatNum
+import com.example.traders.roundAndFormatDouble
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24HourData.Binance24DataItem
 
@@ -26,7 +26,6 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
         return SimpleViewHolder(ListItemCryptoBinding.inflate(layoutInflater, parent, false))
     }
 
-
     override fun onBindViewHolder(
         holder: SimpleViewHolder<ListItemCryptoBinding>,
         position: Int,
@@ -40,14 +39,15 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
             val symbol = item.symbol.replace("USDT", "")
             val priceRoundNum = FixedCryptoList.valueOf(symbol).priceToRound
 
-            holder.binding.cryptoPrice.text = roundAndFormatNum(item.last.toDouble(), priceRoundNum)
+            holder.binding.cryptoPrice.text = roundAndFormatDouble(item.last.toDouble(), priceRoundNum)
             getCryptoPriceChangeText(
-                roundAndFormatNum(item.priceChange.toDouble(), priceRoundNum),
-                roundAndFormatNum(item.priceChangePercent.toDouble()),
+                roundAndFormatDouble(item.priceChange.toDouble(), priceRoundNum),
+                roundAndFormatDouble(item.priceChangePercent.toDouble()),
                 holder.binding.cryptoPriceChange
             )
         }
     }
+
     override fun onBindViewHolder(holder: SimpleViewHolder<ListItemCryptoBinding>, position: Int) {
         val item = currentList[position]
         val symbol = item.symbol.replace("USDT", "")
@@ -55,12 +55,12 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
         val priceRoundNum = FixedCryptoList.valueOf(symbol).priceToRound
 
         holder.binding.root.setOnClickListener { clickListener.onClick(slug, symbol) }
-        holder.binding.cryptoPrice.text = roundAndFormatNum(item.last.toDouble(), priceRoundNum)
+        holder.binding.cryptoPrice.text = roundAndFormatDouble(item.last.toDouble(), priceRoundNum)
         holder.binding.cryptoNameShortcut.text = item.symbol
         holder.binding.cryptoFullName.text = slug.replaceFirstChar { c -> c.uppercase() }
         getCryptoPriceChangeText(
-            roundAndFormatNum(item.priceChange.toDouble(), priceRoundNum),
-            roundAndFormatNum(item.priceChangePercent.toDouble()),
+            roundAndFormatDouble(item.priceChange.toDouble(), priceRoundNum),
+            roundAndFormatDouble(item.priceChangePercent.toDouble()),
             holder.binding.cryptoPriceChange
         )
         Glide.with(holder.binding.cryptoLogo)
@@ -81,7 +81,7 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
         override fun getChangePayload(
             oldItem: Binance24DataItem,
             newItem: Binance24DataItem
-        ): Any? {
+        ): Any {
             // this is called when symbols are the same but contents differ
             return newItem
         }

@@ -10,7 +10,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import com.example.traders.R
-import com.example.traders.roundAndFormatNum
+import com.example.traders.roundAndFormatDouble
 
 class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private var cryptoData: List<List<Float>> = emptyList()
@@ -111,19 +111,19 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs) 
             if(linePositions[i][0] == maxValPosition){
                 canvas?.drawLine(linePositions[i][2],linePositions[i][0], mWidth, linePositions[i][0], mGreenLinePaint)
                 mTextPaint.color = ResourcesCompat.getColor(getResources(), R.color.green, null);
-                canvas?.drawText(roundAndFormatNum(cryptoData[i][2].toDouble()), mWidth - 115F, linePositions[i][0] - 5F, mTextPaint)
+                canvas?.drawText(roundAndFormatDouble(cryptoData[i][2].toDouble()), mWidth - 115F, linePositions[i][0] - 5F, mTextPaint)
             }
             if(linePositions[i][1] == minValPosition) {
                 canvas?.drawLine(linePositions[i][2],linePositions[i][1], mWidth, linePositions[i][1], mRedLinePaint)
                 mTextPaint.color = ResourcesCompat.getColor(getResources(), R.color.red, null);
-                canvas?.drawText(roundAndFormatNum(cryptoData[i][3].toDouble()), mWidth - 115F, linePositions[i][1] - 5F, mTextPaint)
+                canvas?.drawText(roundAndFormatDouble(cryptoData[i][3].toDouble()), mWidth - 115F, linePositions[i][1] - 5F, mTextPaint)
             }
         }
 
         // Draw most recent price
         mTextPaint.color = ResourcesCompat.getColor(getResources(), R.color.light_gray, null);
         canvas?.drawLine(candlePositions.last()[2],candlePositions.last()[1], mWidth, candlePositions.last()[1], mTextPaint)
-        canvas?.drawText(roundAndFormatNum(cryptoData.last()[4].toDouble()), mWidth - 115F, candlePositions.last()[1] - 5F, mTextPaint)
+        canvas?.drawText(roundAndFormatDouble(cryptoData.last()[4].toDouble()), mWidth - 115F, candlePositions.last()[1] - 5F, mTextPaint)
     }
 
     override fun setOnClickListener(l: OnClickListener?) {
