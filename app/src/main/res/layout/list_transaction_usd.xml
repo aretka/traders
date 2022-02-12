@@ -42,6 +42,7 @@
 
     <TextView
         android:id="@+id/symbol"
+        android:paddingLeft="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@+id/icon"
@@ -53,6 +54,7 @@
 
     <TextView
         android:id="@+id/slug"
+        android:paddingLeft="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/icon"

@@ -1,17 +1,13 @@
-package com.example.traders.watchlist.allCrypto
+package com.example.traders.watchlist
 
 import android.util.Log
 import com.example.traders.BaseViewModel
 import com.example.traders.ToBinance24DataItem
-import com.example.traders.profile.cryptoData.CryptoTicker
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.repository.enumContains
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.webSocket.BinanceWSClient
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
@@ -20,24 +16,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AllCryptoViewModel @Inject constructor(
+class WatchListViewModel @Inject constructor(
     private val repository: CryptoRepository,
     private val webSocketClient: BinanceWSClient
-) : BaseViewModel() {
-
-    private val _state = MutableStateFlow(AllCryptoState())
+): BaseViewModel() {
+    private val _state = MutableStateFlow(WatchListState())
     val state = _state.asStateFlow()
 
     init {
-//        clearRoomDatabase()
         getBinanceData()
         startCollectingBinanceTickerData()
-    }
-
-    private fun clearRoomDatabase() {
-        launch {
-            repository.deleteAllCryptoFromDb()
-        }
     }
 
     // This function cannot be called since connection hasnt been established yet at this point
@@ -65,12 +53,7 @@ class AllCryptoViewModel @Inject constructor(
     private suspend fun updateCryptoData() {
         val cryptoPrices = repository.getBinance24Data().body() ?: return
         val extractedPricesList = cryptoPrices.filter { el ->
-            enumContains<FixedCryptoList>(
-                el.symbol.replace(
-                    "USDT",
-                    ""
-                )
-            )
+            enumContains<FixedCryptoList>(el.symbol.replace("USDT", ""))
         }
         _state.value = _state.value.copy(binanceCryptoData = extractedPricesList)
     }
@@ -94,5 +77,4 @@ class AllCryptoViewModel @Inject constructor(
             }
         }
     }
-
 }

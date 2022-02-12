@@ -112,7 +112,7 @@ class HistoryListAdapter(val clearHistoryListener: () -> Unit) :
                         }
                     }
                 }
-                lastPrice.text = item.lastPrice.toString()
+                lastPrice.text = lastPrice.context.getString(R.string.usd_sign, item.lastPrice.toString())
                 when (item.symbol) {
                     "USD" -> icon.setImageResource(R.drawable.ic_dollar)
                     else -> {
