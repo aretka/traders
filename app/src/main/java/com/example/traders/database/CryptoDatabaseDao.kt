@@ -30,5 +30,5 @@ interface CryptoDatabaseDao {
     suspend fun insertTransaction(transaction: Transaction)
 
     @Query("DELETE FROM `transaction`")
-    suspend fun removeAllTransactions()
+    suspend fun deleteAllTransactions()
 }

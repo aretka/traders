@@ -70,6 +70,7 @@ class CryptoRepository @Inject constructor(
     suspend fun getCryptoBySymbol(symbol: String) = cryptoDao.getCryptoBySymbol(symbol)
     suspend fun deleteAllCryptoFromDb() = cryptoDao.deleteAllCryptoFromDb()
     suspend fun insertTransaction(transaction: Transaction) = cryptoDao.insertTransaction(transaction)
+    suspend fun deleteAllTransactions() = cryptoDao.deleteAllTransactions()
     fun getAllTransactionsLive() = cryptoDao.getAllTransactionsLive()
 
     companion object {
