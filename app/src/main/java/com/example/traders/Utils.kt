@@ -1,14 +1,16 @@
 package com.example.traders
 
+import android.os.Build
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24HourData.Binance24DataItem
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
-import java.lang.Math.round
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.text.DecimalFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.reflect.KClass
 
 fun roundAndFormatDouble(numToRound: Double, digitsRounded: Int = 2): String {
@@ -26,7 +28,7 @@ fun getCryptoPriceChangeText(
 ) {
     var finalPriceChange = priceChange
     if (percentagePriceChange.contains('-')) {
-        if(!priceChange.contains('-')) finalPriceChange = "-" + finalPriceChange
+        if (!priceChange.contains('-')) finalPriceChange = "-" + finalPriceChange
         textView.text = textView.context.getString(
             R.string.crypto_price_red,
             finalPriceChange,
@@ -34,7 +36,7 @@ fun getCryptoPriceChangeText(
         )
         textView.setTextColor(ContextCompat.getColor(textView.context, R.color.red))
     } else {
-        if(priceChange.contains('-')) finalPriceChange = finalPriceChange.replace("-", "")
+        if (priceChange.contains('-')) finalPriceChange = finalPriceChange.replace("-", "")
         textView.text = textView.context.getString(
             R.string.crypto_price_green,
             finalPriceChange,
@@ -80,4 +82,19 @@ fun returnTickerWithRoundedPrice(tickerData: PriceTickerData): PriceTickerData {
     val numToRound = FixedCryptoList.valueOf(symbol).priceToRound
     val last = BigDecimal(tickerData.last).setScale(numToRound, RoundingMode.HALF_UP).toString()
     return tickerData.copy(last = last)
+}
+
+fun String.toBigDecimal(): BigDecimal {
+    if (this.isBlank()) {
+        return BigDecimal(0)
+    } else {
+        return BigDecimal(this)
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getCurrentTime(): String {
+    val date = LocalDateTime.now()
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+    return date.format(formatter)
 }
