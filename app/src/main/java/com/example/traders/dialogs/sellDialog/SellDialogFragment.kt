@@ -2,7 +2,9 @@ package com.example.traders.dialogs.sellDialog
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
+import androidx.annotation.RequiresApi
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -27,6 +29,7 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
         SellDialogViewModel.provideFactory(assistedViewModelFactory, symbol, lastPrice)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
 
@@ -67,6 +70,7 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
             cryptoBalanceLeftLabel.context.getString(R.string.crypto_balance_left_label, symbol)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun DialogFragmentSellBinding.addListeners(dialog: AlertDialog) {
         priceInputField.addTextChangedListener { enteredVal ->
             viewModel.validateInput(enteredVal.toString())
@@ -78,6 +82,7 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
 
         sellBtn.setOnClickListener {
             viewModel.updateBalance()
+            viewModel.saveTransactionToDb()
             dialog.dismiss()
         }
 

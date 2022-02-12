@@ -1,11 +1,16 @@
 package com.example.traders.dialogs.sellDialog
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.traders.BaseViewModel
 import com.example.traders.database.Crypto
+import com.example.traders.database.Transaction
+import com.example.traders.database.TransactionType
 import com.example.traders.dialogs.DialogValidationMessage
+import com.example.traders.getCurrentTime
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.roundNum
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
@@ -26,11 +31,13 @@ class SellDialogViewModel @AssistedInject constructor(
     private val amountToRound = getAmountToRound()
     private val minCryptoToSell = getMinCryptoToSell()
 
-    private val _state = MutableStateFlow(SellState(
-        minInputVal = minCryptoToSell,
-        priceToRound = priceToRound,
-        amountToRound = amountToRound
-    ))
+    private val _state = MutableStateFlow(
+        SellState(
+            minInputVal = minCryptoToSell,
+            priceToRound = priceToRound,
+            amountToRound = amountToRound
+        )
+    )
     val state = _state.asStateFlow()
 
     init {
@@ -39,10 +46,17 @@ class SellDialogViewModel @AssistedInject constructor(
         Log.e("TAG", "${_state.value.minInputVal}")
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun saveTransactionToDb() {
+        launch {
+            repository.insertTransaction(createTransaction())
+        }
+    }
+
     fun validateInput(enteredVal: String) {
         val decimalInputVal: BigDecimal
 
-        if(enteredVal.isNotBlank()) {
+        if (enteredVal.isNotBlank()) {
             decimalInputVal = BigDecimal(enteredVal)
         } else {
             decimalInputVal = BigDecimal(0)
@@ -58,7 +72,7 @@ class SellDialogViewModel @AssistedInject constructor(
                 isBtnEnabled = false,
                 messageType = DialogValidationMessage.IS_TOO_HIGH
             )
-        }  else if (decimalInputVal < _state.value.minInputVal) {
+        } else if (decimalInputVal < _state.value.minInputVal) {
             _state.value = _state.value.copy(
                 isBtnEnabled = false,
                 messageType = DialogValidationMessage.IS_TOO_LOW
@@ -77,9 +91,9 @@ class SellDialogViewModel @AssistedInject constructor(
 
     fun updateBalance() {
         //Update Crypto balance (this was already calculated in calculateNewBalance())
-        launch{
+        launch {
             _state.value.cryptoBalance?.let {
-                if(_state.value.cryptoLeft.compareTo(BigDecimal.ZERO) == 0) {
+                if (_state.value.cryptoLeft.compareTo(BigDecimal.ZERO) == 0) {
                     Log.e("ROOM", "This crypto was deleted")
                     repository.deleteCrypto(it)
                 } else {
@@ -97,7 +111,8 @@ class SellDialogViewModel @AssistedInject constructor(
 
     private fun getPriceToRound() = FixedCryptoList.valueOf(symbol).priceToRound
     private fun getAmountToRound() = FixedCryptoList.valueOf(symbol).amountToRound
-    private fun getMinCryptoToSell() = (BigDecimal(10).divide(lastPrice, amountToRound, BigDecimal.ROUND_HALF_UP))
+    private fun getMinCryptoToSell() =
+        (BigDecimal(10).divide(lastPrice, amountToRound, BigDecimal.ROUND_HALF_UP))
 
     private fun getUsdBalance() {
         launch {
@@ -122,7 +137,7 @@ class SellDialogViewModel @AssistedInject constructor(
     private fun calculateNewBalance() {
         var cryptoLeft = _state.value.cryptoBalance?.amount ?: BigDecimal(0)
         var usdToGet = BigDecimal(0)
-        if(_state.value.messageType == DialogValidationMessage.IS_VALID) {
+        if (_state.value.messageType == DialogValidationMessage.IS_VALID) {
             cryptoLeft -= _state.value.inputVal
             usdToGet = _state.value.inputVal * lastPrice
         }
@@ -132,9 +147,16 @@ class SellDialogViewModel @AssistedInject constructor(
         )
     }
 
-    override fun onCleared() {
-        Log.e("DialogViewModel", "onCleared called")
-        super.onCleared()
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createTransaction(): Transaction {
+        return Transaction(
+            symbol = symbol,
+            amount = _state.value.inputVal,
+            usdAmount = _state.value.usdToGet,
+            lastPrice = lastPrice,
+            time = getCurrentTime(),
+            transactionType = TransactionType.SELL
+        )
     }
 
     @AssistedFactory
