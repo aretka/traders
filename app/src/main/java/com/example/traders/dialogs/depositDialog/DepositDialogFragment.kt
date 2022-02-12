@@ -47,7 +47,7 @@ class DepositDialogFragment: DialogFragment() {
 
         depositBtn.setOnClickListener {
             viewModel.updateBalance()
-            viewModel.insertTransaction()
+            viewModel.saveTransactionToDb()
             dialog.dismiss()
         }
 
