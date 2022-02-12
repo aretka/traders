@@ -75,7 +75,7 @@ class PortfolioListAdapter :
                 R.string.usd_sign,
                 item.amountInUsd.toString()
             )
-            when(item.symbol) {
+            when (item.symbol) {
                 "USD" -> binding.cryptoLogo.setImageResource(R.drawable.ic_dollar)
                 else -> {
                     Glide.with(binding.cryptoLogo)

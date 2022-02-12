@@ -30,6 +30,7 @@
         <entry key="app/src/main/res/drawable/inactive_chart_btn.xml" value="0.5734375" />
         <entry key="app/src/main/res/drawable/my_border.xml" value="0.3494791666666667" />
         <entry key="app/src/main/res/drawable/sell_btn_layout.xml" value="0.31927083333333334" />
+        <entry key="app/src/main/res/drawable/top_bot_rounded.xml" value="0.42552083333333335" />
         <entry key="app/src/main/res/drawable/top_bottom_rounded.xml" value="0.2328125" />
         <entry key="app/src/main/res/drawable/top_rounded_layout.xml" value="0.30052083333333335" />
         <entry key="app/src/main/res/drawable/withdraw_btn_layout.xml" value="0.2328125" />
@@ -62,6 +63,10 @@
         <entry key="app/src/main/res/layout/fragment_user_profile.xml" value="0.20675105485232068" />
         <entry key="app/src/main/res/layout/fragment_watch_list.xml" value="0.25" />
         <entry key="app/src/main/res/layout/list_item_crypto.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/list_portfolio_header.xml" value="0.39166666666666666" />
+        <entry key="app/src/main/res/layout/list_transaction_crypto.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/list_transaction_header.xml" value="0.39166666666666666" />
+        <entry key="app/src/main/res/layout/list_transaction_usd.xml" value="0.33" />
         <entry key="app/src/main/res/layout/portfolio_list_header.xml" value="0.2907608695652174" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.19791666666666666" />
       </map>

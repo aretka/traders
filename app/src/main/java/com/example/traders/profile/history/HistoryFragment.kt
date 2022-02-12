@@ -9,12 +9,14 @@ import androidx.fragment.app.viewModels
 import com.example.traders.BaseFragment
 import com.example.traders.database.Transaction
 import com.example.traders.databinding.FragmentHistoryBinding
+import com.example.traders.profile.adapters.HistoryListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HistoryFragment: BaseFragment() {
+class HistoryFragment : BaseFragment() {
 
     private val viewModel: HistoryViewModel by viewModels()
+    private lateinit var adapter: HistoryListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,10 +24,11 @@ class HistoryFragment: BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentHistoryBinding.inflate(inflater, container, false)
+        binding.setUpAdapter()
         viewModel.transactionList.observe(this) {
             it?.let { list ->
                 binding.emptyListMessageVisibility(it)
-                if(list.isNotEmpty()) Log.e("TRANSACTION_INFO", "${list.last().symbol} ${list.last().time}")
+                adapter.addHeaderAndSubmitList(list.reversed())
             }
         }
 
@@ -33,9 +36,14 @@ class HistoryFragment: BaseFragment() {
     }
 
     private fun FragmentHistoryBinding.emptyListMessageVisibility(list: List<Transaction>) {
-        emptyTransactionsListMessage.visibility = when(list) {
+        emptyTransactionsListMessage.visibility = when (list) {
             emptyList<Transaction>() -> View.VISIBLE
             else -> View.GONE
         }
+    }
+
+    private fun FragmentHistoryBinding.setUpAdapter() {
+        adapter = HistoryListAdapter({ viewModel.clearHistory() })
+        historyList.adapter = adapter
     }
 }
