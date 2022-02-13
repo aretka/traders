@@ -8,7 +8,6 @@ import java.math.BigDecimal
 data class Transaction(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-
     val symbol: String,
     val amount: BigDecimal,
     val usdAmount: BigDecimal = BigDecimal(0),

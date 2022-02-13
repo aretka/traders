@@ -1,7 +1,6 @@
 package com.example.traders.database
 
 import androidx.room.*
-import java.io.Serializable
 import java.math.BigDecimal
 
 @Entity

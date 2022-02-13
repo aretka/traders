@@ -1,7 +1,7 @@
 package com.example.traders.database
 
 enum class TransactionType(val message: String) {
-    DEPOSIT("Deopsit"),
+    DEPOSIT("Deposit"),
     PURCHASE("Purchase"),
     SELL("Sale")
 }

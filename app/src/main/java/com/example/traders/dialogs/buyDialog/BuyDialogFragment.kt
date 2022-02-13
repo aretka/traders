@@ -12,8 +12,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
 import com.example.traders.databinding.DialogFragmentBuyBinding
 import com.example.traders.dialogs.DialogValidationMessage
-import com.example.traders.roundAndFormatDouble
-import com.example.traders.roundNum
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import java.math.BigDecimal
@@ -44,13 +42,24 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogF
             binding.addListeners(dialog)
 
             lifecycleScope.launchWhenCreated {
-                viewModel.state.collect {
-                    binding.updateValues(it)
+                with(viewModel) {
+                    state.collect { state ->
+                        binding.updateValues(state)
+                    }
+                    events.collect { event ->
+                        when (event) {
+                            is BuyDialogEvent.Dismiss -> dismissDialog()
+                        }
+                    }
                 }
             }
 
             dialog
         } ?: throw IllegalStateException("Activity cannot be null")
+    }
+
+    private fun dismissDialog() {
+        dialog?.dismiss()
     }
 
     private fun DialogFragmentBuyBinding.initUI() {
@@ -69,7 +78,7 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogF
     @RequiresApi(Build.VERSION_CODES.O)
     private fun DialogFragmentBuyBinding.addListeners(dialog: AlertDialog) {
         priceInputField.addTextChangedListener { enteredVal ->
-            viewModel.validateInput(enteredVal.toString())
+            viewModel.onInputChanged(enteredVal.toString())
         }
 
         cancelBtn.setOnClickListener {
@@ -77,9 +86,7 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogF
         }
 
         buyBtn.setOnClickListener {
-            viewModel.updateBalance()
-            viewModel.saveTransactionToDb()
-            dialog.dismiss()
+            viewModel.onBuyButtonClicked()
         }
 
         maxBtn.setOnClickListener {

@@ -8,6 +8,7 @@ import com.example.traders.BaseViewModel
 import com.example.traders.database.Crypto
 import com.example.traders.database.Transaction
 import com.example.traders.database.TransactionType
+import com.example.traders.dialogs.DialogValidation
 import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.getCurrentTime
 import com.example.traders.repository.CryptoRepository
@@ -16,15 +17,18 @@ import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class BuyDialogViewModel @AssistedInject constructor(
-    val repository: CryptoRepository,
+    private val repository: CryptoRepository,
+    private val dialogValidation: DialogValidation,
     @Assisted val symbol: String,
     @Assisted val lastPrice: BigDecimal
 ) : BaseViewModel() {
@@ -39,88 +43,88 @@ class BuyDialogViewModel @AssistedInject constructor(
     )
     val state = _state.asStateFlow()
 
+    private val _events = MutableSharedFlow<BuyDialogEvent>()
+    val events = _events.asSharedFlow()
+
     init {
         getUsdBalance()
         getCryptoBalance()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun saveTransactionToDb() {
+    fun onBuyButtonClicked() {
         launch {
-            repository.insertTransaction(createTransaction())
+            listOf(
+                async { saveTransactionToDb() },
+                async { updateUSDBalance() },
+                async { updateCryptoBalance() }
+            ).awaitAll()
+
+            _events.emit(BuyDialogEvent.Dismiss)
         }
     }
 
-    fun updateBalance() {
-        //Update Crypto balance
-        launch {
-            _state.value.cryptoBalance?.let {
-                val newCryptoBalance = _state.value.cryptoToGet + it.amount
-                repository.insertCrypto(it.copy(amount = newCryptoBalance))
-            }
-        }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private suspend fun saveTransactionToDb() {
+        repository.insertTransaction(createTransaction())
+    }
 
-        //Update USD balance
-        launch {
-            repository.insertCrypto(_state.value.usdBalance.copy(amount = _state.value.usdLeft))
+    private suspend fun updateUSDBalance() {
+        repository.insertCrypto(_state.value.usdBalance.copy(amount = _state.value.usdLeft))
+    }
+
+    private suspend fun updateCryptoBalance() {
+        _state.value.cryptoBalance?.let {
+            val newCryptoBalance = _state.value.cryptoToGet + it.amount
+            repository.insertCrypto(it.copy(amount = newCryptoBalance))
         }
     }
 
-    fun validateInput(enteredVal: String) {
-        val decimalEnteredVal: BigDecimal
-
-        if (enteredVal.isNotBlank()) {
-            decimalEnteredVal = BigDecimal(enteredVal)
-        } else {
-            decimalEnteredVal = BigDecimal(0)
+    fun onInputChanged(enteredVal: String) {
+        if (validate(enteredVal)) {
+            calculateNewBalance()
         }
+    }
 
-        if (enteredVal.isBlank()) {
-            _state.value = _state.value.copy(
-                isBtnEnabled = false,
-                messageType = DialogValidationMessage.IS_EMPTY
-            )
-        } else if (decimalEnteredVal > _state.value.usdBalance.amount) {
-            _state.value = _state.value.copy(
-                isBtnEnabled = false,
-                messageType = DialogValidationMessage.IS_TOO_HIGH
-            )
-        } else if (decimalEnteredVal < _state.value.minInputVal) {
-            _state.value = _state.value.copy(
-                isBtnEnabled = false,
-                messageType = DialogValidationMessage.IS_TOO_LOW
-            )
+    private fun validate(enteredVal: String): Boolean {
+        val decimalEnteredVal = getDecimalOfEnteredValue(enteredVal)
+
+        val validationMessage = dialogValidation.validate(
+            decimalEnteredVal,
+            _state.value.minInputVal,
+            _state.value.usdBalance.amount
+        )
+
+        _state.value = _state.value.copy(
+            isBtnEnabled = validationMessage == DialogValidationMessage.IS_VALID,
+            messageType = validationMessage,
+            inputVal = decimalEnteredVal
+        )
+
+        return validationMessage == DialogValidationMessage.IS_VALID
+    }
+
+    private fun getDecimalOfEnteredValue(enteredVal: String): BigDecimal {
+        return if (enteredVal.isNotBlank()) {
+            BigDecimal(enteredVal)
         } else {
-            _state.value = _state.value.copy(
-                isBtnEnabled = true,
-                messageType = DialogValidationMessage.IS_VALID
-            )
+            BigDecimal(0)
         }
-
-        // Input val is set to 0 if nothing entered
-        _state.value = _state.value.copy(inputVal = decimalEnteredVal)
-
-        calculateNewBalance()
     }
 
     private fun getPriceToRound() = FixedCryptoList.valueOf(symbol).priceToRound
     private fun getAmountToRound() = FixedCryptoList.valueOf(symbol).amountToRound
 
     private fun calculateNewBalance() {
-        var usdLeft = _state.value.usdBalance.amount
-        var cryptoToGet = BigDecimal(0.0)
+        _state.value = with(_state.value) {
+            val usdLeft = usdBalance.amount - inputVal
+            val cryptoToGet = inputVal.divide(lastPrice, amountToRound, BigDecimal.ROUND_HALF_UP)
 
-        if (_state.value.messageType == DialogValidationMessage.IS_VALID) {
-            usdLeft -= _state.value.inputVal
-            // TODO apply updated roundFunction() and provide numOfDigits(int) from fixedCryptoList by symbol to round
-            cryptoToGet =
-                _state.value.inputVal.divide(lastPrice, amountToRound, BigDecimal.ROUND_HALF_UP)
+            copy(
+                usdLeft = usdLeft.roundNum(),
+                cryptoToGet = cryptoToGet.roundNum(_state.value.amountToRound)
+            )
         }
-
-        _state.value = _state.value.copy(
-            usdLeft = usdLeft.roundNum(),
-            cryptoToGet = cryptoToGet.roundNum(_state.value.amountToRound)
-        )
     }
 
     private fun getUsdBalance() {
