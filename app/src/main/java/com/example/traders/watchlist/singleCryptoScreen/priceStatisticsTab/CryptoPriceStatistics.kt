@@ -1,4 +1,4 @@
-package com.example.traders.watchlist.allCrypto.singleCryptoScreen.priceStatisticsTab
+package com.example.traders.watchlist.singleCryptoScreen.priceStatisticsTab
 
 import android.os.Bundle
 import android.view.LayoutInflater

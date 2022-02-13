@@ -1,4 +1,4 @@
-package com.example.traders.watchlist.allCrypto.singleCryptoScreen.priceStatisticsTab
+package com.example.traders.watchlist.singleCryptoScreen.priceStatisticsTab
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData

@@ -1,4 +1,4 @@
-package com.example.traders.watchlist.allCrypto.singleCryptoScreen
+package com.example.traders.watchlist.singleCryptoScreen
 
 import android.os.Bundle
 import android.view.LayoutInflater

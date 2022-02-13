@@ -1,4 +1,4 @@
-package com.example.traders.watchlist.allCrypto.singleCryptoScreen.chartTab
+package com.example.traders.watchlist.singleCryptoScreen.chartTab
 
 import android.os.Build
 import android.util.Log

@@ -1,4 +1,4 @@
-package com.example.traders.watchlist.allCrypto.singleCryptoScreen.chartTab
+package com.example.traders.watchlist.singleCryptoScreen.chartTab
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
@@ -12,7 +12,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runBlockingTest
@@ -20,7 +19,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import kotlin.test.assertEquals
-import kotlin.test.expect
 
 @ExperimentalCoroutinesApi
 class CryptoChartViewModelTest : TestCoroutineScope by TestCoroutineScope() {

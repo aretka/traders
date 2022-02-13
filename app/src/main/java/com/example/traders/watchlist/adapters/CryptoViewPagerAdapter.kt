@@ -4,9 +4,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.traders.watchlist.allCrypto.singleCryptoScreen.chartTab.CryptoChartFragment
-import com.example.traders.watchlist.allCrypto.singleCryptoScreen.descriptionTab.CryptoDescriptionFragment
-import com.example.traders.watchlist.allCrypto.singleCryptoScreen.priceStatisticsTab.CryptoPriceStatistics
+import com.example.traders.watchlist.singleCryptoScreen.chartTab.CryptoChartFragment
+import com.example.traders.watchlist.singleCryptoScreen.descriptionTab.CryptoDescriptionFragment
+import com.example.traders.watchlist.singleCryptoScreen.priceStatisticsTab.CryptoPriceStatistics
 
 class CryptoViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, val id: String) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
