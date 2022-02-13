@@ -1,12 +1,9 @@
-package com.example.traders.watchlist.allCrypto.singleCryptoScreen.descriptionTab
+package com.example.traders.watchlist.singleCryptoScreen.descriptionTab
 
-import android.os.Build
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.runtime.collectAsState
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels

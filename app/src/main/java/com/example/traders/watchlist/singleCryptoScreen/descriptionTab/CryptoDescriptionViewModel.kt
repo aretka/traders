@@ -1,4 +1,4 @@
-package com.example.traders.watchlist.allCrypto.singleCryptoScreen.descriptionTab
+package com.example.traders.watchlist.singleCryptoScreen.descriptionTab
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope

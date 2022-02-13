@@ -1,4 +1,4 @@
-package com.example.traders.watchlist.allCrypto.singleCryptoScreen.descriptionTab
+package com.example.traders.watchlist.singleCryptoScreen.descriptionTab
 
 data class DescriptionState(
     val projectInfoDesc: String? = null,
