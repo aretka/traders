@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 class WatchListFragment : BaseFragment() {
 
     private val viewModel: WatchListViewModel by viewModels()
+    private lateinit var binding: FragmentWatchListBinding
     private var adapter: WatchListAdapter? = null
 
     override fun onCreateView(
@@ -25,10 +26,18 @@ class WatchListFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentWatchListBinding.inflate(layoutInflater, container, false)
+        binding = FragmentWatchListBinding.inflate(layoutInflater, container, false)
+
+        binding.setPullToRefreshListener()
+        binding.setListAdapter()
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         with(viewModel) {
             isLoading.observe(viewLifecycleOwner) {
-                binding.handleLoader(it)
+                binding.changeLoaderVisibility(it)
             }
             lifecycleScope.launch {
                 state.collect { state ->
@@ -37,11 +46,6 @@ class WatchListFragment : BaseFragment() {
                 }
             }
         }
-
-        binding.setPullToRefreshListener()
-        binding.setListAdapter()
-
-        return binding.root
     }
 
     private fun FragmentWatchListBinding.setPullToRefreshListener() {
@@ -61,7 +65,7 @@ class WatchListFragment : BaseFragment() {
         itemsList.adapter = adapter
     }
 
-    private fun FragmentWatchListBinding.handleLoader(isLoading: Boolean) {
+    private fun FragmentWatchListBinding.changeLoaderVisibility(isLoading: Boolean) {
         if (isLoading) {
             allCryptoLoader.visibility = View.VISIBLE
         } else {

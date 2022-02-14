@@ -56,7 +56,7 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
 
         holder.binding.root.setOnClickListener { clickListener.onClick(slug, symbol) }
         holder.binding.cryptoPrice.text = roundAndFormatDouble(item.last.toDouble(), priceRoundNum)
-        holder.binding.cryptoNameShortcut.text = item.symbol
+        holder.binding.cryptoNameShortcut.text = symbol
         holder.binding.cryptoFullName.text = slug.replaceFirstChar { c -> c.uppercase() }
         getCryptoPriceChangeText(
             roundAndFormatDouble(item.priceChange.toDouble(), priceRoundNum),
