@@ -65,13 +65,17 @@ This is some desc
 
 <a name="technologies"></a>
 ## Technologies used
-* AndroidStudio kotlin
-* Flipper
-* Hilt DI
-* Glide
-* RecyclerView
-* Navigation
-* MVVM architecture
+* Tools used
+  * AndroidStudio kotlin
+  * Flipper<br/>
+* Android specific
+  * Hilt DI
+  * Glide
+  * RecyclerView
+  * Navigation
+  * MVVM architecture
+  * Shared preferences
+  * Room
 
 ## How to install?
 The app has not been released to google play yet, but it will be released in near future.</br></br>
