@@ -1,6 +1,7 @@
 package com.example.traders.dialogs.buyDialog
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -43,7 +44,7 @@ class BuyDialogViewModel @AssistedInject constructor(
     )
     val state = _state.asStateFlow()
 
-    private val _events = MutableSharedFlow<BuyDialogEvent>()
+    private val _events = MutableSharedFlow<BuyDialogEvent>(extraBufferCapacity = 1)
     val events = _events.asSharedFlow()
 
     init {
@@ -60,7 +61,7 @@ class BuyDialogViewModel @AssistedInject constructor(
                 async { updateCryptoBalance() }
             ).awaitAll()
 
-            _events.emit(BuyDialogEvent.Dismiss)
+            _events.tryEmit(BuyDialogEvent.Dismiss)
         }
     }
 
@@ -75,18 +76,18 @@ class BuyDialogViewModel @AssistedInject constructor(
 
     private suspend fun updateCryptoBalance() {
         _state.value.cryptoBalance?.let {
+            Log.e("OnBuy", "updateCryptoBalance called")
             val newCryptoBalance = _state.value.cryptoToGet + it.amount
             repository.insertCrypto(it.copy(amount = newCryptoBalance))
         }
     }
 
     fun onInputChanged(enteredVal: String) {
-        if (validate(enteredVal)) {
-            calculateNewBalance()
-        }
+        validate(enteredVal)
+        calculateNewBalance()
     }
 
-    private fun validate(enteredVal: String): Boolean {
+    private fun validate(enteredVal: String) {
         val decimalEnteredVal = getDecimalOfEnteredValue(enteredVal)
 
         val validationMessage = dialogValidation.validate(
@@ -100,8 +101,6 @@ class BuyDialogViewModel @AssistedInject constructor(
             messageType = validationMessage,
             inputVal = decimalEnteredVal
         )
-
-        return validationMessage == DialogValidationMessage.IS_VALID
     }
 
     private fun getDecimalOfEnteredValue(enteredVal: String): BigDecimal {
@@ -117,8 +116,13 @@ class BuyDialogViewModel @AssistedInject constructor(
 
     private fun calculateNewBalance() {
         _state.value = with(_state.value) {
-            val usdLeft = usdBalance.amount - inputVal
-            val cryptoToGet = inputVal.divide(lastPrice, amountToRound, BigDecimal.ROUND_HALF_UP)
+            var usdLeft = usdBalance.amount
+            var cryptoToGet = BigDecimal(0)
+
+            if(_state.value.messageType == DialogValidationMessage.IS_VALID) {
+                usdLeft -= inputVal
+                cryptoToGet = inputVal.divide(lastPrice, amountToRound, BigDecimal.ROUND_HALF_UP)
+            }
 
             copy(
                 usdLeft = usdLeft.roundNum(),
@@ -130,7 +134,10 @@ class BuyDialogViewModel @AssistedInject constructor(
     private fun getUsdBalance() {
         launch {
             val usdBalance = repository.getCryptoBySymbol("USD") ?: return@launch
-            _state.value = _state.value.copy(usdBalance = usdBalance)
+            _state.value = _state.value.copy(
+                usdBalance = usdBalance,
+                usdLeft = usdBalance.amount
+            )
         }
     }
 

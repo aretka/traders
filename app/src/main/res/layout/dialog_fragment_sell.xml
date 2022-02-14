@@ -42,7 +42,7 @@
         android:fontFamily="@font/roboto_bold"
         android:textSize="@dimen/small_text_size"
         android:textColor="@color/dark_gray"
-        android:text="0.0352"/>
+        tools:text="0.0352"/>
     <TextView
         android:id="@+id/crypto_usd_balance"
         android:layout_width="wrap_content"
@@ -62,7 +62,7 @@
         android:fontFamily="@font/roboto_bold"
         android:textSize="@dimen/small_text_size"
         android:textColor="@color/dark_gray"
-        android:text="$ 46,242.64"
+        tools:text="$ 46,242.64"
         />
 
     <TextView
@@ -121,7 +121,7 @@
         android:fontFamily="@font/roboto_bold"
         android:textSize="@dimen/small_text_size"
         android:textColor="@color/dark_gray"
-        android:text="0.3323"/>
+        tools:text="0.3323"/>
 
     <TextView
         android:id="@+id/crypto_balance_left_label"
@@ -140,7 +140,7 @@
         android:fontFamily="@font/roboto_bold"
         android:textSize="@dimen/small_text_size"
         android:textColor="@color/dark_gray"
-        android:text="$ 300.10"/>
+        tools:text="$ 300.10"/>
 
     <LinearLayout
         android:layout_width="match_parent"

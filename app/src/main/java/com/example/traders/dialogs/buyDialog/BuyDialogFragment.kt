@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
@@ -27,6 +28,8 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogF
         BuyDialogViewModel.provideFactory(viewModelAssistedFactory, symbol, lastPrice)
     }
 
+    private lateinit var binding: DialogFragmentBuyBinding
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
@@ -34,28 +37,39 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogF
             val builder = AlertDialog.Builder(it)
             val inflater = requireActivity().layoutInflater
 
-            val binding = DialogFragmentBuyBinding.inflate(inflater)
+            binding = DialogFragmentBuyBinding.inflate(inflater)
             val dialog = builder.setView(binding.root)
                 .setCancelable(true)
                 .create()
             binding.initUI()
             binding.addListeners(dialog)
-
-            lifecycleScope.launchWhenCreated {
-                with(viewModel) {
-                    state.collect { state ->
-                        binding.updateValues(state)
-                    }
-                    events.collect { event ->
-                        when (event) {
-                            is BuyDialogEvent.Dismiss -> dismissDialog()
-                        }
-                    }
-                }
-            }
+            collectViewModelState()
+            collectEvents()
 
             dialog
         } ?: throw IllegalStateException("Activity cannot be null")
+    }
+
+    private fun collectViewModelState() {
+        lifecycleScope.launchWhenCreated {
+            with(viewModel) {
+                state.collect { state ->
+                    binding.updateValues(state)
+                }
+            }
+        }
+    }
+
+    private fun collectEvents() {
+        lifecycleScope.launchWhenCreated {
+            with(viewModel) {
+                events.collect { event ->
+                    when (event) {
+                        is BuyDialogEvent.Dismiss -> dismissDialog()
+                    }
+                }
+            }
+        }
     }
 
     private fun dismissDialog() {

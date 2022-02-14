@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
@@ -29,6 +30,8 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
         SellDialogViewModel.provideFactory(assistedViewModelFactory, symbol, lastPrice)
     }
 
+    private lateinit var binding: DialogFragmentSellBinding
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
@@ -36,21 +39,36 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
             val builder = AlertDialog.Builder(it)
             val inflater = requireActivity().layoutInflater
 
-            val view = DialogFragmentSellBinding.inflate(inflater)
-            val dialog = builder.setView(view.root)
+            binding = DialogFragmentSellBinding.inflate(inflater)
+            val dialog = builder.setView(binding.root)
                 .setCancelable(true)
                 .create()
-            view.initUI()
-            view.addListeners(dialog)
+            binding.initUI()
+            binding.addListeners(dialog)
 
-            lifecycleScope.launchWhenCreated {
-                viewModel.state.collect {
-                    view.updateFields(it)
-                }
-            }
+            collectStateData()
+            collectEventsData()
 
             dialog
         } ?: throw IllegalStateException("Activity cannot be null")
+    }
+
+    private fun collectEventsData() {
+        lifecycleScope.launchWhenCreated {
+            viewModel.events.collect { event ->
+                when(event) {
+                    is SellDialogEvent.Dismiss -> dialog?.dismiss()
+                }
+            }
+        }
+    }
+
+    private fun collectStateData() {
+        lifecycleScope.launchWhenCreated {
+            viewModel.state.collect {
+                binding.updateFields(it)
+            }
+        }
     }
 
     private fun DialogFragmentSellBinding.initUI() {
@@ -73,7 +91,7 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
     @RequiresApi(Build.VERSION_CODES.O)
     private fun DialogFragmentSellBinding.addListeners(dialog: AlertDialog) {
         priceInputField.addTextChangedListener { enteredVal ->
-            viewModel.validateInput(enteredVal.toString())
+            viewModel.onInputChanged(enteredVal.toString())
         }
 
         cancelBtn.setOnClickListener {
@@ -81,9 +99,7 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
         }
 
         sellBtn.setOnClickListener {
-            viewModel.updateBalance()
-            viewModel.saveTransactionToDb()
-            dialog.dismiss()
+            viewModel.onSellButtonClicked()
         }
 
         maxBtn.setOnClickListener {
