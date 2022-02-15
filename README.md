@@ -127,7 +127,7 @@ Whole transaction page  | OnEraseAllTransactions
 - Balance change over time screen to track how your crypto list changed over time.
 
 <a name="technologies"></a>
-## Technologies used
+## 4. Technologies used
 * Tools used
   * AndroidStudio kotlin
   * Flipper<br/>
@@ -140,6 +140,7 @@ Whole transaction page  | OnEraseAllTransactions
   * Shared preferences
   * Room
 
-## How to install?
+<a name="installation"></a>
+## 5. How to install?
 The app has not been released to google play yet, but it will be released in near future.</br></br>
 The only way to to launch this app is to clone this repo and build project using android studio.
