@@ -8,7 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="10dp"
-    android:background="@drawable/top_bot_rounded">
+    android:background="@drawable/transaction_layout">
 
     <TextView
         android:id="@+id/transaction_type_field"

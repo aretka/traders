@@ -24,6 +24,7 @@ class CryptoRepository @Inject constructor(
 
     var isFetching = false
 
+    // Not utilized but kept as a flow example usage
     val binanceMarketData = flow {
         while (isFetching) {
             val response = getBinance24Data()

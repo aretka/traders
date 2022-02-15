@@ -36,7 +36,7 @@ class PortfolioFragment: BaseFragment() {
         binding.setUpAdapter()
 
         // Update portfolio on list change
-        viewModel.livePortfolioList.observe(this) {
+        viewModel.livePortfolioList.observe(viewLifecycleOwner) {
             it?.let {
                 binding.updateMessageVisibility(it)
                 viewModel.updateStateData()

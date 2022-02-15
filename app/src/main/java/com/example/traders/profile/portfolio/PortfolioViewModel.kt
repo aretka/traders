@@ -7,6 +7,7 @@ import com.example.traders.profile.cryptoData.CryptoInUsd
 import com.example.traders.profile.cryptoData.CryptoTicker
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.roundNum
+import com.example.traders.watchlist.singleCryptoScreen.priceStatisticsTab.Hilt_CryptoPriceStatistics
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,7 +43,8 @@ class PortfolioViewModel @Inject constructor(
 
     fun updateStateData() {
         // filters sublist of new crypto
-        if (livePortfolioList.value?.isNotEmpty() ?: false) {
+        if (livePortfolioList.value?.isNotEmpty() ?: false && _state.value.prevList != livePortfolioList.value) {
+            _state.value = _state.value.copy(prevList = livePortfolioList.value!!)
             val listToFetch = livePortfolioList.value?.filter { newState ->
                 _state.value.cryptoListInUsd.filter { newState.symbol == it.symbol }.isEmpty()
             } ?: emptyList()
@@ -51,7 +53,7 @@ class PortfolioViewModel @Inject constructor(
                 calculateTotalBalance()
                 calculateChartData()
             }
-        } else {
+        } else if(livePortfolioList.value?.isEmpty() ?: false) {
             _state.value = _state.value.copy(
                 usdPricesFromBinance = emptyList(),
                 cryptoListInUsd = emptyList()
