@@ -38,7 +38,7 @@ Watchlist is the main launching screen comprised of top 30 crypto list elements 
 Single crypto screen represents 3 tabs: crypto chart, price statistics(last 24h data, ROI etc) and project description.</br></br>
 <img src="https://user-images.githubusercontent.com/57877668/154049320-c46bd625-87d6-439b-b52b-f8b69df64dc7.gif" width="300"/></br>
 
-#### 2.2.1 Chart screen tab
+#### 2.2.1.Chart screen tab
 This tab is the main single crypto screen which shows the recent crypto price info, candle chart and buy,sell buttons.</br>
 **Main functionality points:**
 * Header info(latest price, and price change) is collected from websocket.
@@ -63,8 +63,8 @@ This tab is the main single crypto screen which shows the recent crypto price in
 :-----------------------:|:-----------------------:|:-----------------------:|:-----------------------:
 <img src="https://user-images.githubusercontent.com/57877668/154037457-84c31867-3365-41a6-8cbc-2e407f5ec281.png" width="230"/> | <img src="https://user-images.githubusercontent.com/57877668/154037965-be4dc8bb-acb5-4850-91ce-5c9090a63ec9.png" width="230"/> | <img src="https://user-images.githubusercontent.com/57877668/154037554-44fe6e3b-9a32-446f-8308-f35c8b662425.png" width="230"/> | <img src="https://user-images.githubusercontent.com/57877668/154038127-30289039-1a88-46ab-ac38-bcced0c723b3.png" width="230"/>
 
-#### 2.2.2 Price statistics tab
-Price statistics tab represents essential statistics points such as market dominance, 1h/24h volume, ATH data, ROI and others.
+#### 2.2.2.Price statistics tab
+Price statistics tab represents essential statistics points such as market dominance, 1h/24h volume, ATH data, ROI and others.</br>
 **Main functionality points:**
 * Header of this screen comprises of immutable data. Icon, latest price stats(latest price, 24h/change), market dominance, market cap, 1h/24h volume.
 * Content area consists of 4 expandable cards: last 1h/24h data(high, low, open, close, volume), ATH data(price, date, days since, perecent down), ROI data(return on investment).
@@ -72,7 +72,7 @@ Price statistics tab represents essential statistics points such as market domin
 
 <img src="https://user-images.githubusercontent.com/57877668/154047257-43509813-7805-4cd3-afeb-fadf4f93c43b.gif" width="300"/>
 
-#### 2.2.3 Project description tab
+#### 2.2.3.Project description tab
 Description tab simply shows Project info and pre-history of the coin. Data comes from messari api.</br>
 <img src="https://user-images.githubusercontent.com/57877668/154049367-e833d09d-a0d2-4a0a-ab7c-47ad98ecebc2.gif" width="300"/>
 
@@ -80,7 +80,7 @@ Description tab simply shows Project info and pre-history of the coin. Data come
 Profile screen contains 2 tabs portfolio and transaction history tabs.</br>
 <img src="https://user-images.githubusercontent.com/57877668/154051857-c0dda0fb-1bbb-4901-988c-a1a0baa63af7.gif" width="300"/>
 
-#### 2.3.1 Portfolio tab
+#### 2.3.1.Portfolio tab
 Portfolio tab comprises of 3 parts: total balance and chart, button area(), crypto list.</br>
 **Main functionality points:**
 * Crypto portfolio the data comes from room local databse and prices from binance api.
@@ -103,7 +103,7 @@ Empty chart  | Item count <= 5  |  Item count > 5
 :-------------:|:------------------:|:----------------:
 <img src="https://user-images.githubusercontent.com/57877668/154079215-d33e7e74-b650-4900-9476-b769efbb14fa.png" width="300"/> | <img src="https://user-images.githubusercontent.com/57877668/154079382-5aa73e73-45ca-45b6-9ba5-ec52fd58ae24.png" width="300"/> | <img src="https://user-images.githubusercontent.com/57877668/154079541-d2ea4983-b12b-4c50-954f-0f81ac08a7eb.png" width="300"> 
 
-#### 2.3.2 Transaction tab
+#### 2.3.2.Transaction tab
 This tab shows a list of executed transactions stored in room database.</br>
 **Main functionality points:**
 * Whole screen is a single recyclerView consisting 3 different viewHolders: header, deposit and purchase/sell holders.
@@ -128,19 +128,23 @@ Whole transaction page  | OnEraseAllTransactions
 
 <a name="technologies"></a>
 ## 4. Technologies used
-* Tools used
-  * AndroidStudio kotlin
-  * Flipper<br/>
+* IDE's, app debuggers
+  * Android Studio - it was chosen as development environment since it is the official integrated development environment (IDE) for Google's Android operating system. Kotlin was chosen as a language(google preferred langugage is kotlin instead of java since 2019).
+  * Flipper - it has been used as a platform for debugging Android app, check network requests, observe room database, shared-preferences etc. <br/>
 * Android specific
-  * Hilt DI
-  * Glide
-  * RecyclerView
-  * Navigation
-  * MVVM architecture
-  * Shared preferences
-  * Room
+  * Hilt DI - a technique widely used in OOP for better reusability, ease of refactoring and ease of testing has been utilized with hilt.
+  * Glide - fast and efficient open source media management and image loading framework for Android has been applied for icon fetching and catching.
+  * RecyclerView - effiecient way of displaying large sets of data. Single and multi-type viewHolder recycler views has been utilized in the project.
+  * Navigation - bottom multistack navigation was accomplished in this app by creating couple graphs and implementing in a parent nav_graph.
+  * MVVM architecture - a pattern that suggests separating the data presentation logic(Views or UI) from the core business logic part of the application.
+  * <img src="https://user-images.githubusercontent.com/57877668/154479959-ee7aec97-f36c-41c6-ad8d-987947f39aa5.png" width="500" />
+  * Shared preferences - key-value pairs has been used in the early version of the app but now they are removed and replaced with room.
+  * Room - a local database designated to store data on your phone has been used for saving crypto porftolio and transaction history.
+  * Retrofit with OKHTTP
+  * Websocket - a persistent connection between a client and server which provides full-duplex communication channels over a single TCP connection. It was uesd for live crypto data fetching.
 
 <a name="installation"></a>
 ## 5. How to install?
 The app has not been released to google play yet, but it will be released in near future.</br></br>
-The only way to to launch this app is to clone this repo and build project using android studio.
+The only way to to launch this app is to clone this repo and build project using Android studio or from
+<a href="https://developer.android.com/studio/build/building-cmdline">CMD</a>.
