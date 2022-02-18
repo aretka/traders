@@ -7,10 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
-import com.example.traders.R
+import com.example.traders.*
 import com.example.traders.databinding.ListItemCryptoBinding
-import com.example.traders.getCryptoPriceChangeText
-import com.example.traders.roundAndFormatDouble
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24HourData.Binance24DataItem
 
@@ -40,11 +38,11 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
             val priceRoundNum = FixedCryptoList.valueOf(symbol).priceToRound
 
             holder.binding.cryptoPrice.text = roundAndFormatDouble(item.last.toDouble(), priceRoundNum)
-            getCryptoPriceChangeText(
+            holder.binding.cryptoPriceChange.setPriceChangeText(
                 roundAndFormatDouble(item.priceChange.toDouble(), priceRoundNum),
-                roundAndFormatDouble(item.priceChangePercent.toDouble()),
-                holder.binding.cryptoPriceChange
+                roundAndFormatDouble(item.priceChangePercent.toDouble())
             )
+            holder.binding.cryptoPriceChange.setPriceChangeTextColor()
         }
     }
 
@@ -58,11 +56,12 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
         holder.binding.cryptoPrice.text = roundAndFormatDouble(item.last.toDouble(), priceRoundNum)
         holder.binding.cryptoNameShortcut.text = symbol
         holder.binding.cryptoFullName.text = slug.replaceFirstChar { c -> c.uppercase() }
-        getCryptoPriceChangeText(
+        holder.binding.cryptoPriceChange.setPriceChangeText(
             roundAndFormatDouble(item.priceChange.toDouble(), priceRoundNum),
-            roundAndFormatDouble(item.priceChangePercent.toDouble()),
-            holder.binding.cryptoPriceChange
-        )
+            roundAndFormatDouble(item.priceChangePercent.toDouble())
+            )
+        holder.binding.cryptoPriceChange.setPriceChangeTextColor()
+
         Glide.with(holder.binding.cryptoLogo)
             .load(FixedCryptoList.valueOf(item.symbol.replace("USDT", "")).logoUrl)
             .placeholder(R.drawable.ic_download)

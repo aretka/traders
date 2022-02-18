@@ -14,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class DepositDialogFragment: DialogFragment() {
+class DepositDialogFragment : DialogFragment() {
     private val viewModel: DepositViewModel by viewModels()
 
     private lateinit var binding: DialogFragmentDepositBinding
@@ -41,7 +41,7 @@ class DepositDialogFragment: DialogFragment() {
     private fun collcetEvents() {
         lifecycleScope.launchWhenCreated {
             viewModel.events.collect {
-                when(it) {
+                when (it) {
                     is DepositDialogEvent.Dismiss -> dialog?.dismiss()
                 }
             }

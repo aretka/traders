@@ -8,14 +8,11 @@ import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.example.traders.BaseFragment
-import com.example.traders.R
+import com.example.traders.*
 import com.example.traders.customviews.CandleChart
 import com.example.traders.databinding.FragmentCryptoItemChartBinding
 import com.example.traders.dialogs.buyDialog.BuyDialogFragment
 import com.example.traders.dialogs.sellDialog.SellDialogFragment
-import com.example.traders.getCryptoPriceChangeText
-import com.example.traders.roundAndFormatDouble
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,11 +54,11 @@ class CryptoChartFragment(val slug: String) : BaseFragment() {
     private fun FragmentCryptoItemChartBinding.setHeaderPrices(priceTicker: PriceTickerData?) {
         priceTicker?.let {
             livePriceText.text = "$ " + roundAndFormatDouble(it.last.toDouble(), viewModel.chartState.value.priceNumToRound)
-            getCryptoPriceChangeText(
+            priceChangeText.setPriceChangeText(
                 roundAndFormatDouble(it.priceChange.toDouble(), viewModel.chartState.value.priceNumToRound),
                 roundAndFormatDouble(it.priceChangePercent.toDouble()),
-                priceChangeText
             )
+            priceChangeText.setPriceChangeTextColor()
         }
     }
 

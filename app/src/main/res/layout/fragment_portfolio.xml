@@ -61,7 +61,7 @@
                         tools:text="$ 124,124.45"/>
                 </LinearLayout>
                 <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/second_piechart"
+                    android:id="@+id/pie_chart"
                     android:layout_width="match_parent"
                     android:layout_height="180dp"
                     app:layout_constraintStart_toStartOf="parent"

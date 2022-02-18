@@ -13,6 +13,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Rule
@@ -63,7 +64,7 @@ class CryptoChartViewModelTest : TestCoroutineScope by TestCoroutineScope() {
         )
     }
 
-    private fun createSharedFlowWithFirstEmit(): MutableSharedFlow<PriceTicker> {
+    private fun createSharedFlowWithFirstEmit(): SharedFlow<PriceTickerData>? {
         val sharedFlow = MutableSharedFlow<PriceTicker>(
             1,
             1,

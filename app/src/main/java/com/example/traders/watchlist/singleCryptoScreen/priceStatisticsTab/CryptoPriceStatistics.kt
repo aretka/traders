@@ -10,11 +10,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
-import com.example.traders.BaseFragment
-import com.example.traders.R
+import com.example.traders.*
 import com.example.traders.databinding.FragmentCryptoItemPriceStatisticsBinding
-import com.example.traders.getCryptoPriceChangeText
-import com.example.traders.roundAndFormatDouble
 import com.example.traders.watchlist.cryptoData.cryptoStatsData.*
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -83,11 +80,11 @@ class CryptoPriceStatistics(val id: String) : BaseFragment() {
         val priceChange =
             roundAndFormatDouble(data.market_data.ohlcv_last_24_hour.open - data.market_data.ohlcv_last_24_hour.close)
         binding.cryptoPrice.text = "$ ${roundAndFormatDouble(data.market_data.price_usd)}"
-        getCryptoPriceChangeText(
+        binding.cryptoPriceChange.setPriceChangeText(
             priceChange,
-            roundAndFormatDouble(data.market_data.percent_change_usd_last_24_hours),
-            binding.cryptoPriceChange
+            roundAndFormatDouble(data.market_data.percent_change_usd_last_24_hours)
         )
+        binding.cryptoPriceChange.setPriceChangeTextColor()
         binding.marketDominance.text = "${roundAndFormatDouble(data.marketcap.marketcap_dominance_percent)}%"
         binding.marketCap.text = "$ ${roundAndFormatDouble(data.marketcap.current_marketcap_usd)}"
         binding.volume1h.text = "$ ${roundAndFormatDouble(data.market_data.ohlcv_last_1_hour.volume)}"

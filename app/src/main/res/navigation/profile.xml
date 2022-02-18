@@ -12,8 +12,4 @@
         android:label="fragment_user_profile"
         tools:layout="@layout/fragment_portfolio" />
 
-<!--    <dialog>-->
-
-<!--    </dialog>-->
-
 </navigation>

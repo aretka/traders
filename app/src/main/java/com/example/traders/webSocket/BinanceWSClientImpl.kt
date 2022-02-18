@@ -2,8 +2,6 @@ package com.example.traders.webSocket
 
 import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
-import androidx.compose.ui.text.toLowerCase
 import com.example.traders.enumConstantNames
 import com.example.traders.paramsToJson
 import com.example.traders.returnTickerWithRoundedPrice
@@ -18,8 +16,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
-import java.util.*
-import kotlin.reflect.KClass
 
 class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
 
@@ -95,11 +91,11 @@ class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
     }
 
     override fun stopConnection() {
-        if(isOpen) close()
+        if (isOpen) close()
     }
 
     override fun restartConnection() {
-        if(isClosed) reconnect()
+        if (isClosed) reconnect()
     }
 
     companion object {

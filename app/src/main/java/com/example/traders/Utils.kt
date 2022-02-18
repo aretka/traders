@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24HourData.Binance24DataItem
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
+import org.w3c.dom.Text
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDateTime
@@ -34,7 +35,6 @@ fun getCryptoPriceChangeText(
             finalPriceChange,
             percentagePriceChange
         )
-        textView.setTextColor(ContextCompat.getColor(textView.context, R.color.red))
     } else {
         if (priceChange.contains('-')) finalPriceChange = finalPriceChange.replace("-", "")
         textView.text = textView.context.getString(
@@ -42,9 +42,39 @@ fun getCryptoPriceChangeText(
             finalPriceChange,
             percentagePriceChange
         )
-        textView.setTextColor(ContextCompat.getColor(textView.context, R.color.green))
     }
 
+}
+
+fun TextView.setPriceChangeText(
+    priceChange: String,
+    percentagePriceChange: String
+) {
+    var finalPriceChange = priceChange
+    if (percentagePriceChange.contains('-')) {
+        if (!priceChange.contains('-')) finalPriceChange = "-" + finalPriceChange
+        text = context.getString(
+            R.string.crypto_price_red,
+            finalPriceChange,
+            percentagePriceChange
+        )
+    } else {
+        if (priceChange.contains('-')) finalPriceChange = finalPriceChange.replace("-", "")
+        text = context.getString(
+            R.string.crypto_price_green,
+            finalPriceChange,
+            percentagePriceChange
+        )
+    }
+
+}
+
+fun TextView.setPriceChangeTextColor() {
+    if(this.text.contains('-')) {
+        setTextColor(ContextCompat.getColor(context, R.color.red))
+    } else {
+        setTextColor(ContextCompat.getColor(context, R.color.green))
+    }
 }
 
 fun paramsToJson(params: List<String>, subscription: String, type: String): String {

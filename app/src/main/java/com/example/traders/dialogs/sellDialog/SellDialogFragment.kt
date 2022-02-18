@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
@@ -13,8 +12,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
 import com.example.traders.databinding.DialogFragmentSellBinding
 import com.example.traders.dialogs.DialogValidationMessage
-import com.example.traders.roundAndFormatDouble
-import com.example.traders.roundNum
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import java.math.BigDecimal
@@ -56,7 +53,7 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
     private fun collectEventsData() {
         lifecycleScope.launchWhenCreated {
             viewModel.events.collect { event ->
-                when(event) {
+                when (event) {
                     is SellDialogEvent.Dismiss -> dialog?.dismiss()
                 }
             }
@@ -109,7 +106,8 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
 
     private fun DialogFragmentSellBinding.updateFields(state: SellState) {
         if (state.messageType == DialogValidationMessage.IS_TOO_LOW) {
-            validationMessage.text = state.messageType.message + viewModel.state.value.minInputVal.toString()
+            validationMessage.text =
+                state.messageType.message + viewModel.state.value.minInputVal.toString()
         } else {
             validationMessage.text = state.messageType.message
         }

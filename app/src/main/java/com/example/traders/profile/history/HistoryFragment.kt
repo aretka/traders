@@ -25,7 +25,7 @@ class HistoryFragment : BaseFragment() {
     ): View {
         val binding = FragmentHistoryBinding.inflate(inflater, container, false)
         binding.setUpAdapter()
-        viewModel.transactionList.observe(this) {
+        viewModel.transactionList.observe(viewLifecycleOwner) {
             it?.let { list ->
                 binding.emptyListMessageVisibility(it)
                 adapter.addHeaderAndSubmitList(list.reversed())
