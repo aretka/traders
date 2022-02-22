@@ -11,9 +11,9 @@ import com.example.traders.database.Transaction
 import com.example.traders.database.TransactionType
 import com.example.traders.dialogs.DialogValidation
 import com.example.traders.dialogs.DialogValidationMessage
-import com.example.traders.getCurrentTime
+import com.example.traders.utils.getCurrentTime
 import com.example.traders.repository.CryptoRepository
-import com.example.traders.roundNum
+import com.example.traders.utils.roundNum
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory

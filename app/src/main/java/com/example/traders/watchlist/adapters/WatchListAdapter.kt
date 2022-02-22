@@ -9,6 +9,9 @@ import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.example.traders.*
 import com.example.traders.databinding.ListItemCryptoBinding
+import com.example.traders.utils.roundAndFormatDouble
+import com.example.traders.utils.setPriceChangeText
+import com.example.traders.utils.setPriceChangeTextColor
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24HourData.Binance24DataItem
 

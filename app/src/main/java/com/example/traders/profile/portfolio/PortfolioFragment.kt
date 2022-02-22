@@ -11,8 +11,10 @@ import com.example.traders.R
 import com.example.traders.database.Crypto
 import com.example.traders.databinding.FragmentPortfolioBinding
 import com.example.traders.dialogs.depositDialog.DepositDialogFragment
+import com.example.traders.profile.ProfileFragmentDirections
 import com.example.traders.profile.adapters.PortfolioListAdapter
-import com.example.traders.profile.cryptoData.CryptoInUsd
+import com.example.traders.watchlist.WatchListFragmentDirections
+import com.example.traders.watchlist.adapters.SingleCryptoListener
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -100,7 +102,13 @@ class PortfolioFragment: BaseFragment() {
     }
 
     private fun FragmentPortfolioBinding.setUpAdapter() {
-        adapter = PortfolioListAdapter()
+        adapter = PortfolioListAdapter(SingleCryptoListener { slug, symbol ->
+            if (symbol != null) {
+                val direction = ProfileFragmentDirections
+                    .actionUserProfileFragmentToCryptoItemFragment(slug, symbol)
+                navController.navigate(direction)
+            }
+        })
         portfolioList.adapter = adapter
     }
 

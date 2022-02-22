@@ -12,20 +12,30 @@ import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.traders.*
 import com.example.traders.databinding.FragmentCryptoItemPriceStatisticsBinding
+import com.example.traders.dialogs.buyDialog.BuyDialogViewModel
+import com.example.traders.utils.roundAndFormatDouble
+import com.example.traders.utils.setPriceChangeText
+import com.example.traders.utils.setPriceChangeTextColor
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.cryptoStatsData.*
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class CryptoPriceStatistics(val id: String) : BaseFragment() {
+class CryptoPriceStatisticsFragment(val crypto: FixedCryptoList) : BaseFragment() {
 
-    private val viewModel: CryptoPriceStatisticsViewModel by viewModels()
+    @Inject
+    lateinit var viewModelAssistedFactory: CryptoPriceStatisticsViewModel.Factory
+
+    private val viewModel: CryptoPriceStatisticsViewModel by viewModels() {
+        CryptoPriceStatisticsViewModel.provideFactory(viewModelAssistedFactory, crypto)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentCryptoItemPriceStatisticsBinding.inflate(inflater, container, false)
-        viewModel.fetchCryptoPriceStatistics(id)
         viewModel.cryptoStatsResponse.observe(viewLifecycleOwner, {
             fillMainSectionData(
                 binding,

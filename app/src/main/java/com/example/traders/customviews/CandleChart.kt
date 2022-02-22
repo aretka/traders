@@ -10,7 +10,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import com.example.traders.R
-import com.example.traders.roundAndFormatDouble
+import com.example.traders.utils.roundAndFormatDouble
 
 class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private var cryptoData: List<List<Float>> = emptyList()

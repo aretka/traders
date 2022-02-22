@@ -1,7 +1,6 @@
 package com.example.traders.watchlist.singleCryptoScreen.chartTab
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -13,106 +12,70 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.O)
 class CryptoChartViewModel @AssistedInject constructor(
     private val repository: CryptoRepository,
     private val webSocketClient: BinanceWSClient,
-    @Assisted private val slug: String
+    @Assisted private val crypto: FixedCryptoList
 ) : BaseViewModel() {
 
-    private val symbol = getSymbol()
-    private val priceNumToRound = getPriceRoundNum()
-
-    private val _chartState = MutableStateFlow(ChartState(priceNumToRound = priceNumToRound))
-    val chartState: StateFlow<ChartState>
-        get() = _chartState
+    private val _chartState = MutableStateFlow(ChartState())
+    val chartState = _chartState.asStateFlow()
 
     init {
         collectBinanceTickerData()
-    }
-
-    fun fetchAllChartData() {
-        fetchCryptoPriceStatistics(90, "1d")
-        fetchCryptoPriceStatistics(360, "1w")
+        fetchCryptoChartData(CandleType.DAILY)
+        fetchCryptoChartData(CandleType.WEEKLY)
     }
 
     fun onChartBtnSelected(btnId: BtnId) {
         if (_chartState.value.chartBtnsEnabled) {
-            when (btnId) {
-                BtnId.MONTH1_BTN -> {
-                    setBtnActiveToFalse()
-                    _chartState.value = _chartState.value.copy(isMonth1BtnActive = true)
-                }
-                BtnId.MONTH3_BTN -> {
-                    setBtnActiveToFalse()
-                    _chartState.value = _chartState.value.copy(isMonth3BtnActive = true)
-                }
-                BtnId.MONTH6_BTN -> {
-                    setBtnActiveToFalse()
-                    _chartState.value = _chartState.value.copy(isMonth6BtnActive = true)
-                }
-                BtnId.MONTH12_BTN -> {
-                    setBtnActiveToFalse()
-                    _chartState.value = _chartState.value.copy(isMonth12BtnActive = true)
-                }
-            }
+            _chartState.value = _chartState.value.copy(
+                prevActiveButtonId = _chartState.value.activeButtonId,
+                activeButtonId = btnId
+            )
         }
     }
 
-    private fun getSymbol(): String {
-        return FixedCryptoList.getEnumName(slug)?.name.toString()
-    }
-
-    private fun getPriceRoundNum(): Int {
-        return FixedCryptoList.valueOf(symbol).priceToRound
-    }
-
-    private fun fetchCryptoPriceStatistics(numDays: Long, candleInterval: String) {
-        val startDate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getStartDate(numDays)
-        } else {
-            TODO("VERSION.SDK_INT < O")
-        }
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun fetchCryptoChartData(candleType: CandleType) {
+        val startDate = getStartDate(candleType.numDays)
 
         launch {
-            val response = repository.getCryptoChartData(slug, startDate, candleInterval).body()
+            val response = repository.getCryptoChartData(crypto.slug, startDate, candleType.candleInterval).body()
                 ?: return@launch
 
-            when (numDays.toInt()) {
-                90 -> _chartState.value =
+            when (candleType) {
+                CandleType.DAILY -> _chartState.value =
                     _chartState.value.copy(chartDataFor90d = response.data.values)
-                360 -> _chartState.value =
+                CandleType.WEEKLY -> _chartState.value =
                     _chartState.value.copy(chartDataFor360d = response.data.values)
-                else -> Log.e(this.javaClass.toString(), "Wrong num of days")
             }
 
-            if (_chartState.value.chartDataFor90d != null && _chartState.value.chartDataFor360d != null) {
+            if (chartDataIsFetched()) {
                 _chartState.value = _chartState.value.copy(chartBtnsEnabled = true)
             }
         }
     }
 
-    private fun collectBinanceTickerData() {
+    private fun chartDataIsFetched(): Boolean {
+        return _chartState.value.chartDataFor90d != null && _chartState.value.chartDataFor360d != null
+    }
+
+    fun collectBinanceTickerData() {
         launch {
             webSocketClient.state.collect {
-                if (it.symbol.replace("USDT", "") == symbol.uppercase()) {
+                if (it.symbol.replace("USDT", "") == crypto.name.uppercase()) {
                     _chartState.value = _chartState.value.copy(tickerData = it)
                 }
             }
         }
-    }
-
-    private fun setBtnActiveToFalse() {
-        _chartState.value = _chartState.value.copy(isMonth1BtnActive = false)
-        _chartState.value = _chartState.value.copy(isMonth3BtnActive = false)
-        _chartState.value = _chartState.value.copy(isMonth6BtnActive = false)
-        _chartState.value = _chartState.value.copy(isMonth12BtnActive = false)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -126,16 +89,16 @@ class CryptoChartViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(someVal: String): CryptoChartViewModel
+        fun create(crypto: FixedCryptoList): CryptoChartViewModel
     }
 
     companion object {
         fun provideFactory(
             assistedFactory: Factory,
-            someVal: String
+            crypto: FixedCryptoList
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(someVal) as T
+                return assistedFactory.create(crypto) as T
             }
         }
     }

@@ -10,14 +10,14 @@ import com.example.traders.R
 import com.example.traders.databinding.ListItemCryptoBinding
 import com.example.traders.databinding.ListPortfolioHeaderBinding
 import com.example.traders.profile.cryptoData.CryptoInUsd
+import com.example.traders.watchlist.adapters.SingleCryptoListener
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 
-class PortfolioListAdapter :
+class PortfolioListAdapter(private val singleCryptoListener: SingleCryptoListener) :
     ListAdapter<DataItem, RecyclerView.ViewHolder>(CryptoDiffCallback()) {
 
     fun addHeaderAndSubmitList(list: List<CryptoInUsd>) {
         val items = when (list) {
-            null -> emptyList()
             emptyList<CryptoInUsd>() -> emptyList()
             else -> listOf(DataItem.Header) + list.map { DataItem.CryptoItem(it) }
         }
@@ -49,7 +49,7 @@ class PortfolioListAdapter :
         when (holder) {
             is CryptoViewHolder -> {
                 val item = currentList[position] as DataItem.CryptoItem
-                holder.bind(item.cryptoInUsd)
+                holder.bind(item.cryptoInUsd, singleCryptoListener)
             }
         }
     }
@@ -67,9 +67,11 @@ class PortfolioListAdapter :
 
     class CryptoViewHolder(val binding: ListItemCryptoBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: CryptoInUsd) {
+        fun bind(item: CryptoInUsd, openSingleCrypto: SingleCryptoListener) {
+            val slug = FixedCryptoList.valueOf(item.symbol).slug
+
             binding.cryptoNameShortcut.text = item.symbol
-            binding.cryptoFullName.text = FixedCryptoList.valueOf(item.symbol).slug
+            binding.cryptoFullName.text = slug
             binding.cryptoPrice.text = item.amount.toString()
             binding.cryptoPriceChange.text = binding.cryptoPriceChange.context.getString(
                 R.string.usd_sign,
@@ -78,6 +80,7 @@ class PortfolioListAdapter :
             when (item.symbol) {
                 "USD" -> binding.cryptoLogo.setImageResource(R.drawable.ic_dollar)
                 else -> {
+                    binding.root.setOnClickListener { openSingleCrypto.onClick(slug, item.symbol)}
                     Glide.with(binding.cryptoLogo)
                         .load(FixedCryptoList.valueOf(item.symbol).logoUrl)
                         .placeholder(R.drawable.ic_download)

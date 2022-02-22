@@ -1,45 +1,42 @@
 package com.example.traders.watchlist.singleCryptoScreen.priceStatisticsTab
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.traders.BaseViewModel
 import com.example.traders.repository.CryptoRepository
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.cryptoStatsData.CryptoStatistics
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
-import javax.inject.Inject
 
-@HiltViewModel
-class CryptoPriceStatisticsViewModel @Inject constructor(
-    private val repository: CryptoRepository
+class CryptoPriceStatisticsViewModel @AssistedInject constructor(
+    private val repository: CryptoRepository,
+    @Assisted private val crypto: FixedCryptoList
 ) : BaseViewModel() {
     private val _cryptoStatsResponse = MutableLiveData<CryptoStatistics>()
-    val cryptoStatsResponse
-        get() = _cryptoStatsResponse
+    val cryptoStatsResponse: LiveData<CryptoStatistics> = _cryptoStatsResponse
 
-    fun fetchCryptoPriceStatistics(slug: String) {
+    init {
         viewModelScope.launch {
+            val responseBody = repository.getCryptoPriceStatistics(crypto.slug).body() ?: return@launch
+            _cryptoStatsResponse.value = responseBody
+        }
+    }
 
-            var response = try {
-                repository.getCryptoPriceStatistics(slug)
-            } catch (e: IOException) {
-                Log.e("ResponseCryptoItem", "IOException, internet connection interference: ${e}")
-                return@launch
-            } catch (e: HttpException) {
-                Log.e("ResponseCryptoItem", "HttpException, unexpected response: ${e}")
-                return@launch
+    @AssistedFactory
+    interface Factory {
+        fun create(crypto: FixedCryptoList): CryptoPriceStatisticsViewModel
+    }
+
+    companion object {
+        fun provideFactory(
+            assistedFactory: Factory,
+            crypto: FixedCryptoList
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(crypto) as T
             }
-
-            if (response.isSuccessful && response.body() != null) {
-                val responseData = response.body()
-                _cryptoStatsResponse.value = responseData!!
-            } else {
-                Log.e("ResponseCryptoItem", "Response not successful")
-            }
-
         }
     }
 }

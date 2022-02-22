@@ -9,7 +9,7 @@ import com.example.traders.database.TransactionType
 import com.example.traders.dialogs.DialogValidation
 import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.repository.CryptoRepository
-import com.example.traders.toBigDecimal
+import com.example.traders.utils.toBigDecimal
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -49,7 +50,7 @@ class DepositViewModel @Inject constructor(
         _state.value = _state.value.copy(
             validationMessage = validationMessage.message,
             isBtnEnabled = validationMessage == DialogValidationMessage.IS_VALID,
-            currentInputVal = decimalEnteredVal
+            currentInputVal = decimalEnteredVal ?: BigDecimal(0)
         )
     }
 

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.traders.BaseViewModel
 import com.example.traders.repository.CryptoRepository
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,29 +20,13 @@ class CryptoDescriptionViewModel
     val descState
         get() = _descState.asStateFlow()
 
-    fun fetchCryptoPriceStatistics(id: String) {
+    fun fetchCryptoPriceStatistics(crypto: FixedCryptoList) {
         viewModelScope.launch {
-
-            var response = try {
-                repository.getCryptoDescriptionData(id)
-            } catch (e: IOException) {
-                Log.e("ResponseCryptoDesc", "IOException, internet connection interference: ${e}")
-                return@launch
-            } catch (e: HttpException) {
-                Log.e("ResponseCryptoDesc", "HttpException, unexpected response: ${e}")
-                return@launch
-            }
-
-            if (response.isSuccessful && response.body() != null) {
-                val responseData = response.body()
-                _descState.value = _descState.value.copy(
-                    projectInfoDesc = responseData?.data?.profile?.general?.overview?.project_details,
-                    preHistoryDesc = responseData?.data?.profile?.general?.background?.background_details
-                )
-            } else {
-                Log.e("ResponseCryptoDesc", "Response not successful")
-            }
-
+            val responseBody = repository.getCryptoDescriptionData(crypto.slug).body() ?: return@launch
+            _descState.value = _descState.value.copy(
+                projectInfoDesc = responseBody.data.profile.general.overview.project_details,
+                preHistoryDesc = responseBody.data.profile.general.background.background_details
+            )
         }
     }
 }

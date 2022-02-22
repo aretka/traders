@@ -5,9 +5,9 @@ import javax.inject.Inject
 
 // Provide with hilt
 class DialogValidation @Inject constructor() {
-    fun validate(input: BigDecimal, minVal: BigDecimal, maxVal: BigDecimal): DialogValidationMessage {
+    fun validate(input: BigDecimal?, minVal: BigDecimal, maxVal: BigDecimal): DialogValidationMessage {
         return when {
-            input.equals(0) -> {
+            input == null -> {
                 DialogValidationMessage.IS_EMPTY
             }
             input > maxVal -> {

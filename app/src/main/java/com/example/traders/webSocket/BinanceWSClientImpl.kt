@@ -2,9 +2,9 @@ package com.example.traders.webSocket
 
 import android.os.Build
 import android.util.Log
-import com.example.traders.enumConstantNames
-import com.example.traders.paramsToJson
-import com.example.traders.returnTickerWithRoundedPrice
+import com.example.traders.utils.enumConstantNames
+import com.example.traders.utils.paramsToJson
+import com.example.traders.utils.returnTickerWithRoundedPrice
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTicker
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData

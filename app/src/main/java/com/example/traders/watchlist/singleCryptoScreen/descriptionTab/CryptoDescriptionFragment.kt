@@ -9,21 +9,22 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.traders.databinding.FragmentCryptoItemDescriptionBinding
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CryptoDescriptionFragment(val id: String) : Fragment() {
+class CryptoDescriptionFragment(val crypto: FixedCryptoList) : Fragment() {
     private val viewModel: CryptoDescriptionViewModel by viewModels()
     private lateinit var binding: FragmentCryptoItemDescriptionBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentCryptoItemDescriptionBinding.inflate(inflater, container, false)
-        viewModel.fetchCryptoPriceStatistics(id)
+        viewModel.fetchCryptoPriceStatistics(crypto)
         return binding.root
     }
 
