@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runBlockingTest
-import okhttp3.ResponseBody
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
@@ -54,7 +53,7 @@ class CryptoChartViewModelTest : TestCoroutineScope by TestCoroutineScope() {
 
     @Test
     fun init_onSuccessfulChartDataFetch_emitNonemptyChartArrays() = runBlockingTest {
-        whenever(repository.getCryptoChartData(any(), any(), any())).thenReturn(createSuccessChartData())
+        whenever(repository.getCryptoChartData(any(), any(), any())).thenReturn(createSuccessChartResponse())
 
         val fixture = initFixture()
         fixture.chartState.test {
@@ -68,7 +67,7 @@ class CryptoChartViewModelTest : TestCoroutineScope by TestCoroutineScope() {
     fun init_onSuccessPriceEmitAndChartDataFetch_emitPriceTicker_emitNonemptyChartArray() = runBlockingTest {
         priceTicker = PriceTickerData(symbol = FixedCryptoList.BTC.name + "USDT")
         whenever(webSocketClient.state).thenReturn(createSharedFlowWithFirstEmit())
-        whenever(repository.getCryptoChartData(any(), any(), any())).thenReturn(createSuccessChartData())
+        whenever(repository.getCryptoChartData(any(), any(), any())).thenReturn(createSuccessChartResponse())
 
         val fixture = initFixture()
         val testing = fixture.chartState.take(5)
@@ -80,7 +79,7 @@ class CryptoChartViewModelTest : TestCoroutineScope by TestCoroutineScope() {
 
     @Test
     fun onButtonClick_resetActiveButton() = runBlockingTest {
-        whenever(repository.getCryptoChartData(any(), any(), any())).thenReturn(createSuccessChartData())
+        whenever(repository.getCryptoChartData(any(), any(), any())).thenReturn(createSuccessChartResponse())
 
         val fixture = initFixture()
         val job = launch {
@@ -108,14 +107,15 @@ class CryptoChartViewModelTest : TestCoroutineScope by TestCoroutineScope() {
         }
     }
 
-    @Test
-    fun init_failedChartDataFetch_emitNothing() = runBlockingTest {
-        whenever(repository.getCryptoChartData(any(), any(), any())).thenReturn(createSuccessChartData())
-        val fixture = initFixture()
-        fixture.chartState.test {
-            assertEquals(ChartState(), awaitItem())
-        }
-    }
+    // TODO create error response
+//    @Test
+//    fun init_failedChartDataFetch_emitNothing() = runBlockingTest {
+//        whenever(repository.getCryptoChartData(any(), any(), any())).thenReturn(createFailedChartResponse())
+//        val fixture = initFixture()
+//        fixture.chartState.test {
+//            assertEquals(ChartState(), awaitItem())
+//        }
+//    }
 
     private fun initFixture(crypto: FixedCryptoList = FixedCryptoList.BTC): CryptoChartViewModel {
         return CryptoChartViewModel(
@@ -125,7 +125,11 @@ class CryptoChartViewModelTest : TestCoroutineScope by TestCoroutineScope() {
         )
     }
 
-    private fun createSuccessChartData(): Response<CryptoChartData> {
+    private fun createSuccessChartResponse(): Response<CryptoChartData> {
+        return Response.success(CryptoChartData())
+    }
+
+    private fun createFailedChartResponse(): Response<CryptoChartData> {
         return Response.success(CryptoChartData())
     }
 

@@ -5,8 +5,6 @@ import com.example.traders.dialogs.DialogValidationMessage
 import java.math.BigDecimal
 
 data class BuyState(
-    val amountToRound: Int = 2,
-    val priceNumToRound: Int = 2,
     val usdBalance: Crypto = Crypto(symbol = "USD"),
     val cryptoBalance: Crypto? = null,
     val inputVal: BigDecimal = BigDecimal(0.0),

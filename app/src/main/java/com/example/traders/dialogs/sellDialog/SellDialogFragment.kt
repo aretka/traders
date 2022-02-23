@@ -12,19 +12,20 @@ import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
 import com.example.traders.databinding.DialogFragmentSellBinding
 import com.example.traders.dialogs.DialogValidationMessage
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import java.math.BigDecimal
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogFragment() {
+class SellDialogFragment(val lastPrice: BigDecimal, val crypto: FixedCryptoList) : DialogFragment() {
 
     @Inject
     lateinit var assistedViewModelFactory: SellDialogViewModel.Factory
 
     private val viewModel: SellDialogViewModel by viewModels {
-        SellDialogViewModel.provideFactory(assistedViewModelFactory, symbol, lastPrice)
+        SellDialogViewModel.provideFactory(assistedViewModelFactory, crypto, lastPrice)
     }
 
     private lateinit var binding: DialogFragmentSellBinding
@@ -69,20 +70,20 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
     }
 
     private fun DialogFragmentSellBinding.initUI() {
-        header.text = header.context.getString(R.string.sell_crypto, symbol)
+        header.text = header.context.getString(R.string.sell_crypto, crypto.name)
 
-        cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, symbol)
+        cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, crypto.name)
         cryptoPrice.text = "$ " + lastPrice.toString()
 
         cryptoBalanceLabel.text =
-            cryptoBalanceLabel.context.getString(R.string.crypto_balance_label, symbol)
+            cryptoBalanceLabel.context.getString(R.string.crypto_balance_label, crypto.name)
 
         usdToGetLabel.text = usdToGetLabel.context.getString(R.string.usd_to_get_label)
         usdToGet.text = viewModel.state.value.usdToGet.toString()
 
         cryptoBalanceLeft.text = viewModel.state.value.cryptoLeft.toString()
         cryptoBalanceLeftLabel.text =
-            cryptoBalanceLeftLabel.context.getString(R.string.crypto_balance_left_label, symbol)
+            cryptoBalanceLeftLabel.context.getString(R.string.crypto_balance_left_label, crypto.name)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

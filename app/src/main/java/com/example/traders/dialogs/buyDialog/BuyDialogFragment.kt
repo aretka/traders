@@ -12,19 +12,20 @@ import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
 import com.example.traders.databinding.DialogFragmentBuyBinding
 import com.example.traders.dialogs.DialogValidationMessage
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import java.math.BigDecimal
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogFragment() {
+class BuyDialogFragment(val lastPrice: BigDecimal, val crypto: FixedCryptoList) : DialogFragment() {
 
     @Inject
     lateinit var viewModelAssistedFactory: BuyDialogViewModel.Factory
 
     private val viewModel: BuyDialogViewModel by viewModels() {
-        BuyDialogViewModel.provideFactory(viewModelAssistedFactory, symbol, lastPrice)
+        BuyDialogViewModel.provideFactory(viewModelAssistedFactory, crypto, lastPrice)
     }
 
     private lateinit var binding: DialogFragmentBuyBinding
@@ -76,7 +77,7 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogF
     }
 
     private fun DialogFragmentBuyBinding.initUI() {
-        header.text = header.context.getString(R.string.buy_crypto, symbol)
+        header.text = header.context.getString(R.string.buy_crypto, crypto.name)
 
         cryptoPrice.text =
             cryptoPrice.context.getString(
@@ -84,8 +85,8 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogF
                 lastPrice.toString()
             )
 
-        cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, symbol)
-        cryptoAmountLabel.text = cryptoAmountLabel.context.getString(R.string.coin_amount, symbol)
+        cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, crypto.name)
+        cryptoAmountLabel.text = cryptoAmountLabel.context.getString(R.string.coin_amount, crypto.name)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

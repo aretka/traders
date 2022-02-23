@@ -11,8 +11,8 @@ import com.example.traders.database.Transaction
 import com.example.traders.database.TransactionType
 import com.example.traders.dialogs.DialogValidation
 import com.example.traders.dialogs.DialogValidationMessage
-import com.example.traders.utils.getCurrentTime
 import com.example.traders.repository.CryptoRepository
+import com.example.traders.utils.DateUtils
 import com.example.traders.utils.roundNum
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import dagger.assisted.Assisted
@@ -30,18 +30,11 @@ import java.math.BigDecimal
 class BuyDialogViewModel @AssistedInject constructor(
     private val repository: CryptoRepository,
     private val dialogValidation: DialogValidation,
-    @Assisted val symbol: String,
+    @Assisted val crypto: FixedCryptoList,
     @Assisted val lastPrice: BigDecimal
 ) : BaseViewModel() {
-    private val priceToRound = getPriceToRound()
-    private val amountToRound = getAmountToRound()
 
-    private val _state = MutableStateFlow(
-        BuyState(
-            priceNumToRound = priceToRound,
-            amountToRound = amountToRound
-        )
-    )
+    private val _state = MutableStateFlow(BuyState())
     val state = _state.asStateFlow()
 
     private val _events = MutableSharedFlow<BuyDialogEvent>(extraBufferCapacity = 1)
@@ -111,22 +104,19 @@ class BuyDialogViewModel @AssistedInject constructor(
         }
     }
 
-    private fun getPriceToRound() = FixedCryptoList.valueOf(symbol).priceToRound
-    private fun getAmountToRound() = FixedCryptoList.valueOf(symbol).amountToRound
-
     private fun calculateNewBalance() {
         _state.value = with(_state.value) {
             var usdLeft = usdBalance.amount
             var cryptoToGet = BigDecimal(0)
 
-            if(_state.value.messageType == DialogValidationMessage.IS_VALID) {
+            if (_state.value.messageType == DialogValidationMessage.IS_VALID) {
                 usdLeft -= inputVal
-                cryptoToGet = inputVal.divide(lastPrice, amountToRound, BigDecimal.ROUND_HALF_UP)
+                cryptoToGet = inputVal.divide(lastPrice, crypto.amountToRound, BigDecimal.ROUND_HALF_UP)
             }
 
             copy(
                 usdLeft = usdLeft.roundNum(),
-                cryptoToGet = cryptoToGet.roundNum(_state.value.amountToRound)
+                cryptoToGet = cryptoToGet.roundNum(crypto.amountToRound)
             )
         }
     }
@@ -143,7 +133,7 @@ class BuyDialogViewModel @AssistedInject constructor(
 
     private fun getCryptoBalance() {
         launch {
-            val cryptoBalance = repository.getCryptoBySymbol(symbol) ?: Crypto(symbol = symbol)
+            val cryptoBalance = repository.getCryptoBySymbol(crypto.name) ?: Crypto(symbol = crypto.name)
             _state.value = _state.value.copy(cryptoBalance = cryptoBalance)
         }
     }
@@ -151,28 +141,28 @@ class BuyDialogViewModel @AssistedInject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createTransaction(): Transaction {
         return Transaction(
-            symbol = symbol,
+            symbol = crypto.name,
             amount = _state.value.cryptoToGet,
             usdAmount = _state.value.inputVal,
             lastPrice = lastPrice,
-            time = getCurrentTime(),
+            time = DateUtils.getCurrentTime(),
             transactionType = TransactionType.PURCHASE
         )
     }
 
     @AssistedFactory
     interface Factory {
-        fun create(symbol: String, lastPrice: BigDecimal): BuyDialogViewModel
+        fun create(crypto: FixedCryptoList, lastPrice: BigDecimal): BuyDialogViewModel
     }
 
     companion object {
         fun provideFactory(
             assistedFactory: Factory,
-            symbol: String,
+            crypto: FixedCryptoList,
             lastPrice: BigDecimal
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(symbol, lastPrice) as T
+                return assistedFactory.create(crypto, lastPrice) as T
             }
         }
     }
