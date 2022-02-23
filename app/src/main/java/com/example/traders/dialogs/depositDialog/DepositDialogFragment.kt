@@ -72,7 +72,11 @@ class DepositDialogFragment : DialogFragment() {
     }
 
     private fun DialogFragmentDepositBinding.updateFields(it: DepositState) {
-        validationMessage.text = it.validationMessage
+        if(it.updateInput) {
+            usdInput.setText(it.validatedInputValue)
+            viewModel.inputUpdated()
+        }
+        validationMessage.text = it.validationMessage.message
         depositBtn.isEnabled = it.isBtnEnabled
     }
 }

@@ -11,6 +11,7 @@ import com.example.traders.database.Transaction
 import com.example.traders.database.TransactionType
 import com.example.traders.dialogs.DialogValidation
 import com.example.traders.dialogs.DialogValidationMessage
+import com.example.traders.dialogs.validateChars
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.utils.DateUtils
 import com.example.traders.utils.roundNum
@@ -58,6 +59,23 @@ class BuyDialogViewModel @AssistedInject constructor(
         }
     }
 
+    fun onInputChanged(enteredVal: String) {
+        val inputWithoutIlleagalChars = enteredVal.validateChars()
+        if(inputWithoutIlleagalChars == enteredVal) {
+            validate(enteredVal)
+            calculateNewBalance()
+        } else {
+            _state.value = _state.value.copy(
+                updateInput = true,
+                validatedInputValue = inputWithoutIlleagalChars
+            )
+        }
+    }
+
+    fun inputUpdated() {
+        _state.value = _state.value.copy(updateInput = false)
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun saveTransactionToDb() {
         repository.insertTransaction(createTransaction())
@@ -75,33 +93,19 @@ class BuyDialogViewModel @AssistedInject constructor(
         }
     }
 
-    fun onInputChanged(enteredVal: String) {
-        validate(enteredVal)
-        calculateNewBalance()
-    }
-
     private fun validate(enteredVal: String) {
-        val decimalEnteredVal = getDecimalOfEnteredValue(enteredVal)
+        val decimalEnteredVal = enteredVal.toBigDecimalOrNull()
 
         val validationMessage = dialogValidation.validate(
             decimalEnteredVal,
             _state.value.minInputVal,
             _state.value.usdBalance.amount
         )
-
         _state.value = _state.value.copy(
             isBtnEnabled = validationMessage == DialogValidationMessage.IS_VALID,
             messageType = validationMessage,
-            inputVal = decimalEnteredVal
+            inputVal = decimalEnteredVal ?: BigDecimal(0)
         )
-    }
-
-    private fun getDecimalOfEnteredValue(enteredVal: String): BigDecimal {
-        return if (enteredVal.isNotBlank()) {
-            BigDecimal(enteredVal)
-        } else {
-            BigDecimal(0)
-        }
     }
 
     private fun calculateNewBalance() {
@@ -111,7 +115,8 @@ class BuyDialogViewModel @AssistedInject constructor(
 
             if (_state.value.messageType == DialogValidationMessage.IS_VALID) {
                 usdLeft -= inputVal
-                cryptoToGet = inputVal.divide(lastPrice, crypto.amountToRound, BigDecimal.ROUND_HALF_UP)
+                cryptoToGet =
+                    inputVal.divide(lastPrice, crypto.amountToRound, BigDecimal.ROUND_HALF_UP)
             }
 
             copy(
@@ -133,7 +138,8 @@ class BuyDialogViewModel @AssistedInject constructor(
 
     private fun getCryptoBalance() {
         launch {
-            val cryptoBalance = repository.getCryptoBySymbol(crypto.name) ?: Crypto(symbol = crypto.name)
+            val cryptoBalance =
+                repository.getCryptoBySymbol(crypto.name) ?: Crypto(symbol = crypto.name)
             _state.value = _state.value.copy(cryptoBalance = cryptoBalance)
         }
     }

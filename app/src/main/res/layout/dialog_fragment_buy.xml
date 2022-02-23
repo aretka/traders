@@ -72,6 +72,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/price_input_label"
         android:digits="0123456789."/>
+<!--    <EditText-->
+<!--        android:id="@+id/price_input_field"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/price_input_label"-->
+<!--        android:inputType="phone"-->
+<!--        />-->
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/max_btn"

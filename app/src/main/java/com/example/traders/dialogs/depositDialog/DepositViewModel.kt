@@ -8,8 +8,8 @@ import com.example.traders.database.Transaction
 import com.example.traders.database.TransactionType
 import com.example.traders.dialogs.DialogValidation
 import com.example.traders.dialogs.DialogValidationMessage
+import com.example.traders.dialogs.validateChars
 import com.example.traders.repository.CryptoRepository
-import com.example.traders.utils.toBigDecimal
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -35,11 +35,23 @@ class DepositViewModel @Inject constructor(
     val events = _events.asSharedFlow()
 
     fun onInputChanged(input: String) {
-        validate(input)
+        val inputWithoutIlleagalChars = input.validateChars()
+        if(inputWithoutIlleagalChars == input) {
+            validate(input)
+        } else {
+            _state.value = _state.value.copy(
+                updateInput = true,
+                validatedInputValue = inputWithoutIlleagalChars
+            )
+        }
+    }
+
+    fun inputUpdated() {
+        _state.value = _state.value.copy(updateInput = false)
     }
 
     private fun validate(enteredVal: String) {
-        val decimalEnteredVal = enteredVal.toBigDecimal()
+        val decimalEnteredVal = enteredVal.toBigDecimalOrNull()
 
         val validationMessage = dialogValidation.validate(
             decimalEnteredVal,
@@ -48,7 +60,7 @@ class DepositViewModel @Inject constructor(
         )
 
         _state.value = _state.value.copy(
-            validationMessage = validationMessage.message,
+            validationMessage = validationMessage,
             isBtnEnabled = validationMessage == DialogValidationMessage.IS_VALID,
             currentInputVal = decimalEnteredVal ?: BigDecimal(0)
         )

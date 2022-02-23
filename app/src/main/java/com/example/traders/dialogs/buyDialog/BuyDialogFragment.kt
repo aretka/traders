@@ -115,6 +115,12 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val crypto: FixedCryptoList) 
         } else {
             validationMessage.text = state.messageType.message
         }
+
+        if(state.updateInput) {
+            priceInputField.setText(state.validatedInputValue)
+            viewModel.inputUpdated()
+        }
+
         usdBalance.text =
             usdBalance.context.getString(
                 R.string.usd_sign,

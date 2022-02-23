@@ -11,6 +11,7 @@ import com.example.traders.database.Transaction
 import com.example.traders.database.TransactionType
 import com.example.traders.dialogs.DialogValidation
 import com.example.traders.dialogs.DialogValidationMessage
+import com.example.traders.dialogs.validateChars
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.utils.DateUtils
 import com.example.traders.utils.roundNum
@@ -48,7 +49,6 @@ class SellDialogViewModel @AssistedInject constructor(
     init {
         getUsdBalance()
         getCryptoBalance()
-        Log.e("TAG", "${_state.value.minInputVal}")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -60,28 +60,38 @@ class SellDialogViewModel @AssistedInject constructor(
                 async { updateCryptoBalance() }
             ).awaitAll()
 
-            Log.e("EVENTS", "events emitted")
             _events.emit(SellDialogEvent.Dismiss)
         }
     }
 
     fun onInputChanged(enteredVal: String) {
-        validate(enteredVal)
-        calculateNewBalance()
+        val inputWithoutIlleagalChars = enteredVal.validateChars(crypto.amountToRound)
+        if(inputWithoutIlleagalChars == enteredVal) {
+            validate(enteredVal)
+            calculateNewBalance()
+        } else {
+            _state.value = _state.value.copy(
+                updateInput = true,
+                validatedInputValue = inputWithoutIlleagalChars
+            )
+        }
+    }
 
+    fun inputUpdated() {
+        _state.value = _state.value.copy(updateInput = false)
     }
 
     private fun validate(enteredVal: String): Boolean {
-        val decimalInputVal = getDecimalFromString(enteredVal)
+        val decimalEnteredVal = enteredVal.toBigDecimalOrNull()
 
         val messageType = dialogValidation.validate(
-            decimalInputVal,
+            decimalEnteredVal,
             _state.value.minInputVal,
             _state.value.cryptoBalance!!.amount
         )
 
         _state.value = _state.value.copy(
-            inputVal = decimalInputVal,
+            inputVal = decimalEnteredVal ?: BigDecimal(0),
             isBtnEnabled = messageType == DialogValidationMessage.IS_VALID,
             messageType = messageType
         )

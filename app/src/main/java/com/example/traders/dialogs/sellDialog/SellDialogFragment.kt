@@ -112,6 +112,13 @@ class SellDialogFragment(val lastPrice: BigDecimal, val crypto: FixedCryptoList)
         } else {
             validationMessage.text = state.messageType.message
         }
+
+        if(state.updateInput) {
+            priceInputField.setText(state.validatedInputValue)
+            priceInputField.setSelection(state.validatedInputValue.length)
+            viewModel.inputUpdated()
+        }
+
         cryptoBalance.text = viewModel.state.value.cryptoBalance?.amount.toString() ?: ""
         sellBtn.isEnabled = state.isBtnEnabled
         usdToGet.text = state.usdToGet.toString()

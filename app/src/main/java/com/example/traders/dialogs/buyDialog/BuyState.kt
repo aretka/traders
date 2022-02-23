@@ -12,5 +12,7 @@ data class BuyState(
     val isBtnEnabled: Boolean = false,
     val cryptoToGet: BigDecimal = BigDecimal(0.0),
     val usdLeft: BigDecimal = BigDecimal(0.0),
-    val messageType: DialogValidationMessage = DialogValidationMessage.IS_EMPTY
+    val messageType: DialogValidationMessage = DialogValidationMessage.IS_UNTOUCHED,
+    val updateInput: Boolean = false,
+    val validatedInputValue: String = ""
 )
