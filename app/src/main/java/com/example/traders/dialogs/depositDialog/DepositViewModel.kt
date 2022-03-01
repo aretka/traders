@@ -50,6 +50,18 @@ class DepositViewModel @Inject constructor(
         _state.value = _state.value.copy(updateInput = false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun onDepositButtonClicked() {
+        launch {
+            listOf(
+                async { updateBalance() },
+                async { saveTransactionToDb() }
+            ).awaitAll()
+
+            _events.emit(DepositDialogEvent.Dismiss)
+        }
+    }
+
     private fun validate(enteredVal: String) {
         val decimalEnteredVal = enteredVal.toBigDecimalOrNull()
 
@@ -64,17 +76,6 @@ class DepositViewModel @Inject constructor(
             isBtnEnabled = validationMessage == DialogValidationMessage.IS_VALID,
             currentInputVal = decimalEnteredVal ?: BigDecimal(0)
         )
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun onDepositButtonClicked() {
-        launch {
-            listOf(
-                async { updateBalance() },
-                async { saveTransactionToDb() }
-            ).awaitAll()
-            _events.emit(DepositDialogEvent.Dismiss)
-        }
     }
 
     private suspend fun updateBalance() {

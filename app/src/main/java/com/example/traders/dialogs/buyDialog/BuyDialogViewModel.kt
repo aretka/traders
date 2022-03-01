@@ -121,7 +121,7 @@ class BuyDialogViewModel @AssistedInject constructor(
 
             copy(
                 usdLeft = usdLeft.roundNum(),
-                cryptoToGet = cryptoToGet.roundNum(crypto.amountToRound)
+                cryptoToGet = cryptoToGet
             )
         }
     }

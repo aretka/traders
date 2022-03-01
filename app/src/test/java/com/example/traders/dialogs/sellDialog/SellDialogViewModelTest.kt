@@ -1,11 +1,10 @@
-package com.example.traders.dialogs.buyDialog
+package com.example.traders.dialogs.sellDialog
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.example.traders.database.Crypto
 import com.example.traders.dialogs.DialogValidation
 import com.example.traders.repository.CryptoRepository
-import com.example.traders.utils.roundFormatBigDecimal
 import com.example.traders.utils.roundNum
 import com.example.traders.watchlist.TestDispatcherRule
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
@@ -15,18 +14,15 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import java.math.BigDecimal
-import java.math.RoundingMode
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
-class BuyDialogViewModelTest : TestCoroutineScope by TestCoroutineScope() {
+class SellDialogViewModelTest() : TestCoroutineScope by TestCoroutineScope() {
 
     @Rule
     @JvmField
@@ -45,7 +41,7 @@ class BuyDialogViewModelTest : TestCoroutineScope by TestCoroutineScope() {
     @Test
     fun init_sucessfulUnemptyBalanceFetch_usdBalanceUnEmpty() = runBlockingTest {
         val expectedBalance = BigDecimal(1000)
-        val fixture = init_fixture()
+        val fixture = initFixture()
 
         fixture.state.test {
             assertEquals(expectedBalance, awaitItem().usdBalance.amount)
@@ -56,7 +52,7 @@ class BuyDialogViewModelTest : TestCoroutineScope by TestCoroutineScope() {
     fun init_onNonexistantRoomUsdFetch_usdBalanceIsZero() = runBlockingTest {
         whenever(repository.getCryptoBySymbol("USD")).thenReturn(null)
 
-        val fixture = init_fixture()
+        val fixture = initFixture()
 
         fixture.state.test {
             assertEquals(Crypto(symbol = "USD"), awaitItem().usdBalance)
@@ -65,7 +61,7 @@ class BuyDialogViewModelTest : TestCoroutineScope by TestCoroutineScope() {
 
     @Test
     fun init_onSuccessfulRoomCryptoFetch_cryptoBalanceNonnull() = runBlockingTest {
-        val fixture = init_fixture()
+        val fixture = initFixture()
 
         fixture.state.test {
             assertTrue(awaitItem().cryptoBalance != null)
@@ -77,7 +73,7 @@ class BuyDialogViewModelTest : TestCoroutineScope by TestCoroutineScope() {
         whenever(repository.getCryptoBySymbol(CRYPTO.name)).thenReturn(null)
 
         val expectedBalance = Crypto(symbol = CRYPTO.name, amount = BigDecimal(0))
-        val fixture = init_fixture()
+        val fixture = initFixture()
 
         fixture.state.test {
             assertEquals(expectedBalance, awaitItem().cryptoBalance)
@@ -86,87 +82,84 @@ class BuyDialogViewModelTest : TestCoroutineScope by TestCoroutineScope() {
 
     @Test
     fun onInputChanged_onInvalidInput_emitTransactionButtonDisabled() = runBlockingTest {
-        val fixture = init_fixture()
+        val fixture = initFixture()
 
-        fixture.onInputChanged("")
-        fixture.state.test {
-            assertFalse(awaitItem().isBtnEnabled)
+        val job = launch {
+            fixture.state.test {
+                awaitItem()
+                awaitItem()
+                assertFalse(awaitItem().isBtnEnabled)
+                awaitItem()
+                assertFalse(awaitItem().isBtnEnabled)
+            }
         }
+        fixture.onInputChanged("")
+        fixture.onInputChanged("100")
+        job.join()
+        job.cancel()
 
     }
 
     @Test
     fun onInputChanged_onValidInput_emitBuyButtonEnabled() = runBlockingTest {
-        val fixture = init_fixture()
+        val fixture = initFixture()
 
-        fixture.onInputChanged("15.24")
+        fixture.onInputChanged("1")
         fixture.state.test {
             assertTrue(awaitItem().isBtnEnabled)
         }
     }
 
     @Test
-    fun onInputChanged_inputValid_emitSuccessUsdLeftBalance() = runBlockingTest {
-        val fixture = init_fixture()
-        val expected = BigDecimal(1000).minus(BigDecimal(123.01)).roundNum()
+    fun onInputChanged_inputValid_emitSuccessUsdToGetBalance() = runBlockingTest {
+        val fixture = initFixture()
+        val expected = BigDecimal(1).times(CRYPTO_PRICE).roundNum()
 
-        fixture.onInputChanged("123.01")
+        fixture.onInputChanged("1")
         fixture.state.test {
-            assertEquals(expected, awaitItem().usdLeft)
+            assertEquals(expected, awaitItem().usdToGet)
         }
     }
 
     @Test
-    fun onInputChanged_inputValid_emitSuccessCryptoToGetBalance() = runBlockingTest {
-        val fixture = init_fixture()
-        val expected = BigDecimal(123.01)
-            .divide(CRYPTO_PRICE, CRYPTO.amountToRound, RoundingMode.HALF_UP)
-
-        fixture.onInputChanged("123.01")
-        fixture.state.test {
-            assertEquals(expected, awaitItem().cryptoToGet)
-        }
-    }
-
-    @Test
-    fun onInputChanged_onValid_emitSuccessUsdLeftBalance() = runBlockingTest {
-        val fixture = init_fixture()
-        val expected1 = USD_BALANCE.minus(BigDecimal(123.01)).roundNum()
-        val expected2 = USD_BALANCE.minus(BigDecimal(1000.00)).roundNum()
-        val expected3 = USD_BALANCE.minus(BigDecimal(10)).roundNum()
+    fun onInputChanged_onValid_emitSuccessUsdToGetBalance() = runBlockingTest {
+        val fixture = initFixture()
+        val expected1 = CRYPTO_BALANCE.minus(BigDecimal(1)).roundNum(CRYPTO.amountToRound)
+        val expected2 = CRYPTO_BALANCE.minus(BigDecimal(1.12)).roundNum(CRYPTO.amountToRound)
+        val expected3 = CRYPTO_BALANCE.minus(BigDecimal(10)).roundNum(CRYPTO.amountToRound)
 
         val job = launch {
             fixture.state.test {
                 awaitItem()
                 awaitItem()
-                assertEquals(expected1, awaitItem().usdLeft)
+                kotlin.test.assertEquals(expected1, awaitItem().cryptoLeft)
                 awaitItem()
-                assertEquals(expected2, awaitItem().usdLeft)
+                kotlin.test.assertEquals(expected2, awaitItem().cryptoLeft)
                 awaitItem()
-                assertEquals(expected3, awaitItem().usdLeft)
+                kotlin.test.assertEquals(expected3, awaitItem().cryptoLeft)
             }
         }
-        fixture.onInputChanged("123.01")
-        fixture.onInputChanged("1000")
+        fixture.onInputChanged("1")
+        fixture.onInputChanged("1.12")
         fixture.onInputChanged("10")
         job.join()
         job.cancel()
     }
 
     @Test
-    fun onInputChanged_onInputInvalid_emitUsdLeftBalance_asOriginalBalance() = runBlockingTest {
-        val fixture = init_fixture()
-        val expected = USD_BALANCE.roundNum()
+    fun onInputChanged_onInputInvalid_emitCryptoToGet_asOriginalBalance() = runBlockingTest {
+        val fixture = initFixture()
+        val expected = CRYPTO_BALANCE.roundNum(CRYPTO.amountToRound)
 
         val job = launch {
             fixture.state.test {
                 awaitItem()
                 awaitItem()
-                assertEquals(expected, awaitItem().usdLeft)
+                assertEquals(expected, awaitItem().cryptoLeft)
                 awaitItem()
-                assertEquals(expected, awaitItem().usdLeft)
+                assertEquals(expected, awaitItem().cryptoLeft)
                 awaitItem()
-                assertEquals(expected, awaitItem().usdLeft)
+                assertEquals(expected, awaitItem().cryptoLeft)
             }
         }
         // Too high
@@ -174,52 +167,48 @@ class BuyDialogViewModelTest : TestCoroutineScope by TestCoroutineScope() {
         // Empty
         fixture.onInputChanged("")
         // Too low
-        fixture.onInputChanged("4")
+        fixture.onInputChanged("13")
         job.join()
         job.cancel()
     }
 
     @Test
     fun onInputChanged_onIlleagalChar_emitSuccessValidatedInputValue() = runBlockingTest {
-        val fixture = init_fixture()
+        val fixture = initFixture()
         val job = launch {
             fixture.state.test {
                 awaitItem()
-                val item1 = awaitItem()
-                val item2 = awaitItem()
-                val item3 = awaitItem()
-                val item4 = awaitItem()
-                assertEquals("", item1.validatedInputValue)
-                assertEquals("1.", item2.validatedInputValue)
-                assertEquals("1.", item3.validatedInputValue)
-                assertEquals("1.24", item4.validatedInputValue)
+                assertEquals("", awaitItem().validatedInputValue)
+                assertEquals("1.24", awaitItem().validatedInputValue)
+                assertEquals("1.", awaitItem().validatedInputValue)
+                assertEquals("1.", awaitItem().validatedInputValue)
             }
         }
         fixture.onInputChanged(".")
+        fixture.onInputChanged("1.24.")
         fixture.onInputChanged(".1.")
         fixture.onInputChanged("1..")
-        fixture.onInputChanged("1.24.")
         job.join()
         job.cancel()
     }
 
     @Test
     fun onInputChanged_onIlleagalChar_emitUpdateInputTRUE() = runBlockingTest {
-        val fixture = init_fixture()
+        val fixture = initFixture()
         fixture.onInputChanged("1..")
         fixture.state.test {
-            assertTrue( awaitItem().updateInput)
+            assertTrue(awaitItem().updateInput)
         }
     }
 
     @Test
     fun onInputFieldUpdated_emitUpdateInputFALSE() = runBlockingTest {
-        val fixture = init_fixture()
+        val fixture = initFixture()
         val job = launch {
             fixture.state.test {
                 awaitItem()
-                assertTrue( awaitItem().updateInput)
-                assertFalse( awaitItem().updateInput)
+                kotlin.test.assertTrue(awaitItem().updateInput)
+                kotlin.test.assertFalse(awaitItem().updateInput)
             }
         }
         fixture.onInputChanged("1..")
@@ -231,19 +220,19 @@ class BuyDialogViewModelTest : TestCoroutineScope by TestCoroutineScope() {
 
     @Test
     fun onBuyButtonClicked_emitDismissEvent() = runBlockingTest {
-        val fixture = init_fixture()
+        val fixture = initFixture()
         val job = launch {
             fixture.events.test {
-                assertEquals(BuyDialogEvent.Dismiss, awaitItem())
+                assertEquals(SellDialogEvent.Dismiss, awaitItem())
             }
         }
-        fixture.onBuyButtonClicked()
+        fixture.onSellButtonClicked()
         job.join()
         job.cancel()
     }
 
-    private fun init_fixture(): BuyDialogViewModel {
-        return BuyDialogViewModel(
+    private fun initFixture(): SellDialogViewModel {
+        return SellDialogViewModel(
             repository,
             DialogValidation(),
             CRYPTO,
@@ -254,7 +243,7 @@ class BuyDialogViewModelTest : TestCoroutineScope by TestCoroutineScope() {
     private fun createSuccessCryptoResponse(): Crypto {
         return Crypto(
             symbol = CRYPTO.name,
-            amount = BigDecimal(10)
+            amount = CRYPTO_BALANCE
         )
     }
 
@@ -269,6 +258,6 @@ class BuyDialogViewModelTest : TestCoroutineScope by TestCoroutineScope() {
         private val USD_BALANCE = BigDecimal(1000)
         private val CRYPTO = FixedCryptoList.BTC
         private val CRYPTO_PRICE = BigDecimal(100)
+        private val CRYPTO_BALANCE = BigDecimal(10)
     }
-
 }

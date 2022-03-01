@@ -8,7 +8,7 @@ data class DepositState(
     val isBtnEnabled: Boolean = false,
     val currentInputVal: BigDecimal = BigDecimal(0),
     val minInputVal: BigDecimal = BigDecimal(10),
-    val maxInputVal: BigDecimal =  BigDecimal(10000),
+    val maxInputVal: BigDecimal = BigDecimal(10000),
     val updateInput: Boolean = false,
     val validatedInputValue: String = ""
 )

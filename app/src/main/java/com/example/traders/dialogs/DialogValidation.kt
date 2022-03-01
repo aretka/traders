@@ -27,7 +27,7 @@ class DialogValidation @Inject constructor() {
 * Returns string without invalid characters
 * Cases:
 * 1. First dot returns without dot
-* 2. 2 dots removes 1 dot
+* 2. Digits with 2 dots removes 1 dot
 * 3. More digits after dot than allowed removes excess values
 * */
 fun String.validateChars(digitsAfterDot: Int = 2): String {
