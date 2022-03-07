@@ -10,10 +10,27 @@
         android:id="@+id/userProfileFragment"
         android:name="com.example.traders.profile.ProfileFragment"
         android:label="fragment_user_profile"
-        tools:layout="@layout/fragment_portfolio" />
+        tools:layout="@layout/fragment_portfolio" >
+        <action
+            android:id="@+id/action_userProfileFragment_to_cryptoItemFragment"
+            app:destination="@id/cryptoItemFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"
+            app:popUpToInclusive="true" />
+    </fragment>
 
-<!--    <dialog>-->
-
-<!--    </dialog>-->
+    <fragment
+        android:id="@+id/cryptoItemFragment"
+        android:name="com.example.traders.singleCryptoScreen.CryptoItemFragment"
+        android:label="CryptoItemFragment">
+        <argument
+            android:name="slug"
+            app:argType="string" />
+        <argument
+            android:name="symbol"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

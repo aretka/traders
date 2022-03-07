@@ -1,5 +1,6 @@
 package com.example.traders.profile.portfolio
 
+import com.example.traders.database.Crypto
 import com.example.traders.profile.cryptoData.CryptoInUsd
 import com.example.traders.profile.cryptoData.CryptoTicker
 import com.github.mikephil.charting.data.PieEntry
@@ -11,5 +12,7 @@ data class PortfolioState(
     val cryptoListInUsd: List<CryptoInUsd> = emptyList(),
     val usdPricesFromBinance: List<CryptoTicker?> = emptyList(),
     val chartReadyForUpdate: Boolean = false,
-    val totalPortfolioBalance: BigDecimal? = null
+    val chartDataLoaded: Boolean = false,
+    val totalPortfolioBalance: BigDecimal? = null,
+    val prevList: List<Crypto> = emptyList()
 )

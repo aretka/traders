@@ -12,22 +12,23 @@ import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
 import com.example.traders.databinding.DialogFragmentSellBinding
 import com.example.traders.dialogs.DialogValidationMessage
-import com.example.traders.roundAndFormatDouble
-import com.example.traders.roundNum
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import java.math.BigDecimal
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogFragment() {
+class SellDialogFragment(val lastPrice: BigDecimal, val crypto: FixedCryptoList) : DialogFragment() {
 
     @Inject
     lateinit var assistedViewModelFactory: SellDialogViewModel.Factory
 
     private val viewModel: SellDialogViewModel by viewModels {
-        SellDialogViewModel.provideFactory(assistedViewModelFactory, symbol, lastPrice)
+        SellDialogViewModel.provideFactory(assistedViewModelFactory, crypto, lastPrice)
     }
+
+    private lateinit var binding: DialogFragmentSellBinding
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -36,44 +37,59 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
             val builder = AlertDialog.Builder(it)
             val inflater = requireActivity().layoutInflater
 
-            val view = DialogFragmentSellBinding.inflate(inflater)
-            val dialog = builder.setView(view.root)
+            binding = DialogFragmentSellBinding.inflate(inflater)
+            val dialog = builder.setView(binding.root)
                 .setCancelable(true)
                 .create()
-            view.initUI()
-            view.addListeners(dialog)
+            binding.initUI()
+            binding.addListeners(dialog)
 
-            lifecycleScope.launchWhenCreated {
-                viewModel.state.collect {
-                    view.updateFields(it)
-                }
-            }
+            collectStateData()
+            collectEventsData()
 
             dialog
         } ?: throw IllegalStateException("Activity cannot be null")
     }
 
-    private fun DialogFragmentSellBinding.initUI() {
-        header.text = header.context.getString(R.string.sell_crypto, symbol)
+    private fun collectEventsData() {
+        lifecycleScope.launchWhenCreated {
+            viewModel.events.collect { event ->
+                when (event) {
+                    is SellDialogEvent.Dismiss -> dialog?.dismiss()
+                }
+            }
+        }
+    }
 
-        cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, symbol)
+    private fun collectStateData() {
+        lifecycleScope.launchWhenCreated {
+            viewModel.state.collect {
+                binding.updateFields(it)
+            }
+        }
+    }
+
+    private fun DialogFragmentSellBinding.initUI() {
+        header.text = header.context.getString(R.string.sell_crypto, crypto.name)
+
+        cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, crypto.name)
         cryptoPrice.text = "$ " + lastPrice.toString()
 
         cryptoBalanceLabel.text =
-            cryptoBalanceLabel.context.getString(R.string.crypto_balance_label, symbol)
+            cryptoBalanceLabel.context.getString(R.string.crypto_balance_label, crypto.name)
 
         usdToGetLabel.text = usdToGetLabel.context.getString(R.string.usd_to_get_label)
         usdToGet.text = viewModel.state.value.usdToGet.toString()
 
         cryptoBalanceLeft.text = viewModel.state.value.cryptoLeft.toString()
         cryptoBalanceLeftLabel.text =
-            cryptoBalanceLeftLabel.context.getString(R.string.crypto_balance_left_label, symbol)
+            cryptoBalanceLeftLabel.context.getString(R.string.crypto_balance_left_label, crypto.name)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun DialogFragmentSellBinding.addListeners(dialog: AlertDialog) {
         priceInputField.addTextChangedListener { enteredVal ->
-            viewModel.validateInput(enteredVal.toString())
+            viewModel.onInputChanged(enteredVal.toString())
         }
 
         cancelBtn.setOnClickListener {
@@ -81,9 +97,7 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
         }
 
         sellBtn.setOnClickListener {
-            viewModel.updateBalance()
-            viewModel.saveTransactionToDb()
-            dialog.dismiss()
+            viewModel.onSellButtonClicked()
         }
 
         maxBtn.setOnClickListener {
@@ -93,10 +107,18 @@ class SellDialogFragment(val lastPrice: BigDecimal, val symbol: String) : Dialog
 
     private fun DialogFragmentSellBinding.updateFields(state: SellState) {
         if (state.messageType == DialogValidationMessage.IS_TOO_LOW) {
-            validationMessage.text = state.messageType.message + viewModel.state.value.minInputVal.toString()
+            validationMessage.text =
+                state.messageType.message + viewModel.state.value.minInputVal.toString()
         } else {
             validationMessage.text = state.messageType.message
         }
+
+        if(state.updateInput) {
+            priceInputField.setText(state.validatedInputValue)
+            priceInputField.setSelection(state.validatedInputValue.length)
+            viewModel.inputUpdated()
+        }
+
         cryptoBalance.text = viewModel.state.value.cryptoBalance?.amount.toString() ?: ""
         sellBtn.isEnabled = state.isBtnEnabled
         usdToGet.text = state.usdToGet.toString()

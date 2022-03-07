@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/cryptoItemFragment"
-        android:name="com.example.traders.watchlist.singleCryptoScreen.CryptoItemFragment"
+        android:name="com.example.traders.singleCryptoScreen.CryptoItemFragment"
         android:label="CryptoItem" >
         <argument
             android:name="slug"

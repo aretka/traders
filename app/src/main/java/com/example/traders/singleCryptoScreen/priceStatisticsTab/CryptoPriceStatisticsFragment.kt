@@ -1,4 +1,4 @@
-package com.example.traders.watchlist.singleCryptoScreen.priceStatisticsTab
+package com.example.traders.singleCryptoScreen.priceStatisticsTab
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,25 +10,32 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
-import com.example.traders.BaseFragment
-import com.example.traders.R
+import com.example.traders.*
 import com.example.traders.databinding.FragmentCryptoItemPriceStatisticsBinding
-import com.example.traders.getCryptoPriceChangeText
-import com.example.traders.roundAndFormatDouble
+import com.example.traders.dialogs.buyDialog.BuyDialogViewModel
+import com.example.traders.utils.roundAndFormatDouble
+import com.example.traders.utils.setPriceChangeText
+import com.example.traders.utils.setPriceChangeTextColor
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.cryptoStatsData.*
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class CryptoPriceStatistics(val id: String) : BaseFragment() {
+class CryptoPriceStatisticsFragment(val crypto: FixedCryptoList) : BaseFragment() {
 
-    private val viewModel: CryptoPriceStatisticsViewModel by viewModels()
+    @Inject
+    lateinit var viewModelAssistedFactory: CryptoPriceStatisticsViewModel.Factory
+
+    private val viewModel: CryptoPriceStatisticsViewModel by viewModels() {
+        CryptoPriceStatisticsViewModel.provideFactory(viewModelAssistedFactory, crypto)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentCryptoItemPriceStatisticsBinding.inflate(inflater, container, false)
-        viewModel.fetchCryptoPriceStatistics(id)
         viewModel.cryptoStatsResponse.observe(viewLifecycleOwner, {
             fillMainSectionData(
                 binding,
@@ -83,17 +90,17 @@ class CryptoPriceStatistics(val id: String) : BaseFragment() {
         val priceChange =
             roundAndFormatDouble(data.market_data.ohlcv_last_24_hour.open - data.market_data.ohlcv_last_24_hour.close)
         binding.cryptoPrice.text = "$ ${roundAndFormatDouble(data.market_data.price_usd)}"
-        getCryptoPriceChangeText(
+        binding.cryptoPriceChange.setPriceChangeText(
             priceChange,
-            roundAndFormatDouble(data.market_data.percent_change_usd_last_24_hours),
-            binding.cryptoPriceChange
+            roundAndFormatDouble(data.market_data.percent_change_usd_last_24_hours)
         )
+        binding.cryptoPriceChange.setPriceChangeTextColor()
         binding.marketDominance.text = "${roundAndFormatDouble(data.marketcap.marketcap_dominance_percent)}%"
         binding.marketCap.text = "$ ${roundAndFormatDouble(data.marketcap.current_marketcap_usd)}"
         binding.volume1h.text = "$ ${roundAndFormatDouble(data.market_data.ohlcv_last_1_hour.volume)}"
         binding.volume24h.text = "$ ${roundAndFormatDouble(data.market_data.ohlcv_last_24_hour.volume)}"
         Glide.with(binding.cryptoImage)
-            .load("https://cryptologos.cc/logos/${data.slug}-${data.symbol.lowercase()}-logo.png?v=014")
+            .load(crypto.logoUrl)
             .placeholder(R.drawable.ic_image_error)
             .error(R.drawable.ic_image_error)
             .into(binding.cryptoImage)

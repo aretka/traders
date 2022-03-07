@@ -4,20 +4,20 @@ import com.google.gson.annotations.SerializedName
 
 data class Binance24DataItem(
 
-    val symbol: String,
+    val symbol: String = "",
 
     @SerializedName("lastPrice")
-    val last: String,
+    val last: String = "",
 
     @SerializedName("highPrice")
-    val high: String,
+    val high: String = "",
 
     @SerializedName("lowPrice")
-    val low: String,
+    val low: String = "",
 
     @SerializedName("openPrice")
-    val open: String,
+    val open: String = "",
 
-    val priceChange: String,
-    val priceChangePercent: String
+    val priceChange: String = "",
+    val priceChangePercent: String = ""
 )

@@ -1,4 +1,4 @@
-package com.example.traders.watchlist.singleCryptoScreen.chartTab
+package com.example.traders.singleCryptoScreen.chartTab
 
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
 
@@ -11,6 +11,7 @@ data class ChartState(
     val isMonth3BtnActive: Boolean = false,
     val isMonth6BtnActive: Boolean = false,
     val isMonth12BtnActive: Boolean = false,
-    val dialogBtnsEnabled: Boolean = false,
-    val priceNumToRound: Int = 2
+    val activeButtonId: BtnId = BtnId.MONTH1_BTN,
+    val prevActiveButtonId: BtnId? = null,
+    val dialogBtnsEnabled: Boolean = false
 )

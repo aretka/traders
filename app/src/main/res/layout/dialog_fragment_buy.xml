@@ -10,7 +10,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Buy BTC"
+        tools:text="Buy BTC"
         android:textAlignment="center"
         android:textSize="@dimen/large_text_size"
         android:fontFamily="@font/roboto_bold"
@@ -31,7 +31,7 @@
         style="@style/DialogLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header"
-        android:text="Price of BTC"/>
+        tools:text="Price of BTC"/>
 
     <TextView
         android:id="@+id/usd_balance"
@@ -42,7 +42,7 @@
         android:fontFamily="@font/roboto_bold"
         android:textSize="@dimen/small_text_size"
         android:textColor="@color/dark_gray"
-        android:text="$ 1533.00"/>
+        tools:text="$ 1533.00"/>
 
     <TextView
         android:id="@+id/crypto_price"
@@ -53,7 +53,7 @@
         android:fontFamily="@font/roboto_bold"
         android:textSize="@dimen/small_text_size"
         android:textColor="@color/dark_gray"
-        android:text="$ 46,242.64"
+        tools:text="$ 46,242.64"
         />
 
     <TextView
@@ -72,6 +72,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/price_input_label"
         android:digits="0123456789."/>
+<!--    <EditText-->
+<!--        android:id="@+id/price_input_field"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/price_input_label"-->
+<!--        android:inputType="phone"-->
+<!--        />-->
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/max_btn"
@@ -101,7 +109,7 @@
         android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/price_input_field"
-        android:text="BTC amount"/>
+        tools:text="BTC amount"/>
 
     <TextView
         android:id="@+id/crypto_to_get"
@@ -112,7 +120,7 @@
         android:fontFamily="@font/roboto_bold"
         android:textSize="@dimen/small_text_size"
         android:textColor="@color/dark_gray"
-        android:text="0.3323"/>
+        tools:text="0.3323"/>
 
     <TextView
         android:id="@+id/usd_balance_left_label"
@@ -131,7 +139,7 @@
         android:fontFamily="@font/roboto_bold"
         android:textSize="@dimen/small_text_size"
         android:textColor="@color/dark_gray"
-        android:text="$ 300.10"/>
+        tools:text="$ 300.10"/>
 
     <LinearLayout
         android:layout_width="match_parent"

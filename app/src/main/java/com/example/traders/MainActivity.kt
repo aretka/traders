@@ -3,13 +3,17 @@ package com.example.traders
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.forEach
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.traders.utils.roundFormatBigDecimal
 import com.example.traders.webSocket.BinanceWSClient
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -35,6 +39,8 @@ class MainActivity : AppCompatActivity() {
 
             when (destination.id) {
                 R.id.cryptoItemFragment -> {
+                    bottomNavigationView.menu.forEach { it.isEnabled = false }
+                    bottomNavigationView.isFocusable = false
                     bottomNavigationView.animate()
                         .translationX(-bottomNavigationView.width.toFloat())
                         .setDuration(300)
@@ -46,6 +52,8 @@ class MainActivity : AppCompatActivity() {
                         })
                 }
                 else -> {
+                    bottomNavigationView.menu.forEach { it.isEnabled = true }
+                    bottomNavigationView.isActivated = true
                     bottomNavigationView.animate()
                         .translationX(0F)
                         .setDuration(300)

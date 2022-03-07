@@ -12,20 +12,23 @@ import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
 import com.example.traders.databinding.DialogFragmentBuyBinding
 import com.example.traders.dialogs.DialogValidationMessage
+import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import java.math.BigDecimal
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogFragment() {
+class BuyDialogFragment(val lastPrice: BigDecimal, val crypto: FixedCryptoList) : DialogFragment() {
 
     @Inject
     lateinit var viewModelAssistedFactory: BuyDialogViewModel.Factory
 
     private val viewModel: BuyDialogViewModel by viewModels() {
-        BuyDialogViewModel.provideFactory(viewModelAssistedFactory, symbol, lastPrice)
+        BuyDialogViewModel.provideFactory(viewModelAssistedFactory, crypto, lastPrice)
     }
+
+    private lateinit var binding: DialogFragmentBuyBinding
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -34,28 +37,39 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogF
             val builder = AlertDialog.Builder(it)
             val inflater = requireActivity().layoutInflater
 
-            val binding = DialogFragmentBuyBinding.inflate(inflater)
+            binding = DialogFragmentBuyBinding.inflate(inflater)
             val dialog = builder.setView(binding.root)
                 .setCancelable(true)
                 .create()
             binding.initUI()
             binding.addListeners(dialog)
-
-            lifecycleScope.launchWhenCreated {
-                with(viewModel) {
-                    state.collect { state ->
-                        binding.updateValues(state)
-                    }
-                    events.collect { event ->
-                        when (event) {
-                            is BuyDialogEvent.Dismiss -> dismissDialog()
-                        }
-                    }
-                }
-            }
+            collectViewModelState()
+            collectEvents()
 
             dialog
         } ?: throw IllegalStateException("Activity cannot be null")
+    }
+
+    private fun collectViewModelState() {
+        lifecycleScope.launchWhenCreated {
+            with(viewModel) {
+                state.collect { state ->
+                    binding.updateValues(state)
+                }
+            }
+        }
+    }
+
+    private fun collectEvents() {
+        lifecycleScope.launchWhenCreated {
+            with(viewModel) {
+                events.collect { event ->
+                    when (event) {
+                        is BuyDialogEvent.Dismiss -> dismissDialog()
+                    }
+                }
+            }
+        }
     }
 
     private fun dismissDialog() {
@@ -63,7 +77,7 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogF
     }
 
     private fun DialogFragmentBuyBinding.initUI() {
-        header.text = header.context.getString(R.string.buy_crypto, symbol)
+        header.text = header.context.getString(R.string.buy_crypto, crypto.name)
 
         cryptoPrice.text =
             cryptoPrice.context.getString(
@@ -71,8 +85,8 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogF
                 lastPrice.toString()
             )
 
-        cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, symbol)
-        cryptoAmountLabel.text = cryptoAmountLabel.context.getString(R.string.coin_amount, symbol)
+        cryptoPriceLabel.text = cryptoPriceLabel.context.getString(R.string.price_of_coin, crypto.name)
+        cryptoAmountLabel.text = cryptoAmountLabel.context.getString(R.string.coin_amount, crypto.name)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -101,6 +115,12 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val symbol: String) : DialogF
         } else {
             validationMessage.text = state.messageType.message
         }
+
+        if(state.updateInput) {
+            priceInputField.setText(state.validatedInputValue)
+            viewModel.inputUpdated()
+        }
+
         usdBalance.text =
             usdBalance.context.getString(
                 R.string.usd_sign,

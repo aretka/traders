@@ -1,6 +1,7 @@
 package com.example.traders.profile.portfolio
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,17 +12,21 @@ import com.example.traders.R
 import com.example.traders.database.Crypto
 import com.example.traders.databinding.FragmentPortfolioBinding
 import com.example.traders.dialogs.depositDialog.DepositDialogFragment
+import com.example.traders.profile.ProfileFragmentDirections
 import com.example.traders.profile.adapters.PortfolioListAdapter
-import com.example.traders.profile.cryptoData.CryptoInUsd
+import com.example.traders.watchlist.WatchListFragmentDirections
+import com.example.traders.watchlist.adapters.SingleCryptoListener
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PortfolioFragment: BaseFragment() {
+    private lateinit var binding: FragmentPortfolioBinding
     val viewModel: PortfolioViewModel by viewModels()
     private lateinit var adapter: PortfolioListAdapter
 
@@ -30,16 +35,22 @@ class PortfolioFragment: BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentPortfolioBinding.inflate(inflater, container, false)
+        binding = FragmentPortfolioBinding.inflate(inflater, container, false)
         binding.setUpPieChart()
         binding.setUpClickListeners()
         binding.setUpAdapter()
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        updateChartAndAdapterData()
         // Update portfolio on list change
-        viewModel.livePortfolioList.observe(this) {
+        viewModel.livePortfolioList.observe(viewLifecycleOwner) {
             it?.let {
                 binding.updateMessageVisibility(it)
-                viewModel.updateStateData()
+                viewModel.updatePortfolioState()
             }
         }
 
@@ -48,27 +59,26 @@ class PortfolioFragment: BaseFragment() {
                 binding.updateUiData(it)
             }
         }
-        return binding.root
     }
 
     private fun FragmentPortfolioBinding.setUpPieChart() {
-        secondPiechart.setUsePercentValues(true)
-        secondPiechart.setUsePercentValues(true)
-        secondPiechart.setCenterTextSize(20F)
-        secondPiechart.setDrawEntryLabels(false)
-        secondPiechart.description.isEnabled = false
-        secondPiechart.legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
-        secondPiechart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
-        secondPiechart.legend.orientation = Legend.LegendOrientation.VERTICAL
+        pieChart.setUsePercentValues(true)
+        pieChart.setUsePercentValues(true)
+        pieChart.setCenterTextSize(20F)
+        pieChart.setDrawEntryLabels(false)
+        pieChart.description.isEnabled = false
+        pieChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
+        pieChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        pieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
     }
 
     private fun FragmentPortfolioBinding.updateUiData(state: PortfolioState) {
         if(state.chartReadyForUpdate) {
             val pieDataSet = PieDataSet(state.chartData, "Portfolio")
             pieDataSet.setColors(state.colors)
-            secondPiechart.data = PieData(pieDataSet)
-            secondPiechart.invalidate()
-            secondPiechart.animate()
+            pieChart.data = PieData(pieDataSet)
+            pieChart.invalidate()
+            pieChart.animate()
             viewModel.chartUpdated()
             adapter.addHeaderAndSubmitList(state.cryptoListInUsd)
         }
@@ -78,6 +88,17 @@ class PortfolioFragment: BaseFragment() {
                 R.string.usd_sign,
                 state.totalPortfolioBalance.toString()
             )
+        }
+    }
+
+    private fun updateChartAndAdapterData() {
+        if(viewModel.state.value.chartDataLoaded) {
+            val pieDataSet = PieDataSet(viewModel.state.value.chartData, "Portfolio")
+            pieDataSet.setColors(viewModel.state.value.colors)
+            binding.pieChart.data = PieData(pieDataSet)
+            binding.pieChart.invalidate()
+            binding.pieChart.animate()
+            adapter.addHeaderAndSubmitList(viewModel.state.value.cryptoListInUsd)
         }
     }
 
@@ -96,7 +117,13 @@ class PortfolioFragment: BaseFragment() {
     }
 
     private fun FragmentPortfolioBinding.setUpAdapter() {
-        adapter = PortfolioListAdapter()
+        adapter = PortfolioListAdapter(SingleCryptoListener { slug, symbol ->
+            if (symbol != null) {
+                val direction = ProfileFragmentDirections
+                    .actionUserProfileFragmentToCryptoItemFragment(slug, symbol)
+                navController.navigate(direction)
+            }
+        })
         portfolioList.adapter = adapter
     }
 

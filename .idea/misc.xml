@@ -33,15 +33,16 @@
         <entry key="app/src/main/res/drawable/top_bot_rounded.xml" value="0.42552083333333335" />
         <entry key="app/src/main/res/drawable/top_bottom_rounded.xml" value="0.2328125" />
         <entry key="app/src/main/res/drawable/top_rounded_layout.xml" value="0.30052083333333335" />
+        <entry key="app/src/main/res/drawable/transaction_layout.xml" value="0.2845" />
         <entry key="app/src/main/res/drawable/withdraw_btn_layout.xml" value="0.2328125" />
         <entry key="app/src/main/res/font/new_font.xml" value="0.3640625" />
         <entry key="app/src/main/res/font/roboto_bold.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/font/roboto_medium.xml" value="0.3640625" />
         <entry key="app/src/main/res/layout-v28/fragment_crypto_item_price_statistics.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/dialog_fragment_buy.xml" value="0.24479166666666666" />
+        <entry key="app/src/main/res/layout/dialog_fragment_buy.xml" value="0.33" />
         <entry key="app/src/main/res/layout/dialog_fragment_deposit.xml" value="0.67" />
-        <entry key="app/src/main/res/layout/dialog_fragment_sell.xml" value="0.24479166666666666" />
+        <entry key="app/src/main/res/layout/dialog_fragment_sell.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_buy_dialog.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_crypto_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_crypto_item_chart.xml" value="0.5" />
@@ -69,6 +70,8 @@
         <entry key="app/src/main/res/layout/list_transaction_usd.xml" value="0.33" />
         <entry key="app/src/main/res/layout/portfolio_list_header.xml" value="0.2907608695652174" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.19791666666666666" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.127" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2265" />
       </map>
     </option>
   </component>
