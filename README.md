@@ -10,7 +10,7 @@ Table of contents
 <a name="desc"></a>
 ## 1. About this app
 This is a trading app which allows you to simulate crypto trading with fake money.
-The main idea of the app is to permit customer learn trading crypto.
+The main idea of the app is to permit customer to learn trading crypto.
 Crytpo trading is extremely dangerous for new retail investors and most of them come to this area with lack of knowledge how volatile this market is.
 Therefore, this trading app provides functionality to simulate trading(deposit USD, buying/sell crypto) and gain a sense of how volatile crypto market is.</br></br>
 This version of the app consists of the main and most valuable functionalities/features. 
