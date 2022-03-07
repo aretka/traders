@@ -1,8 +1,5 @@
 package com.example.traders.profile.portfolio
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
 import com.example.traders.BaseViewModel
 import com.example.traders.database.Crypto
 import com.example.traders.profile.cryptoData.CryptoInUsd
@@ -10,30 +7,34 @@ import com.example.traders.profile.cryptoData.CryptoTicker
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.utils.roundNum
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.utils.ColorTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class PortfolioViewModel @Inject constructor(
     private val repository: CryptoRepository
 ) : BaseViewModel() {
-    private val colors = getColors()
+    private val colors =
+        listOf(-13710223, -932849, -1618884, -13330213, -4128884, -2164, -12148, -7542017, -29539)
 
-    private val _state = MutableStateFlow(PortfolioState(colors = colors))
+    private val _state = MutableStateFlow(
+        PortfolioState(
+            colors = colors
+        )
+    )
     val state = _state.asStateFlow()
-//    val state = _state.asStateFlow().combine(repository.getLiveAllCryptoPortfolio().asFlow()) { a, b -> }
+//    val state = _state.asStateFlow().combine(repository.getLiveAllCryptoPortfolio().asFlow()) {
+//        portfolioState, liveAllCryptoPortfolio ->
+//        updateStateData()
+//    }
 
-//    val livePortfolioList = repository.getLiveAllCryptoPortfolio().asFlow()
     val livePortfolioList = repository.getLiveAllCryptoPortfolio()
 
     fun chartUpdated() {
@@ -46,7 +47,7 @@ class PortfolioViewModel @Inject constructor(
         }
     }
 
-    fun updateStateData() {
+    fun updatePortfolioState() {
         if (listNotEmptyAndNotEqualsToPrevList()) {
             _state.value = _state.value.copy(prevList = livePortfolioList.value ?: emptyList())
             launch {
@@ -54,10 +55,9 @@ class PortfolioViewModel @Inject constructor(
                 calculateTotalBalance()
                 calculateChartData()
             }
-        } else if(listIsEmpty()) {
+        } else if (listIsEmpty()) {
             setStateListsToEmpty()
             launch {
-                calculateTotalBalance()
                 calculateChartData()
             }
         }
@@ -81,7 +81,8 @@ class PortfolioViewModel @Inject constructor(
         _state.value = _state.value.copy(
             usdPricesFromBinance = emptyList(),
             cryptoListInUsd = emptyList(),
-            prevList = emptyList()
+            prevList = emptyList(),
+            totalPortfolioBalance = BigDecimal(0.00)
         )
     }
 
@@ -145,7 +146,7 @@ class PortfolioViewModel @Inject constructor(
         val binanceTickerTasks = mutableListOf<Deferred<CryptoTicker?>>()
         for (crypto in listToFetch) {
             if (crypto.symbol != "USD") {
-                Log.e("API_FETCH", "NEW REQUEST OF ${crypto.symbol}")
+//                Log.e("API_FETCH", "NEW REQUEST OF ${crypto.symbol}")
                 binanceTickerTasks.add(
                     async { repository.getBinanceTickerBySymbol(crypto.symbol + "USDT").body() }
                 )
@@ -171,7 +172,7 @@ class PortfolioViewModel @Inject constructor(
                 chartData.add(PieEntry(crypto.amountInUsd.toFloat() ?: 0F, crypto.symbol))
             }
         } else {
-            val sortedList = state.value.cryptoListInUsd.toMutableList()
+            val sortedList = _state.value.cryptoListInUsd.toMutableList()
             sortedList.sortByDescending { it.amountInUsd }
             for (i in 0..3) {
                 chartData.add(
@@ -191,19 +192,12 @@ class PortfolioViewModel @Inject constructor(
 
         _state.value = _state.value.copy(
             chartData = chartData,
-            chartReadyForUpdate = true
+            chartReadyForUpdate = true,
+            chartDataLoaded = true
         )
     }
 
-    private fun getColors(): List<Int> {
-        val newColorArray = mutableListOf<Int>()
-        for (color in ColorTemplate.MATERIAL_COLORS) {
-            newColorArray.add(color)
-        }
-        for (color in ColorTemplate.VORDIPLOM_COLORS) {
-            newColorArray.add(color)
-        }
-        return newColorArray
+    override fun onCleared() {
+        super.onCleared()
     }
-
 }

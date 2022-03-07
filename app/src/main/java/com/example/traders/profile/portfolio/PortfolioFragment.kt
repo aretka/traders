@@ -1,6 +1,7 @@
 package com.example.traders.profile.portfolio
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -42,11 +44,13 @@ class PortfolioFragment: BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        updateChartAndAdapterData()
         // Update portfolio on list change
         viewModel.livePortfolioList.observe(viewLifecycleOwner) {
             it?.let {
                 binding.updateMessageVisibility(it)
-                viewModel.updateStateData()
+                viewModel.updatePortfolioState()
             }
         }
 
@@ -84,6 +88,17 @@ class PortfolioFragment: BaseFragment() {
                 R.string.usd_sign,
                 state.totalPortfolioBalance.toString()
             )
+        }
+    }
+
+    private fun updateChartAndAdapterData() {
+        if(viewModel.state.value.chartDataLoaded) {
+            val pieDataSet = PieDataSet(viewModel.state.value.chartData, "Portfolio")
+            pieDataSet.setColors(viewModel.state.value.colors)
+            binding.pieChart.data = PieData(pieDataSet)
+            binding.pieChart.invalidate()
+            binding.pieChart.animate()
+            adapter.addHeaderAndSubmitList(viewModel.state.value.cryptoListInUsd)
         }
     }
 

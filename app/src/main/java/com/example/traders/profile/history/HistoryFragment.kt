@@ -17,22 +17,27 @@ class HistoryFragment : BaseFragment() {
 
     private val viewModel: HistoryViewModel by viewModels()
     private lateinit var adapter: HistoryListAdapter
+    private lateinit var binding: FragmentHistoryBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentHistoryBinding.inflate(inflater, container, false)
+        binding = FragmentHistoryBinding.inflate(inflater, container, false)
         binding.setUpAdapter()
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel.transactionList.observe(viewLifecycleOwner) {
             it?.let { list ->
                 binding.emptyListMessageVisibility(it)
                 adapter.addHeaderAndSubmitList(list.reversed())
             }
         }
-
-        return binding.root
     }
 
     private fun FragmentHistoryBinding.emptyListMessageVisibility(list: List<Transaction>) {

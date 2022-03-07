@@ -1,4 +1,4 @@
-package com.example.traders.watchlist.singleCryptoScreen.priceStatisticsTab
+package com.example.traders.singleCryptoScreen.priceStatisticsTab
 
 import androidx.lifecycle.*
 import com.example.traders.BaseViewModel
@@ -18,7 +18,7 @@ class CryptoPriceStatisticsViewModel @AssistedInject constructor(
     val cryptoStatsResponse: LiveData<CryptoStatistics> = _cryptoStatsResponse
 
     init {
-        viewModelScope.launch {
+        launch {
             val responseBody = repository.getCryptoPriceStatistics(crypto.slug).body() ?: return@launch
             _cryptoStatsResponse.value = responseBody
         }

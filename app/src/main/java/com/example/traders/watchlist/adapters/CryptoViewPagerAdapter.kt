@@ -1,13 +1,15 @@
 package com.example.traders.watchlist.adapters
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
-import com.example.traders.watchlist.singleCryptoScreen.chartTab.CryptoChartFragment
-import com.example.traders.watchlist.singleCryptoScreen.descriptionTab.CryptoDescriptionFragment
-import com.example.traders.watchlist.singleCryptoScreen.priceStatisticsTab.CryptoPriceStatisticsFragment
+import com.example.traders.singleCryptoScreen.chartTab.CryptoChartFragment
+import com.example.traders.singleCryptoScreen.descriptionTab.CryptoDescriptionFragment
+import com.example.traders.singleCryptoScreen.priceStatisticsTab.CryptoPriceStatisticsFragment
 
 class CryptoViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, val crypto: FixedCryptoList) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
@@ -23,6 +25,7 @@ class CryptoViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecy
         return NUM_OF_FRAGMENTS
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             FIRST_POSITION -> {

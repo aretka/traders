@@ -46,7 +46,6 @@ class WatchListViewModel @Inject constructor(
         launch {
             _state.update { it.copy(isRefreshing = true) }
             updateCryptoData()
-            _state.update { it.copy(isCryptoFetched = true) }
             _state.update { it.copy(isRefreshing = false) }
         }
     }

@@ -1,4 +1,4 @@
-package com.example.traders.watchlist.singleCryptoScreen
+package com.example.traders.singleCryptoScreen
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,7 +28,7 @@ class CryptoItemFragment : BaseFragment() {
         setUpTabs(binding.singleItemViewPager, binding.singleItemTablayout, crypto)
 
         binding.backButton.setOnClickListener {
-            this.findNavController().navigateUp()
+            navControllerProvider.get().navigateUp()
         }
 
         return binding.root

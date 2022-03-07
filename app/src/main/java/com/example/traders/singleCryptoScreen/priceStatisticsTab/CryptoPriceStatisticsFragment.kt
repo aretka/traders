@@ -1,4 +1,4 @@
-package com.example.traders.watchlist.singleCryptoScreen.priceStatisticsTab
+package com.example.traders.singleCryptoScreen.priceStatisticsTab
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -100,7 +100,7 @@ class CryptoPriceStatisticsFragment(val crypto: FixedCryptoList) : BaseFragment(
         binding.volume1h.text = "$ ${roundAndFormatDouble(data.market_data.ohlcv_last_1_hour.volume)}"
         binding.volume24h.text = "$ ${roundAndFormatDouble(data.market_data.ohlcv_last_24_hour.volume)}"
         Glide.with(binding.cryptoImage)
-            .load("https://cryptologos.cc/logos/${data.slug}-${data.symbol.lowercase()}-logo.png?v=014")
+            .load(crypto.logoUrl)
             .placeholder(R.drawable.ic_image_error)
             .error(R.drawable.ic_image_error)
             .into(binding.cryptoImage)

@@ -12,6 +12,7 @@ data class PortfolioState(
     val cryptoListInUsd: List<CryptoInUsd> = emptyList(),
     val usdPricesFromBinance: List<CryptoTicker?> = emptyList(),
     val chartReadyForUpdate: Boolean = false,
+    val chartDataLoaded: Boolean = false,
     val totalPortfolioBalance: BigDecimal? = null,
     val prevList: List<Crypto> = emptyList()
 )

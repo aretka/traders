@@ -35,6 +35,7 @@ class WatchListFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         with(viewModel) {
             isLoading.observe(viewLifecycleOwner) {
                 binding.changeLoaderVisibility(it)

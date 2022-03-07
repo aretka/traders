@@ -1,4 +1,4 @@
-package com.example.traders.watchlist.singleCryptoScreen.chartTab
+package com.example.traders.singleCryptoScreen.chartTab
 
 import android.os.Build
 import androidx.annotation.RequiresApi

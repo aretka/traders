@@ -2,8 +2,7 @@ package com.example.traders.webSocket
 
 import android.os.Build
 import android.util.Log
-import com.example.traders.utils.enumConstantNames
-import com.example.traders.utils.paramsToJson
+import com.example.traders.utils.MappingUtils
 import com.example.traders.utils.returnTickerWithRoundedPrice
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTicker
@@ -16,6 +15,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
+import kotlin.reflect.KClass
 
 class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
 
@@ -59,7 +59,7 @@ class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
     override fun subscribe(params: List<String>, type: String) {
         if (isOpen) {
             send(
-                paramsToJson(
+                MappingUtils.paramsToJson(
                     params = params,
                     subscription = "SUBSCRIBE",
                     type = type
@@ -71,7 +71,7 @@ class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
     override fun unsubscribe(params: List<String>, type: String) {
         if (isOpen) {
             send(
-                paramsToJson(
+                MappingUtils.paramsToJson(
                     params = params,
                     subscription = "UNSUBSCRIBE",
                     type = type
@@ -103,4 +103,7 @@ class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
         private val gson = Gson()
     }
 
+    // Converts enum names to String array
+    fun KClass<out Enum<*>>.enumConstantNames() =
+        this.java.enumConstants.map(Enum<*>::name)
 }

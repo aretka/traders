@@ -27,7 +27,7 @@ class ProfileFragment : BaseFragment() {
     }
 
     private fun setUpTabs(viewPager: ViewPager2, tabLayout: TabLayout) {
-        val viewPagerAdapter = UserViewPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
+        val viewPagerAdapter = UserViewPagerAdapter(childFragmentManager, lifecycle)
         viewPager.adapter = viewPagerAdapter
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {

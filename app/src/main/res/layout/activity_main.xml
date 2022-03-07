@@ -14,8 +14,19 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph" />
 
+<!--    <Space-->
+<!--        android:id="@+id/spacer"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="55dp"-->
+<!--        android:background="@color/very_light_gray"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent" -->
+<!--        app:layout_constraintTop_toTopOf="@+id/bottom_nav"-->
+<!--        app:layout_constraintEnd_toEndOf="parent" />-->
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:itemTextColor="@color/bottom_nav_colors"

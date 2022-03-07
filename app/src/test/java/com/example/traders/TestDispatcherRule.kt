@@ -1,4 +1,4 @@
-package com.example.traders.watchlist
+package com.example.traders
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

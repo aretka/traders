@@ -1,9 +1,9 @@
-package com.example.traders.watchlist.singleCryptoScreen.chartTab
+package com.example.traders.singleCryptoScreen.chartTab
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.example.traders.repository.CryptoRepository
-import com.example.traders.watchlist.TestDispatcherRule
+import com.example.traders.TestDispatcherRule
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
 import com.example.traders.watchlist.cryptoData.cryptoChartData.CryptoChartData

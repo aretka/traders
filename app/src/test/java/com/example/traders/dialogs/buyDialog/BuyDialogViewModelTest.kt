@@ -5,9 +5,8 @@ import app.cash.turbine.test
 import com.example.traders.database.Crypto
 import com.example.traders.dialogs.DialogValidation
 import com.example.traders.repository.CryptoRepository
-import com.example.traders.utils.roundFormatBigDecimal
 import com.example.traders.utils.roundNum
-import com.example.traders.watchlist.TestDispatcherRule
+import com.example.traders.TestDispatcherRule
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever

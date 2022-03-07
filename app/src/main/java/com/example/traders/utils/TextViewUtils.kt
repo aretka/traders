@@ -28,7 +28,7 @@ fun TextView.setPriceChangeText(
 }
 
 fun TextView.setPriceChangeTextColor() {
-    if(this.text.contains('-')) {
+    if (this.text.contains('-')) {
         setTextColor(ContextCompat.getColor(context, R.color.red))
     } else {
         setTextColor(ContextCompat.getColor(context, R.color.green))
