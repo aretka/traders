@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">traders</string>
+    <string name="app_name">Traders</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fragment_watch_list_label">fragment_watch_list</string>
     <string name="navigation_profile_label">Profile</string>
