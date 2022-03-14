@@ -1,5 +1,6 @@
 package com.example.traders
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,7 +14,7 @@ import kotlin.coroutines.CoroutineContext
 open class BaseViewModel : ViewModel(), CoroutineScope {
 
     private val _isLoading = MutableLiveData(false)
-    val isLoading
+    val isLoading: LiveData<Boolean>
         get() = _isLoading
 
     private val _errorEvents = MutableSharedFlow<ErrorEvent>()
