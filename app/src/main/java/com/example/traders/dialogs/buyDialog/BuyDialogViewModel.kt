@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.traders.BaseViewModel
 import com.example.traders.database.Crypto
 import com.example.traders.database.Transaction
@@ -28,6 +29,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
+private const val TAG = "BuyDialogViewModel"
+
 class BuyDialogViewModel @AssistedInject constructor(
     private val repository: CryptoRepository,
     private val dialogValidation: DialogValidation,
@@ -42,6 +45,7 @@ class BuyDialogViewModel @AssistedInject constructor(
     val events = _events.asSharedFlow()
 
     init {
+        print(launch { Log.e(TAG, "${Thread.currentThread().name}") })
         getUsdBalance()
         getCryptoBalance()
     }

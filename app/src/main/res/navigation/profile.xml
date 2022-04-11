@@ -32,5 +32,9 @@
             android:name="symbol"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/confirmationDialogFragment"
+        android:name="com.example.traders.dialogs.confirmationDialog.ConfirmationDialogFragment"
+        android:label="ConfirmationDialogFragment" />
 
 </navigation>

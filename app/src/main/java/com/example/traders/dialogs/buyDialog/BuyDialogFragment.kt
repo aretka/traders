@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
@@ -52,6 +53,7 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val crypto: FixedCryptoList) 
 
     private fun collectViewModelState() {
         lifecycleScope.launchWhenCreated {
+            Log.e("TAG", "collectViewModelState: ${Thread.currentThread().name}", )
             with(viewModel) {
                 state.collect { state ->
                     binding.updateValues(state)
