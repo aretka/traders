@@ -88,7 +88,7 @@
                         android:layout_margin="15dp"
                         android:background="@drawable/deposit_btn_layout"/>
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/withdraw_btn"
+                        android:id="@+id/reset_balance_btn"
                         android:layout_width="0dp"
                         android:layout_height="35dp"
                         android:textColor="@color/white"

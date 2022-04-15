@@ -1,6 +1,7 @@
 package com.example.traders.profile.portfolio
 
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import com.example.traders.BaseFragment
 import com.example.traders.R
 import com.example.traders.database.Crypto
 import com.example.traders.databinding.FragmentPortfolioBinding
+import com.example.traders.dialogs.confirmationDialog.ConfirmationDialogFragment
 import com.example.traders.dialogs.depositDialog.DepositDialogFragment
 import com.example.traders.profile.ProfileFragmentDirections
 import com.example.traders.profile.adapters.PortfolioListAdapter
@@ -106,8 +108,12 @@ class PortfolioFragment: BaseFragment() {
         depositBtn.setOnClickListener {
             openDialog()
         }
-        withdrawBtn.setOnClickListener {
-            viewModel.deleteAllDbRows()
+        resetBalanceBtn.setOnClickListener {
+            val dialog = ConfirmationDialogFragment("Are you sure you want to reset balance?")
+            dialog.show(parentFragmentManager, "confirmation_dialog")
+//            val direction = ProfileFragmentDirections.actionGlobalConfirmationDialogFragment()
+//            navController.navigate(direction)
+//            viewModel.deleteAllDbRows()
         }
     }
 
