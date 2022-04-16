@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.example.traders.database.Crypto
 import com.example.traders.database.CryptoDatabaseDao
+import com.example.traders.database.FavouriteCrypto
 import com.example.traders.database.Transaction
 import com.example.traders.network.BinanceApi
 import com.example.traders.network.MessariApi
@@ -28,7 +29,8 @@ class CryptoRepository @Inject constructor(
     val binanceMarketData = flow {
         while (isFetching) {
             val response = getBinance24Data()
-            val extractedList = response.body()?.filter { el -> enumContains<FixedCryptoList>(el.symbol.replace("USDT", ""))}
+            val extractedList = response.body()
+                ?.filter { el -> enumContains<FixedCryptoList>(el.symbol.replace("USDT", "")) }
             emit(extractedList)
             delay(REFRESH_INTERVAL_MS)
         }
@@ -50,12 +52,14 @@ class CryptoRepository @Inject constructor(
         afterDate: String,
         interval: String
     ) = api.getCryptoChartData(slug, afterDate, interval)
+
     suspend fun getCryptoDescriptionData(id: String) = api.getCryptoDescriptionData(id)
 
     // Binance api
     suspend fun checkServerTime() = binanceApi.checkServerTime()
     suspend fun getBinance24Data() = binanceApi.get24HourData()
-    suspend fun getBinanceTickerBySymbol(symbol: String) = binanceApi.getBinanceTickerBySymbol(symbol)
+    suspend fun getBinanceTickerBySymbol(symbol: String) =
+        binanceApi.getBinanceTickerBySymbol(symbol)
 
     // Shared preferences
     fun getStoredTag(symbol: String) = sharedPrefs.getFloat(symbol, 0F)
@@ -70,9 +74,17 @@ class CryptoRepository @Inject constructor(
     suspend fun deleteCrypto(crypto: Crypto) = cryptoDao.deleteCrypto(crypto)
     suspend fun getCryptoBySymbol(symbol: String) = cryptoDao.getCryptoBySymbol(symbol)
     suspend fun deleteAllCryptoFromDb() = cryptoDao.deleteAllCryptoFromDb()
-    suspend fun insertTransaction(transaction: Transaction) = cryptoDao.insertTransaction(transaction)
+    suspend fun insertTransaction(transaction: Transaction) =
+        cryptoDao.insertTransaction(transaction)
+
     suspend fun deleteAllTransactions() = cryptoDao.deleteAllTransactions()
     fun getAllTransactionsLive() = cryptoDao.getAllTransactionsLive()
+    fun getAllFavourites() = cryptoDao.getAllFavourites()
+    suspend fun insertFavouriteCrypto(favouriteCrypto: FavouriteCrypto) =
+        cryptoDao.insertFavouriteCrypto(favouriteCrypto)
+
+    suspend fun deleteFavouriteCrypto(symbol: String) =
+        cryptoDao.deleteFavouriteCrypto(symbol)
 
     companion object {
         const val REFRESH_INTERVAL_MS = 10000L
@@ -80,5 +92,5 @@ class CryptoRepository @Inject constructor(
 }
 
 inline fun <reified T : Enum<T>> enumContains(symbol: String): Boolean {
-    return enumValues<T>().any { it.name == symbol}
+    return enumValues<T>().any { it.name == symbol }
 }
