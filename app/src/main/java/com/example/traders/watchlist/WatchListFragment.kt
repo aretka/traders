@@ -13,7 +13,10 @@ import com.example.traders.watchlist.adapters.WatchListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-
+/*
+* TODO: viewModel read all favourite list and update list
+*
+* */
 @AndroidEntryPoint
 class WatchListFragment : BaseFragment() {
 
@@ -59,7 +62,7 @@ class WatchListFragment : BaseFragment() {
         adapter = WatchListAdapter(SingleCryptoListener { slug, symbol ->
             if (symbol != null) {
                 val direction = WatchListFragmentDirections
-                    .actionWatchListFragmentToCryptoItem(slug, symbol)
+                    .actionWatchListFragmentToCryptoItem(slug, symbol, false)
                 navController.navigate(direction)
             }
         })

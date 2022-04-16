@@ -57,6 +57,10 @@ class WatchListViewModel @Inject constructor(
         }
 //        _state.update { it.copy(binanceCryptoData = extractedPricesList) }
         _state.value = _state.value.copy(binanceCryptoData = extractedPricesList)
+//        TODO: edit binance CryptoData to a new one with isFavourite field
+//        TODO: map list to new list using favourites
+
+//        TODO: start collecting list and map new list to a new one map
     }
 
     // It collects message emitted from websocket sharedFlow and updates list item by reassigning BinanceDataItem to new value
