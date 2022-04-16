@@ -23,6 +23,7 @@ interface CryptoDatabaseDao {
     @Query("DELETE FROM crypto")
     suspend fun deleteAllCryptoFromDb()
 
+//    Transactions
     @Query("SELECT * FROM `transaction`")
     fun getAllTransactionsLive(): LiveData<List<Transaction>>
 
@@ -31,4 +32,14 @@ interface CryptoDatabaseDao {
 
     @Query("DELETE FROM `transaction`")
     suspend fun deleteAllTransactions()
+
+//    Favourite crypto
+    @Query("SELECT * FROM favouritecrypto")
+    fun getAllFavourites() : LiveData<List<FavouriteCrypto>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFavouriteCrypto(favouriteCrypto: FavouriteCrypto)
+
+    @Query("DELETE FROM favouritecrypto WHERE symbol=:symbol")
+    suspend fun deleteFavouriteCrypto(symbol: String)
 }
