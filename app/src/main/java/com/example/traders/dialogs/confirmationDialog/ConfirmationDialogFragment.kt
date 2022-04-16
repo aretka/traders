@@ -10,11 +10,20 @@ import com.example.traders.databinding.DialogConfirmationBinding
 import com.example.traders.utils.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class ConfirmationDialogFragment(private val message: String) : DialogFragment() {
+class ConfirmationDialogFragment(
+    private val message: String,
+    private val confirmationType: ConfirmationType
+) : DialogFragment() {
     private lateinit var binding: DialogConfirmationBinding
-    val viewModel: ConfirmationDialogViewModel by viewModels()
+    @Inject
+    lateinit var viewModelAssistedFactory: ConfirmationDialogViewModel.Factory
+
+    private val viewModel: ConfirmationDialogViewModel by viewModels() {
+        ConfirmationDialogViewModel.provideFactory(viewModelAssistedFactory, confirmationType)
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
@@ -32,7 +41,7 @@ class ConfirmationDialogFragment(private val message: String) : DialogFragment()
                 viewModel.events.collect { event ->
                     when (event) {
                         ConfirmationDialogEvent.Dismiss -> {
-                            DismissDialog()
+                            dismissDialog()
                         }
                     }.exhaustive
                 }
@@ -52,7 +61,7 @@ class ConfirmationDialogFragment(private val message: String) : DialogFragment()
         }
     }
 
-    private fun DismissDialog() {
+    private fun dismissDialog() {
         dialog?.dismiss()
     }
 

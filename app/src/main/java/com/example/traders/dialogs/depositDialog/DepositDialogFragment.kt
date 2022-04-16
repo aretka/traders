@@ -63,6 +63,11 @@ class DepositDialogFragment : DialogFragment() {
         }
 
         depositBtn.setOnClickListener {
+//            Bundles do not work (probably since it is not a destination )
+//            requireActivity().supportFragmentManager.setFragmentResult(
+//                "deposited_amount",
+//                bundleOf("deposited_amount" to "SomeVal")
+//            )
             viewModel.onDepositButtonClicked()
         }
 
@@ -72,7 +77,7 @@ class DepositDialogFragment : DialogFragment() {
     }
 
     private fun DialogFragmentDepositBinding.updateFields(it: DepositState) {
-        if(it.updateInput) {
+        if (it.updateInput) {
             usdInput.setText(it.validatedInputValue)
             viewModel.inputUpdated()
         }
