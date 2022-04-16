@@ -48,12 +48,12 @@ class PortfolioFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 //        Result is not received from dialog fragment
-//        setFragmentResultListener(
-//            "deposited_amount"
-//        ) { _, bundle ->
-//            val result = bundle.getString("deposited_amount")
-//            Toast.makeText(context, "Amount received: $result", Toast.LENGTH_SHORT)
-//        }
+        setFragmentResultListener(
+            "deposited_amount"
+        ) { _, bundle ->
+            val result = bundle.getString("deposited_amount")
+            Toast.makeText(context, "Amount received: $result", Toast.LENGTH_SHORT).show()
+        }
         updateChartAndAdapterData()
         // Update portfolio on list change
         viewModel.livePortfolioList.observe(viewLifecycleOwner) {
@@ -131,7 +131,7 @@ class PortfolioFragment : BaseFragment() {
         adapter = PortfolioListAdapter(SingleCryptoListener { slug, symbol ->
             if (symbol != null) {
                 val direction = ProfileFragmentDirections
-                    .actionUserProfileFragmentToCryptoItemFragment(slug, symbol)
+                    .actionUserProfileFragmentToCryptoItemFragment(slug, symbol, false)
                 navController.navigate(direction)
             }
         })
