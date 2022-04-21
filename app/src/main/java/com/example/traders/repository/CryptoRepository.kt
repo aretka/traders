@@ -82,9 +82,9 @@ class CryptoRepository @Inject constructor(
     fun getAllFavourites() = cryptoDao.getAllFavourites()
     suspend fun insertFavouriteCrypto(favouriteCrypto: FavouriteCrypto) =
         cryptoDao.insertFavouriteCrypto(favouriteCrypto)
-
     suspend fun deleteFavouriteCrypto(symbol: String) =
         cryptoDao.deleteFavouriteCrypto(symbol)
+    suspend fun getFavouriteBySymbol(symbol: String) = cryptoDao.getFavouriteBySymbol(symbol)
 
     companion object {
         const val REFRESH_INTERVAL_MS = 10000L

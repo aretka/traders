@@ -42,4 +42,7 @@ interface CryptoDatabaseDao {
 
     @Query("DELETE FROM favouritecrypto WHERE symbol=:symbol")
     suspend fun deleteFavouriteCrypto(symbol: String)
+
+    @Query("SELECT * FROM favouritecrypto WHERE symbol=:symbol")
+    suspend fun getFavouriteBySymbol(symbol: String): FavouriteCrypto?
 }
