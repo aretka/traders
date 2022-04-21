@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.example.traders.BaseViewModel
 import com.example.traders.database.FavouriteCrypto
 import com.example.traders.repository.CryptoRepository
+import com.example.traders.singleCryptoScreen.priceStatisticsTab.Hilt_CryptoPriceStatisticsFragment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,35 +17,50 @@ import javax.inject.Inject
 @HiltViewModel
 class CryptoItemViewModel @Inject constructor(
     private val repository: CryptoRepository,
-    private val state: SavedStateHandle
+    private val savedState: SavedStateHandle
 ) : BaseViewModel() {
-    val symbol = state.get<String>("symbol")
-    private var _isFavourite = state.get<Boolean>("isFavourite") ?: false
-        set(value) {
-            field = value
-            state.set("isFavourite", value)
-        }
-    val isFavourite: Boolean
-        get() = _isFavourite
+    val symbol = savedState.get<String>("symbol")
+//    private var _isFavourite = savedState.get<Boolean>("isFavourite") ?: false
+//        set(value) {
+//            field = value
+//            savedState.set("isFavourite", value)
+//        }
+//    val isFavourite: Boolean
+//        get() = _isFavourite
 
-    private val _isFavouriteBtnActive = MutableStateFlow(true)
-    val isFavouriteBtnActive = _isFavouriteBtnActive.asStateFlow()
+    private val _state = MutableStateFlow(CryptoItemState())
+    val state = _state.asStateFlow()
 
     private val _events = MutableSharedFlow<CryptoItemEvents>()
     val events = _events.asSharedFlow()
 
+    init {
+        fetchFavouriteFromDb(symbol)
+    }
+
     fun onFavouriteBtnClicked(symbol: String) {
         launch {
-            _isFavouriteBtnActive.value = false
+            _state.value = _state.value.copy(isBtnActive = false)
             updateFavouritesInDb(symbol)
-            _isFavourite = !_isFavourite
+            _state.value = _state.value.copy(isFavourite = !_state.value.isFavourite)
             delay(1500L)
-            _isFavouriteBtnActive.value = true
+            _state.value = _state.value.copy(isBtnActive = false)
+        }
+    }
+
+    fun fetchFavouriteFromDb(symbol: String?) {
+        launch {
+            symbol?.let {
+                val favouriteCrypto: FavouriteCrypto? = repository.getFavouriteBySymbol(it)
+                favouriteCrypto?.let {
+                    _state.value = _state.value.copy(isFavourite = !_state.value.isFavourite)
+                }
+            }
         }
     }
 
     private suspend fun updateFavouritesInDb(symbol: String) {
-        if(_isFavourite) {
+        if(_state.value.isFavourite ) {
             repository.deleteFavouriteCrypto(symbol)
             _events.emit(CryptoItemEvents.RemoveFromFavourites)
         } else {

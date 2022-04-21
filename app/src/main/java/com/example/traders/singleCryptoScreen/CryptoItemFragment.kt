@@ -1,7 +1,6 @@
 package com.example.traders.singleCryptoScreen
 
 import android.os.Bundle
-import android.text.style.TabStopSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,14 +11,12 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.traders.BaseFragment
 import com.example.traders.R
 import com.example.traders.databinding.FragmentCryptoItemBinding
-import com.example.traders.dialogs.confirmationDialog.ConfirmationDialogViewModel
 import com.example.traders.watchlist.adapters.CryptoViewPagerAdapter
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CryptoItemFragment : BaseFragment() {
@@ -46,8 +43,13 @@ class CryptoItemFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         with(viewModel) {
             lifecycleScope.launchWhenStarted {
-                isFavouriteBtnActive.collect { isActive ->
-                    binding.favouriteBtn.isEnabled = isActive
+                state.collect { state ->
+                    binding.favouriteBtn.isEnabled = state.isBtnActive
+                    if(viewModel.state.value.isFavourite) {
+                        binding.favouriteBtn.setImageResource(R.drawable.ic_star_active)
+                    } else {
+                        binding.favouriteBtn.setImageResource(R.drawable.ic_star_inactive)
+                    }
                 }
             }
             lifecycleScope.launchWhenStarted {
@@ -67,9 +69,6 @@ class CryptoItemFragment : BaseFragment() {
 
     private fun FragmentCryptoItemBinding.setUpUI(receivedValues: CryptoItemFragmentArgs) {
         symbol.text = receivedValues.symbol
-        if(receivedValues.isFavourite) {
-           favouriteBtn.setImageResource(R.drawable.ic_star_active)
-        }
     }
 
     private fun FragmentCryptoItemBinding.setUpListeners() {
@@ -78,12 +77,6 @@ class CryptoItemFragment : BaseFragment() {
         }
 
         favouriteBtn.setOnClickListener {
-//            change icon to the opposite
-            if(!viewModel.isFavourite) {
-                favouriteBtn.setImageResource(R.drawable.ic_star_active)
-            } else {
-                favouriteBtn.setImageResource(R.drawable.ic_star_inactive)
-            }
             viewModel.symbol?.let { viewModel.onFavouriteBtnClicked(it) }
         }
     }
