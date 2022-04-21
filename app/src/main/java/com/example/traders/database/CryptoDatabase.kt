@@ -5,8 +5,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [Crypto::class, Transaction::class],
-    version = 1,
+    entities = [Crypto::class, Transaction::class, FavouriteCrypto::class],
+    version = 2,
 )
 @TypeConverters(Converters::class)
 abstract class CryptoDatabase : RoomDatabase() {

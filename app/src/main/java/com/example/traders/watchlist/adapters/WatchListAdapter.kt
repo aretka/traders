@@ -1,5 +1,6 @@
 package com.example.traders.watchlist.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -7,16 +8,16 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
-import com.example.traders.*
+import com.example.traders.R
 import com.example.traders.databinding.ListItemCryptoBinding
 import com.example.traders.utils.roundAndFormatDouble
 import com.example.traders.utils.setPriceChangeText
 import com.example.traders.utils.setPriceChangeTextColor
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
-import com.example.traders.watchlist.cryptoData.binance24HourData.Binance24DataItem
+import com.example.traders.watchlist.cryptoData.binance24HourData.BinanceDataItem
 
 class WatchListAdapter(private val clickListener: SingleCryptoListener) :
-    ListAdapter<Binance24DataItem, SimpleViewHolder<ListItemCryptoBinding>>(DiffCallback()) {
+    ListAdapter<BinanceDataItem, SimpleViewHolder<ListItemCryptoBinding>>(DiffCallback()) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -35,18 +36,27 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
         // changing only lastPrice, priceChange and priceChangePercent
         if (payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads)
-        } else if(payloads[0] is Binance24DataItem){
-            val item = payloads[0] as Binance24DataItem
+        } else {
+//            changing only click listener if isFavourite changed
+            val item = currentList[position]
             val symbol = item.symbol.replace("USDT", "")
-            val priceRoundNum = FixedCryptoList.valueOf(symbol).priceToRound
+            val condition = payloads[0] as Boolean
 
-            holder.binding.cryptoPrice.text = roundAndFormatDouble(item.last.toDouble(), priceRoundNum)
-            holder.binding.cryptoPriceChange.setPriceChangeText(
-                roundAndFormatDouble(item.priceChange.toDouble(), priceRoundNum),
-                roundAndFormatDouble(item.priceChangePercent.toDouble())
-            )
-            holder.binding.cryptoPriceChange.setPriceChangeTextColor()
+            if(!condition) {
+                val priceRoundNum = FixedCryptoList.valueOf(symbol).priceToRound
+                holder.binding.cryptoPrice.text =
+                    roundAndFormatDouble(item.last.toDouble(), priceRoundNum)
+                holder.binding.cryptoPriceChange.setPriceChangeText(
+                    roundAndFormatDouble(item.priceChange.toDouble(), priceRoundNum),
+                    roundAndFormatDouble(item.priceChangePercent.toDouble())
+                )
+                holder.binding.cryptoPriceChange.setPriceChangeTextColor()
+            } else {
+                val slug = FixedCryptoList.valueOf(symbol).slug
+                holder.binding.root.setOnClickListener { clickListener.onClick(slug, symbol) }
+            }
         }
+
     }
 
     override fun onBindViewHolder(holder: SimpleViewHolder<ListItemCryptoBinding>, position: Int) {
@@ -62,7 +72,7 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
         holder.binding.cryptoPriceChange.setPriceChangeText(
             roundAndFormatDouble(item.priceChange.toDouble(), priceRoundNum),
             roundAndFormatDouble(item.priceChangePercent.toDouble())
-            )
+        )
         holder.binding.cryptoPriceChange.setPriceChangeTextColor()
 
         Glide.with(holder.binding.cryptoLogo)
@@ -72,20 +82,22 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
             .into(holder.binding.cryptoLogo)
     }
 
-    private class DiffCallback : DiffUtil.ItemCallback<Binance24DataItem>() {
+    private class DiffCallback : DiffUtil.ItemCallback<BinanceDataItem>() {
 
-        override fun areItemsTheSame(oldItem: Binance24DataItem, newItem: Binance24DataItem) =
+        override fun areItemsTheSame(oldItem: BinanceDataItem, newItem: BinanceDataItem) =
             oldItem.symbol == newItem.symbol
 
-        override fun areContentsTheSame(oldItem: Binance24DataItem, newItem: Binance24DataItem) =
+        override fun areContentsTheSame(oldItem: BinanceDataItem, newItem: BinanceDataItem) =
             oldItem == newItem
 
         override fun getChangePayload(
-            oldItem: Binance24DataItem,
-            newItem: Binance24DataItem
+            oldItem: BinanceDataItem,
+            newItem: BinanceDataItem
         ): Any {
             // this is called when symbols are the same but contents differ
-            return newItem
+//            passing true if isFavourite changed, because it means that only this field has changed
+//            and false if the same
+            return oldItem.isFavourite != newItem.isFavourite
         }
     }
 }

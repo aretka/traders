@@ -1,6 +1,7 @@
 package com.example.traders.watchlist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,12 @@ import com.example.traders.watchlist.adapters.WatchListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.security.auth.login.LoginException
 
+/*
+* TODO: viewModel read all favourite list and update list
+*
+* */
 @AndroidEntryPoint
 class WatchListFragment : BaseFragment() {
 
@@ -40,10 +46,15 @@ class WatchListFragment : BaseFragment() {
             isLoading.observe(viewLifecycleOwner) {
                 binding.changeLoaderVisibility(it)
             }
-            lifecycleScope.launch {
+            lifecycleScope.launchWhenStarted {
                 state.collect { state ->
                     binding.pullToRefresh.isRefreshing = state.isRefreshing
                     adapter?.submitList(state.binanceCryptoData)
+                }
+            }
+            lifecycleScope.launchWhenStarted {
+                favouriteCryptoList.observe(viewLifecycleOwner) { newFavouriteList ->
+                    onNewFavouriteList()
                 }
             }
         }

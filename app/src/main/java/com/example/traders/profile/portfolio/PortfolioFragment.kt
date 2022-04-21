@@ -1,31 +1,33 @@
 package com.example.traders.profile.portfolio
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.traders.BaseFragment
 import com.example.traders.R
 import com.example.traders.database.Crypto
 import com.example.traders.databinding.FragmentPortfolioBinding
+import com.example.traders.dialogs.confirmationDialog.ConfirmationDialogFragment
+import com.example.traders.dialogs.confirmationDialog.ConfirmationType
 import com.example.traders.dialogs.depositDialog.DepositDialogFragment
 import com.example.traders.profile.ProfileFragmentDirections
 import com.example.traders.profile.adapters.PortfolioListAdapter
-import com.example.traders.watchlist.WatchListFragmentDirections
 import com.example.traders.watchlist.adapters.SingleCryptoListener
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class PortfolioFragment: BaseFragment() {
+class PortfolioFragment : BaseFragment() {
     private lateinit var binding: FragmentPortfolioBinding
     val viewModel: PortfolioViewModel by viewModels()
     private lateinit var adapter: PortfolioListAdapter
@@ -45,6 +47,13 @@ class PortfolioFragment: BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        Result is not received from dialog fragment
+        setFragmentResultListener(
+            "deposited_amount"
+        ) { _, bundle ->
+            val result = bundle.getString("deposited_amount")
+            Toast.makeText(context, "Amount received: $result", Toast.LENGTH_SHORT).show()
+        }
         updateChartAndAdapterData()
         // Update portfolio on list change
         viewModel.livePortfolioList.observe(viewLifecycleOwner) {
@@ -73,7 +82,7 @@ class PortfolioFragment: BaseFragment() {
     }
 
     private fun FragmentPortfolioBinding.updateUiData(state: PortfolioState) {
-        if(state.chartReadyForUpdate) {
+        if (state.chartReadyForUpdate) {
             val pieDataSet = PieDataSet(state.chartData, "Portfolio")
             pieDataSet.setColors(state.colors)
             pieChart.data = PieData(pieDataSet)
@@ -92,7 +101,7 @@ class PortfolioFragment: BaseFragment() {
     }
 
     private fun updateChartAndAdapterData() {
-        if(viewModel.state.value.chartDataLoaded) {
+        if (viewModel.state.value.chartDataLoaded) {
             val pieDataSet = PieDataSet(viewModel.state.value.chartData, "Portfolio")
             pieDataSet.setColors(viewModel.state.value.colors)
             binding.pieChart.data = PieData(pieDataSet)
@@ -106,8 +115,10 @@ class PortfolioFragment: BaseFragment() {
         depositBtn.setOnClickListener {
             openDialog()
         }
-        withdrawBtn.setOnClickListener {
-            viewModel.deleteAllDbRows()
+        resetBalanceBtn.setOnClickListener {
+            val dialog =
+                ConfirmationDialogFragment(CONFIRMATION_MESSAGE, ConfirmationType.RESET_BALANCE)
+            dialog.show(parentFragmentManager, "balance_reset_dialog")
         }
     }
 
@@ -117,7 +128,7 @@ class PortfolioFragment: BaseFragment() {
     }
 
     private fun FragmentPortfolioBinding.setUpAdapter() {
-        adapter = PortfolioListAdapter(SingleCryptoListener { slug, symbol ->
+        adapter = PortfolioListAdapter(SingleCryptoListener { slug, symbol, isFavourite->
             if (symbol != null) {
                 val direction = ProfileFragmentDirections
                     .actionUserProfileFragmentToCryptoItemFragment(slug, symbol)
@@ -128,10 +139,14 @@ class PortfolioFragment: BaseFragment() {
     }
 
     private fun FragmentPortfolioBinding.updateMessageVisibility(list: List<Crypto>) {
-        emptyListMessage.visibility = when(list) {
+        emptyListMessage.visibility = when (list) {
             emptyList<Crypto>() -> View.VISIBLE
             else -> View.GONE
         }
+    }
+
+    companion object {
+        private val CONFIRMATION_MESSAGE = "Are you sure you want to reset balance?"
     }
 }
 

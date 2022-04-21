@@ -21,8 +21,6 @@ import javax.inject.Inject
 class PortfolioViewModel @Inject constructor(
     private val repository: CryptoRepository
 ) : BaseViewModel() {
-    private val colors =
-        listOf(-13710223, -932849, -1618884, -13330213, -4128884, -2164, -12148, -7542017, -29539)
 
     private val _state = MutableStateFlow(
         PortfolioState(
@@ -195,6 +193,11 @@ class PortfolioViewModel @Inject constructor(
             chartReadyForUpdate = true,
             chartDataLoaded = true
         )
+    }
+
+    companion object {
+        private val colors =
+            listOf(-13710223, -932849, -1618884, -13330213, -4128884, -2164, -12148, -7542017, -29539)
     }
 
     override fun onCleared() {

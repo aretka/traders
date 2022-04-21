@@ -5,8 +5,10 @@ import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.traders.databinding.DialogFragmentDepositBinding
@@ -63,6 +65,10 @@ class DepositDialogFragment : DialogFragment() {
         }
 
         depositBtn.setOnClickListener {
+            setFragmentResult(
+                "deposited_amount",
+                bundleOf("deposited_amount" to viewModel.state.value.currentInputVal.toString())
+            )
             viewModel.onDepositButtonClicked()
         }
 
@@ -72,7 +78,7 @@ class DepositDialogFragment : DialogFragment() {
     }
 
     private fun DialogFragmentDepositBinding.updateFields(it: DepositState) {
-        if(it.updateInput) {
+        if (it.updateInput) {
             usdInput.setText(it.validatedInputValue)
             viewModel.inputUpdated()
         }

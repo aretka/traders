@@ -9,6 +9,8 @@ import androidx.fragment.app.viewModels
 import com.example.traders.BaseFragment
 import com.example.traders.database.Transaction
 import com.example.traders.databinding.FragmentHistoryBinding
+import com.example.traders.dialogs.confirmationDialog.ConfirmationDialogFragment
+import com.example.traders.dialogs.confirmationDialog.ConfirmationType
 import com.example.traders.profile.adapters.HistoryListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -48,7 +50,19 @@ class HistoryFragment : BaseFragment() {
     }
 
     private fun FragmentHistoryBinding.setUpAdapter() {
-        adapter = HistoryListAdapter({ viewModel.clearHistory() })
+        adapter = HistoryListAdapter { ShowDialog() }
         historyList.adapter = adapter
+    }
+
+    private fun ShowDialog() {
+        val confirmationDialog = ConfirmationDialogFragment(
+            CONFIRMATION_MESSAGE,
+            ConfirmationType.DELETE_TRANSACTION_HISTORY
+        )
+        confirmationDialog.show(parentFragmentManager, "delete_transaction_dialog")
+    }
+
+    companion object {
+        val CONFIRMATION_MESSAGE = "Do you really want to delete transaction history?"
     }
 }
