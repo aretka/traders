@@ -25,7 +25,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DepositViewModel @Inject constructor(
-    private val repository: CryptoRepository,
     private val dialogValidation: DialogValidation
 ) : BaseViewModel() {
     private val _state = MutableStateFlow(DepositState())
@@ -53,12 +52,7 @@ class DepositViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun onDepositButtonClicked() {
         launch {
-            listOf(
-                async { updateBalance() },
-                async { saveTransactionToDb() }
-            ).awaitAll()
-
-            _events.emit(DepositDialogEvent.Dismiss)
+            _events.emit(DepositDialogEvent.Dismiss(enteredAmount = _state.value.currentInputVal))
         }
     }
 
@@ -76,34 +70,5 @@ class DepositViewModel @Inject constructor(
             isBtnEnabled = validationMessage == DialogValidationMessage.IS_VALID,
             currentInputVal = decimalEnteredVal ?: BigDecimal(0)
         )
-    }
-
-    private suspend fun updateBalance() {
-        val currBalance = repository.getCryptoBySymbol("USD") ?: Crypto(symbol = "USD")
-        val newBalance = currBalance.amount + _state.value.currentInputVal
-
-        repository.insertCrypto(currBalance.copy(amount = newBalance))
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private suspend fun saveTransactionToDb() {
-        repository.insertTransaction(createTransaction())
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun createTransaction(): Transaction {
-        return Transaction(
-            symbol = "USD",
-            amount = _state.value.currentInputVal,
-            time = getCurrentTime(),
-            transactionType = TransactionType.DEPOSIT
-        )
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun getCurrentTime(): String {
-        val date = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-        return date.format(formatter)
     }
 }
