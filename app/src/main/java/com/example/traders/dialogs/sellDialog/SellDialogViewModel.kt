@@ -1,7 +1,6 @@
 package com.example.traders.dialogs.sellDialog
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -12,6 +11,7 @@ import com.example.traders.database.TransactionType
 import com.example.traders.dialogs.DialogValidation
 import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.dialogs.validateChars
+import com.example.traders.profile.portfolio.TransactionInfo
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.utils.DateUtils
 import com.example.traders.utils.roundNum
@@ -54,13 +54,23 @@ class SellDialogViewModel @AssistedInject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun onSellButtonClicked() {
         launch {
-            listOf(
-                async { saveTransactionToDb() },
-                async { updateUsdBalance() },
-                async { updateCryptoBalance() }
-            ).awaitAll()
+//            listOf(
+//                async { saveTransactionToDb() },
+//                async { updateUsdBalance() },
+//                async { updateCryptoBalance() }
+//            ).awaitAll()
 
-            _events.emit(SellDialogEvent.Dismiss)
+            _events.emit(SellDialogEvent.Dismiss(
+                TransactionInfo(
+                    symbol = crypto.name,
+                    cryptoAmount = _state.value.inputVal.toString(),
+                    usdAmount = _state.value.usdToGet.toString(),
+                    lastPrice = lastPrice.toString(),
+                    transactionType = TransactionType.SELL,
+                    newUsdBalance = getNewUsdBalance(),
+                    newCryptoBalance = _state.value.cryptoLeft.toString()
+                )
+            ))
         }
     }
 
@@ -109,7 +119,7 @@ class SellDialogViewModel @AssistedInject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun saveTransactionToDb() {
-        repository.insertTransaction(createTransaction())
+//        repository.insertTransaction(createTransaction())
     }
 
 
@@ -123,9 +133,10 @@ class SellDialogViewModel @AssistedInject constructor(
         }
     }
 
-    private suspend fun updateUsdBalance() {
-        val newUsdBalance = _state.value.usdBalance.amount + _state.value.usdToGet
-        repository.insertCrypto(_state.value.usdBalance.copy(amount = newUsdBalance))
+    private fun getNewUsdBalance(): String {
+        return (_state.value.usdBalance.amount + _state.value.usdToGet).toString()
+//        val newUsdBalance = _state.value.usdBalance.amount + _state.value.usdToGet
+//        repository.insertCrypto(_state.value.usdBalance.copy(amount = newUsdBalance))
     }
 
     private fun getMinCryptoToSell() =

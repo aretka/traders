@@ -5,8 +5,10 @@ import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
@@ -55,7 +57,13 @@ class SellDialogFragment(val lastPrice: BigDecimal, val crypto: FixedCryptoList)
         lifecycleScope.launchWhenCreated {
             viewModel.events.collect { event ->
                 when (event) {
-                    is SellDialogEvent.Dismiss -> dialog?.dismiss()
+                    is SellDialogEvent.Dismiss -> {
+                        setFragmentResult(
+                            "transaction_info",
+                            bundleOf("transaction_info" to event.transactionInfo)
+                        )
+                        dialog?.dismiss()
+                    }
                 }
             }
         }
