@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.example.traders.BaseViewModel
 import com.example.traders.database.Crypto
 import com.example.traders.database.Transaction
@@ -13,6 +12,7 @@ import com.example.traders.database.TransactionType
 import com.example.traders.dialogs.DialogValidation
 import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.dialogs.validateChars
+import com.example.traders.profile.portfolio.TransactionInfo
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.utils.DateUtils
 import com.example.traders.utils.roundNum
@@ -45,7 +45,6 @@ class BuyDialogViewModel @AssistedInject constructor(
     val events = _events.asSharedFlow()
 
     init {
-        print(launch { Log.e(TAG, "${Thread.currentThread().name}") })
         getUsdBalance()
         getCryptoBalance()
     }
@@ -53,14 +52,25 @@ class BuyDialogViewModel @AssistedInject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun onBuyButtonClicked() {
         launch {
-            listOf(
-                async { saveTransactionToDb() },
-                async { updateUSDBalance() },
-                async { updateCryptoBalance() }
-            ).awaitAll()
-
-            _events.tryEmit(BuyDialogEvent.Dismiss)
+            _events.tryEmit(BuyDialogEvent.Dismiss(
+                TransactionInfo(
+                    symbol = crypto.name,
+                    cryptoAmount = _state.value.cryptoToGet.toString(),
+                    usdAmount = _state.value.inputVal.toString(),
+                    lastPrice = lastPrice.toString(),
+                    transactionType = TransactionType.PURCHASE,
+                    newUsdBalance = _state.value.usdLeft.toString(),
+                    newCryptoBalance = getNewCryptoBalance()
+                )
+            ))
         }
+    }
+
+    private fun getNewCryptoBalance(): String {
+        return _state.value.cryptoBalance?.let {
+            val newCryptoBalance = _state.value.cryptoToGet + it.amount
+            newCryptoBalance.toString()
+        } ?: "0"
     }
 
     fun onInputChanged(enteredVal: String) {
@@ -78,23 +88,6 @@ class BuyDialogViewModel @AssistedInject constructor(
 
     fun inputUpdated() {
         _state.value = _state.value.copy(updateInput = false)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private suspend fun saveTransactionToDb() {
-        repository.insertTransaction(createTransaction())
-    }
-
-    private suspend fun updateUSDBalance() {
-        repository.insertCrypto(_state.value.usdBalance.copy(amount = _state.value.usdLeft))
-    }
-
-    private suspend fun updateCryptoBalance() {
-        _state.value.cryptoBalance?.let {
-            Log.e("OnBuy", "updateCryptoBalance called")
-            val newCryptoBalance = _state.value.cryptoToGet + it.amount
-            repository.insertCrypto(it.copy(amount = newCryptoBalance))
-        }
     }
 
     private fun validate(enteredVal: String) {
@@ -146,18 +139,6 @@ class BuyDialogViewModel @AssistedInject constructor(
                 repository.getCryptoBySymbol(crypto.name) ?: Crypto(symbol = crypto.name)
             _state.value = _state.value.copy(cryptoBalance = cryptoBalance)
         }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun createTransaction(): Transaction {
-        return Transaction(
-            symbol = crypto.name,
-            amount = _state.value.cryptoToGet,
-            usdAmount = _state.value.inputVal,
-            lastPrice = lastPrice,
-            time = DateUtils.getCurrentTime(),
-            transactionType = TransactionType.PURCHASE
-        )
     }
 
     @AssistedFactory
