@@ -9,13 +9,18 @@ import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.traders.*
 import com.example.traders.customviews.CandleChart
 import com.example.traders.databinding.FragmentCryptoItemChartBinding
 import com.example.traders.dialogs.buyDialog.BuyDialogFragment
+import com.example.traders.dialogs.confirmationDialog.ConfirmationDialogFragment
+import com.example.traders.dialogs.confirmationDialog.ConfirmationType
 import com.example.traders.dialogs.sellDialog.SellDialogFragment
+import com.example.traders.profile.portfolio.PortfolioFragment
+import com.example.traders.profile.portfolio.TransactionInfo
 import com.example.traders.utils.roundAndFormatDouble
 import com.example.traders.utils.setPriceChangeText
 import com.example.traders.utils.setPriceChangeTextColor
@@ -24,6 +29,7 @@ import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -51,6 +57,17 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setFragmentResultListener(
+            "transaction_info"
+        ) { _, bundle ->
+            val transactionInfo = bundle.getParcelable<TransactionInfo>("transaction_info")
+            if(transactionInfo != null) {
+                showConfirmationDialog(transactionInfo)
+            } else {
+                throw Exception("Bundle value is not received(nothing was emitted or wrong key, mistype)")
+            }
+        }
         lifecycleScope.launch {
             viewModel.chartState.collect { state ->
                 binding.setHeaderPrices(state.tickerData)
@@ -60,6 +77,14 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
             }
         }
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    private fun showConfirmationDialog(transactionInfo: TransactionInfo) {
+        val confirmationDialog = ConfirmationDialogFragment(
+            message = transactionInfo.transactionType.confirmationMessage,
+            confirmationType = ConfirmationType.BuySellCrypto(transactionInfo)
+        )
+        confirmationDialog.show(parentFragmentManager, "buy_sell_confirmation")
     }
 
     private fun FragmentCryptoItemChartBinding.setHeaderPrices(priceTicker: PriceTickerData?) {
