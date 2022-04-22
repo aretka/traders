@@ -45,7 +45,7 @@ class CryptoItemFragment : BaseFragment() {
             lifecycleScope.launchWhenStarted {
                 state.collect { state ->
                     binding.favouriteBtn.isEnabled = state.isBtnActive
-                    if(viewModel.state.value.isFavourite) {
+                    if (viewModel.state.value.isFavourite) {
                         binding.favouriteBtn.setImageResource(R.drawable.ic_star_active)
                     } else {
                         binding.favouriteBtn.setImageResource(R.drawable.ic_star_inactive)
@@ -54,12 +54,14 @@ class CryptoItemFragment : BaseFragment() {
             }
             lifecycleScope.launchWhenStarted {
                 events.collect { event ->
-                    when(event) {
+                    when (event) {
                         CryptoItemEvents.AddToFavourites -> {
-                            Toast.makeText(context, "Added to favourites", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Added to favourites", Toast.LENGTH_SHORT)
+                                .show()
                         }
                         CryptoItemEvents.RemoveFromFavourites -> {
-                            Toast.makeText(context, "Removed from favourites", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Removed from favourites", Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }
                 }
