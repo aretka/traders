@@ -21,60 +21,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WatchListViewModel @Inject constructor(
-    private val repository: CryptoRepository,
     private val webSocketClient: BinanceWSClient,
-    private val preferencesManager: PreferancesManager
+    private val watchListRepository: WatchListRepository
 ) : BaseViewModel() {
+
     private val _state = MutableStateFlow(WatchListState())
     val state = _state.asStateFlow()
 
-    val favouriteCryptoList = repository.getAllFavourites()
-
-    val preferencesFlow = preferencesManager.preferencesFlow
-
-    private val _sortedExtractedList = combine(
-        preferencesFlow,
-        _state
-    ) { preferences, state ->
-        Pair(preferences, state)
-    }.flatMapLatest { (preferences, state) ->
-        flowOf(
-            if(preferences.isFavourite) {
-                state.binanceCryptoData.filter { it.isFavourite == preferences.isFavourite }
-            } else {
-                state.binanceCryptoData
-            }
-        )
-    }
-    val sortedExtractedList = _sortedExtractedList.asLiveData()
-
     init {
-        getBinanceData()
+        launchWithProgress {
+            watchListRepository.refreshCryptoPrices()
+        }
         startCollectingBinanceTickerData()
     }
 
-    //    Updates binanceDataList which is stored in a state
-    fun onNewFavouriteList() {
-        if (_state.value.binanceCryptoData.isNotEmpty()) {
-            val newBinanceItemList = _state.value.binanceCryptoData
-                .toListWithFavourites(favouriteCryptoList.value)
-            _state.update { it.copy(binanceCryptoData = newBinanceItemList) }
-        }
-    }
-
-    // This function cannot be called since connection hasnt been established yet at this point
-    // Subscribe and unsubscribe must be called when connection is successfully established and terminated respectively
-    private fun subscribeWebSocket() {
-        Log.e("ALlCryptoViewModel", "initWebSocket called")
-        webSocketClient.subscribe(listOf("btcusdt", "bnbusdt"), "ticker")
-    }
-
-    private fun getBinanceData() {
-        launchWithProgress {
-            updateCryptoData()
-//            startCollectingPreferences()
-        }
-    }
 
     fun getCryptoOnRefresh() {
         launch {
@@ -84,18 +44,10 @@ class WatchListViewModel @Inject constructor(
         }
     }
 
-    fun onFavouriteButtonClicked() {}
 
-    private suspend fun updateCryptoData() {
-        val cryptoPrices = repository.getBinance24Data().body() ?: return
-        val extractedPricesList = cryptoPrices.filter { el ->
-            enumContains<FixedCryptoList>(el.symbol.replace("USDT", ""))
-        }.map { it.toBinanceDataItem() }
 
-        val listWithFavouriteCrypto =
-            extractedPricesList.toListWithFavourites(favouriteCryptoList.value)
+    fun onFavouriteButtonClicked() {
 
-        _state.value = _state.value.copy(binanceCryptoData = listWithFavouriteCrypto)
     }
 
     private suspend fun startCollectingPreferences() {
@@ -136,7 +88,6 @@ class WatchListViewModel @Inject constructor(
         _state.value = _state.value.copy(binanceCryptoData = _state.value.binanceCryptoData.sortedByDescending { it.priceChangePercent })
     }
 
-
     // It collects message emitted from websocket sharedFlow and updates list item by reassigning BinanceDataItem to new value
     private fun startCollectingBinanceTickerData() {
         launch {
@@ -158,6 +109,7 @@ class WatchListViewModel @Inject constructor(
         }
     }
 
+
     // Converts PriceTickerData tp Binance24DataItem
     private fun PriceTickerData?.toBinanceDataItem(isFavourite: Boolean): BinanceDataItem? {
         if (this == null) return null
@@ -173,10 +125,15 @@ class WatchListViewModel @Inject constructor(
         )
     }
 
-
+    // This function cannot be called since connection hasnt been established yet at this point
+    // Subscribe and unsubscribe must be called when connection is successfully established and terminated respectively
+    private fun subscribeWebSocket() {
+        Log.e("ALlCryptoViewModel", "initWebSocket called")
+        webSocketClient.subscribe(listOf("btcusdt", "bnbusdt"), "ticker")
+    }
 }
 
-private fun List<BinanceDataItem>.toListWithFavourites(favouriteList: List<FavouriteCrypto>?): List<BinanceDataItem> {
+private fun List<BinanceDataItem>.applyFavourites(favouriteList: List<FavouriteCrypto>?): List<BinanceDataItem> {
     return map { item ->
         item.copy(
             isFavourite = favouriteList?.any { it.symbol == item.symbol.replace("USDT", "") } == true
