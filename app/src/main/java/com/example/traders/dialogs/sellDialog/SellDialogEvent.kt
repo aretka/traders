@@ -1,5 +1,7 @@
 package com.example.traders.dialogs.sellDialog
 
+import com.example.traders.profile.portfolio.TransactionInfo
+
 sealed class SellDialogEvent {
-    object Dismiss: SellDialogEvent()
+    data class Dismiss(val transactionInfo: TransactionInfo): SellDialogEvent()
 }

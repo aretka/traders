@@ -1,17 +1,9 @@
 package com.example.traders.repository
 
-import android.content.SharedPreferences
-import android.util.Log
-import com.example.traders.database.Crypto
-import com.example.traders.database.CryptoDatabaseDao
-import com.example.traders.database.FavouriteCrypto
-import com.example.traders.database.Transaction
+import com.example.traders.database.*
 import com.example.traders.network.BinanceApi
 import com.example.traders.network.MessariApi
-import com.example.traders.watchlist.cryptoData.FixedCryptoList
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
+import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,30 +11,8 @@ import javax.inject.Singleton
 class CryptoRepository @Inject constructor(
     private val api: MessariApi,
     private val binanceApi: BinanceApi,
-    private val sharedPrefs: SharedPreferences,
     private val cryptoDao: CryptoDatabaseDao
 ) {
-
-    var isFetching = false
-
-    // Not utilized but kept as a flow example usage
-    val binanceMarketData = flow {
-        while (isFetching) {
-            val response = getBinance24Data()
-            val extractedList = response.body()
-                ?.filter { el -> enumContains<FixedCryptoList>(el.symbol.replace("USDT", "")) }
-            emit(extractedList)
-            delay(REFRESH_INTERVAL_MS)
-        }
-    }.catch { e -> Log.e("CryptoRepository", "Binance 24h data request failed", e) }
-
-    fun startFetching() {
-        isFetching = true
-    }
-
-    fun stopFetching() {
-        isFetching = false
-    }
 
     // Messari api
     suspend fun getCryptoPrices() = api.getCryptoPrices()
@@ -56,16 +26,9 @@ class CryptoRepository @Inject constructor(
     suspend fun getCryptoDescriptionData(id: String) = api.getCryptoDescriptionData(id)
 
     // Binance api
-    suspend fun checkServerTime() = binanceApi.checkServerTime()
     suspend fun getBinance24Data() = binanceApi.get24HourData()
     suspend fun getBinanceTickerBySymbol(symbol: String) =
         binanceApi.getBinanceTickerBySymbol(symbol)
-
-    // Shared preferences
-    fun getStoredTag(symbol: String) = sharedPrefs.getFloat(symbol, 0F)
-    fun setStoredPrice(symbol: String, newPrice: Float) {
-        sharedPrefs.edit().putFloat(symbol, newPrice).apply()
-    }
 
     // Room Database
     fun getLiveAllCryptoPortfolio() = cryptoDao.getAllCryptoLive()
@@ -74,21 +37,37 @@ class CryptoRepository @Inject constructor(
     suspend fun deleteCrypto(crypto: Crypto) = cryptoDao.deleteCrypto(crypto)
     suspend fun getCryptoBySymbol(symbol: String) = cryptoDao.getCryptoBySymbol(symbol)
     suspend fun deleteAllCryptoFromDb() = cryptoDao.deleteAllCryptoFromDb()
-    suspend fun insertTransaction(transaction: Transaction) =
-        cryptoDao.insertTransaction(transaction)
+    suspend fun updateCrypto(amount: BigDecimal, symbol: String) =
+        cryptoDao.updateCrypto(amount, symbol)
+
+    suspend fun insertTransaction(
+        symbol: String,
+        amount: BigDecimal,
+        usdAmount: BigDecimal = BigDecimal(0),
+        lastPrice: BigDecimal = BigDecimal(0),
+        time: String,
+        transactionType: TransactionType
+    ) = cryptoDao.insertTransaction(
+        Transaction(
+            symbol = symbol,
+            amount = amount,
+            usdAmount = usdAmount,
+            lastPrice = lastPrice,
+            time = time,
+            transactionType = transactionType
+        )
+    )
 
     suspend fun deleteAllTransactions() = cryptoDao.deleteAllTransactions()
     fun getAllTransactionsLive() = cryptoDao.getAllTransactionsLive()
     fun getAllFavourites() = cryptoDao.getAllFavourites()
     suspend fun insertFavouriteCrypto(favouriteCrypto: FavouriteCrypto) =
         cryptoDao.insertFavouriteCrypto(favouriteCrypto)
+
     suspend fun deleteFavouriteCrypto(symbol: String) =
         cryptoDao.deleteFavouriteCrypto(symbol)
-    suspend fun getFavouriteBySymbol(symbol: String) = cryptoDao.getFavouriteBySymbol(symbol)
 
-    companion object {
-        const val REFRESH_INTERVAL_MS = 10000L
-    }
+    suspend fun getFavouriteBySymbol(symbol: String) = cryptoDao.getFavouriteBySymbol(symbol)
 }
 
 inline fun <reified T : Enum<T>> enumContains(symbol: String): Boolean {

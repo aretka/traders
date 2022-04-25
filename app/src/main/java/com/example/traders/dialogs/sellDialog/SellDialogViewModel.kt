@@ -1,7 +1,6 @@
 package com.example.traders.dialogs.sellDialog
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -12,6 +11,7 @@ import com.example.traders.database.TransactionType
 import com.example.traders.dialogs.DialogValidation
 import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.dialogs.validateChars
+import com.example.traders.profile.portfolio.TransactionInfo
 import com.example.traders.repository.CryptoRepository
 import com.example.traders.utils.DateUtils
 import com.example.traders.utils.roundNum
@@ -54,13 +54,17 @@ class SellDialogViewModel @AssistedInject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun onSellButtonClicked() {
         launch {
-            listOf(
-                async { saveTransactionToDb() },
-                async { updateUsdBalance() },
-                async { updateCryptoBalance() }
-            ).awaitAll()
-
-            _events.emit(SellDialogEvent.Dismiss)
+            _events.emit(SellDialogEvent.Dismiss(
+                TransactionInfo(
+                    symbol = crypto.name,
+                    cryptoAmount = _state.value.inputVal.toString(),
+                    usdAmount = _state.value.usdToGet.toString(),
+                    lastPrice = lastPrice.toString(),
+                    transactionType = TransactionType.SELL,
+                    newUsdBalance = getNewUsdBalance(),
+                    newCryptoBalance = _state.value.cryptoLeft.toString()
+                )
+            ))
         }
     }
 
@@ -99,33 +103,8 @@ class SellDialogViewModel @AssistedInject constructor(
         return messageType == DialogValidationMessage.IS_VALID
     }
 
-    private fun getDecimalFromString(enteredVal: String): BigDecimal {
-        return if (enteredVal.isNotBlank()) {
-            BigDecimal(enteredVal)
-        } else {
-            BigDecimal(0)
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private suspend fun saveTransactionToDb() {
-        repository.insertTransaction(createTransaction())
-    }
-
-
-    private suspend fun updateCryptoBalance() {
-        _state.value.cryptoBalance?.let {
-            if (_state.value.cryptoLeft.compareTo(BigDecimal.ZERO) == 0) {
-                repository.deleteCrypto(it)
-            } else {
-                repository.insertCrypto(it.copy(amount = _state.value.cryptoLeft))
-            }
-        }
-    }
-
-    private suspend fun updateUsdBalance() {
-        val newUsdBalance = _state.value.usdBalance.amount + _state.value.usdToGet
-        repository.insertCrypto(_state.value.usdBalance.copy(amount = newUsdBalance))
+    private fun getNewUsdBalance(): String {
+        return (_state.value.usdBalance.amount + _state.value.usdToGet).toString()
     }
 
     private fun getMinCryptoToSell() =
@@ -161,18 +140,6 @@ class SellDialogViewModel @AssistedInject constructor(
         _state.value = _state.value.copy(
             cryptoLeft = cryptoLeft.roundNum(crypto.amountToRound),
             usdToGet = usdToGet.roundNum()
-        )
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun createTransaction(): Transaction {
-        return Transaction(
-            symbol = crypto.name,
-            amount = _state.value.inputVal,
-            usdAmount = _state.value.usdToGet,
-            lastPrice = lastPrice,
-            time = DateUtils.getCurrentTime(),
-            transactionType = TransactionType.SELL
         )
     }
 

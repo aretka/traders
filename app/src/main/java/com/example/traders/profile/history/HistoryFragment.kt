@@ -1,7 +1,6 @@
 package com.example.traders.profile.history
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,7 +56,7 @@ class HistoryFragment : BaseFragment() {
     private fun ShowDialog() {
         val confirmationDialog = ConfirmationDialogFragment(
             CONFIRMATION_MESSAGE,
-            ConfirmationType.DELETE_TRANSACTION_HISTORY
+            ConfirmationType.DeleteTransactionHistory
         )
         confirmationDialog.show(parentFragmentManager, "delete_transaction_dialog")
     }

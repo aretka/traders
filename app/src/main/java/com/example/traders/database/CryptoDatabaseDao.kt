@@ -2,6 +2,7 @@ package com.example.traders.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import java.math.BigDecimal
 
 @Dao
 interface CryptoDatabaseDao {
@@ -22,6 +23,9 @@ interface CryptoDatabaseDao {
 
     @Query("DELETE FROM crypto")
     suspend fun deleteAllCryptoFromDb()
+
+    @Query("UPDATE crypto SET amount=:amount WHERE  symbol=:symbol")
+    suspend fun updateCrypto(amount: BigDecimal, symbol: String)
 
 //    Transactions
     @Query("SELECT * FROM `transaction`")

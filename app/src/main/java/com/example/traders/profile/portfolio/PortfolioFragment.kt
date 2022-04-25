@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -49,10 +47,10 @@ class PortfolioFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 //        Result is not received from dialog fragment
         setFragmentResultListener(
-            "deposited_amount"
+            "deposit_data"
         ) { _, bundle ->
-            val result = bundle.getString("deposited_amount")
-            Toast.makeText(context, "Amount received: $result", Toast.LENGTH_SHORT).show()
+            val depositedAmount = bundle.getString("deposited_amount") ?: "0"
+            showConfirmationDialog(depositedAmount)
         }
         updateChartAndAdapterData()
         // Update portfolio on list change
@@ -68,6 +66,14 @@ class PortfolioFragment : BaseFragment() {
                 binding.updateUiData(it)
             }
         }
+    }
+
+    private fun showConfirmationDialog(depositedAmount: String) {
+        val confirmationDialog = ConfirmationDialogFragment(
+            message = DEPOSIT_CONFIRMATION_MESSAGE,
+            confirmationType = ConfirmationType.DepositUsd(depositedAmount.toBigDecimal())
+        )
+        confirmationDialog.show(parentFragmentManager, "deposit_dialog")
     }
 
     private fun FragmentPortfolioBinding.setUpPieChart() {
@@ -113,22 +119,22 @@ class PortfolioFragment : BaseFragment() {
 
     private fun FragmentPortfolioBinding.setUpClickListeners() {
         depositBtn.setOnClickListener {
-            openDialog()
+            openDepositDialog()
         }
         resetBalanceBtn.setOnClickListener {
             val dialog =
-                ConfirmationDialogFragment(CONFIRMATION_MESSAGE, ConfirmationType.RESET_BALANCE)
+                ConfirmationDialogFragment(RESET_CONFIRMATION_MESSAGE, ConfirmationType.ResetBalance)
             dialog.show(parentFragmentManager, "balance_reset_dialog")
         }
     }
 
-    private fun openDialog() {
+    private fun openDepositDialog() {
         val depositDialog = DepositDialogFragment()
         depositDialog.show(parentFragmentManager, "deposit_dialog")
     }
 
     private fun FragmentPortfolioBinding.setUpAdapter() {
-        adapter = PortfolioListAdapter(SingleCryptoListener { slug, symbol, isFavourite->
+        adapter = PortfolioListAdapter(SingleCryptoListener { slug, symbol ->
             if (symbol != null) {
                 val direction = ProfileFragmentDirections
                     .actionUserProfileFragmentToCryptoItemFragment(slug, symbol)
@@ -146,7 +152,8 @@ class PortfolioFragment : BaseFragment() {
     }
 
     companion object {
-        private val CONFIRMATION_MESSAGE = "Are you sure you want to reset balance?"
+        private val RESET_CONFIRMATION_MESSAGE = "Are you sure you want to reset balance?"
+        private val DEPOSIT_CONFIRMATION_MESSAGE = "Are you sure you want to deposit?"
     }
 }
 

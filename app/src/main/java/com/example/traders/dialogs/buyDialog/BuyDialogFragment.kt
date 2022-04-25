@@ -6,8 +6,10 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
@@ -67,7 +69,13 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val crypto: FixedCryptoList) 
             with(viewModel) {
                 events.collect { event ->
                     when (event) {
-                        is BuyDialogEvent.Dismiss -> dismissDialog()
+                        is BuyDialogEvent.Dismiss -> {
+                            setFragmentResult(
+                                "transaction_info",
+                                bundleOf("transaction_info" to event.transactionInfo)
+                            )
+                            dismissDialog()
+                        }
                     }
                 }
             }
@@ -98,7 +106,7 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val crypto: FixedCryptoList) 
         }
 
         cancelBtn.setOnClickListener {
-            dialog.dismiss()
+            dismissDialog()
         }
 
         buyBtn.setOnClickListener {

@@ -44,7 +44,13 @@ class DepositDialogFragment : DialogFragment() {
         lifecycleScope.launchWhenCreated {
             viewModel.events.collect {
                 when (it) {
-                    is DepositDialogEvent.Dismiss -> dialog?.dismiss()
+                    is DepositDialogEvent.Dismiss -> {
+                        setFragmentResult(
+                            "deposit_data",
+                            bundleOf("deposited_amount" to it.enteredAmount.toString())
+                        )
+                        dialog?.dismiss()
+                    }
                 }
             }
         }
@@ -65,10 +71,6 @@ class DepositDialogFragment : DialogFragment() {
         }
 
         depositBtn.setOnClickListener {
-            setFragmentResult(
-                "deposited_amount",
-                bundleOf("deposited_amount" to viewModel.state.value.currentInputVal.toString())
-            )
             viewModel.onDepositButtonClicked()
         }
 
