@@ -33,6 +33,7 @@ class WatchListFragment : BaseFragment() {
 
         binding.setPullToRefreshListener()
         binding.setListAdapter()
+        binding.setUpListeners()
 
         return binding.root
     }
@@ -44,8 +45,12 @@ class WatchListFragment : BaseFragment() {
                 binding.changeLoaderVisibility(it)
             }
             lifecycleScope.launchWhenStarted {
+//                Collect new sorted list
+            }
+            lifecycleScope.launchWhenStarted {
                 state.collect { state ->
                     binding.pullToRefresh.isRefreshing = state.isRefreshing
+                    binding.updateUi()
                     adapter?.submitList(state.binanceCryptoData)
                 }
             }
@@ -79,6 +84,16 @@ class WatchListFragment : BaseFragment() {
             allCryptoLoader.visibility = View.VISIBLE
         } else {
             allCryptoLoader.visibility = View.GONE
+        }
+    }
+
+    private fun FragmentWatchListBinding.updateUi() {
+        TODO("Update when clicked")
+    }
+
+    private fun FragmentWatchListBinding.setUpListeners() {
+        favouriteBtn.setOnClickListener {
+            viewModel.onFavouriteButtonClicked()
         }
     }
 

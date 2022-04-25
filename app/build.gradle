@@ -127,4 +127,7 @@ dependencies {
     // Chart and graph
     implementation "com.github.PhilJay:MPAndroidChart:v3.1.0"
 
+    // Data store
+    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha02"
+
 }
