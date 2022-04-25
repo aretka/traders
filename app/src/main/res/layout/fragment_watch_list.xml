@@ -16,14 +16,66 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <androidx.appcompat.widget.LinearLayoutCompat
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sort_item_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/pull_to_refresh"
         app:layout_constraintTop_toBottomOf="@id/text_crypto_list">
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        <ImageView
+            android:layout_marginStart="5dp"
+            android:id="@+id/favourite_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_star_active" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/sort_by_name_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            app:layout_constraintStart_toEndOf="@id/favourite_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/sort_by_name_desc"
+                android:layout_marginTop="-3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_up_inactive"/>
+            <ImageView
+                android:layout_marginTop="-17dp"
+                android:id="@+id/sort_by_name_asc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_down_inactive"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/sort_by_change_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/sort_by_change_desc"
+                android:layout_marginTop="-3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_up_inactive"/>
+            <ImageView
+                android:layout_marginTop="-17dp"
+                android:id="@+id/sort_by_change_asc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_down_inactive"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/pull_to_refresh"
@@ -39,6 +91,7 @@
             android:layout_height="wrap_content"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/list_item_crypto" />
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
