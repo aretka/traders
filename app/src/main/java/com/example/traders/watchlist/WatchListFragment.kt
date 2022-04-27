@@ -41,22 +41,16 @@ class WatchListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(viewModel) {
+//            This function reassigns isFavourite values to a list
+//            updateList()
             isLoading.observe(viewLifecycleOwner) {
                 binding.changeLoaderVisibility(it)
-            }
-            lifecycleScope.launchWhenStarted {
-//                Collect new sorted list
             }
             lifecycleScope.launchWhenStarted {
                 state.collect { state ->
                     binding.pullToRefresh.isRefreshing = state.isRefreshing
                     binding.updateUi()
                     adapter?.submitList(state.binanceCryptoData)
-                }
-            }
-            lifecycleScope.launchWhenStarted {
-                favouriteCryptoList.observe(viewLifecycleOwner) { newFavouriteList ->
-                    onNewFavouriteList()
                 }
             }
         }

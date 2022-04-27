@@ -22,32 +22,40 @@ import javax.inject.Inject
 @HiltViewModel
 class WatchListViewModel @Inject constructor(
     private val webSocketClient: BinanceWSClient,
-    private val watchListRepository: WatchListRepository
+    private val watchListRepository: WatchListRepository,
+    private val preferencesManager: PreferancesManager
 ) : BaseViewModel() {
 
-    private val _state = MutableStateFlow(WatchListState())
+    private val _state = watchListRepository.binanceCryptoList.
     val state = _state.asStateFlow()
 
     init {
         launchWithProgress {
             watchListRepository.refreshCryptoPrices()
         }
-        startCollectingBinanceTickerData()
+//        startCollectingBinanceTickerData()
     }
 
 
     fun getCryptoOnRefresh() {
         launch {
             _state.update { it.copy(isRefreshing = true) }
-            updateCryptoData()
+            watchListRepository.refreshCryptoPrices()
             _state.update { it.copy(isRefreshing = false) }
         }
     }
 
-
-
     fun onFavouriteButtonClicked() {
+        launch {
+            preferencesManager.updateIsFavourite(!_state.value.showFavourites)
+        }
+    }
 
+    fun getLatestPrefs() {
+        launch {
+            val latestVals = preferencesManager.preferencesFlow.last()
+            _state.update { it.copy(isRefreshing = latestVals.isFavourite) }
+        }
     }
 
     private suspend fun startCollectingPreferences() {
@@ -86,43 +94,6 @@ class WatchListViewModel @Inject constructor(
 
     private fun emitSortedByChangeDesc() {
         _state.value = _state.value.copy(binanceCryptoData = _state.value.binanceCryptoData.sortedByDescending { it.priceChangePercent })
-    }
-
-    // It collects message emitted from websocket sharedFlow and updates list item by reassigning BinanceDataItem to new value
-    private fun startCollectingBinanceTickerData() {
-        launch {
-            webSocketClient.state.collectLatest { tickerData ->
-                val indexOfCryptoDataToUpdate = _state.value.binanceCryptoData.indexOfFirst {
-                    it.symbol == tickerData.symbol
-                }
-
-                _state.value = _state.value.let {
-                    val updatedList = it.binanceCryptoData.toMutableList()
-                    val itemToUpdate =
-                        tickerData.toBinanceDataItem(updatedList[indexOfCryptoDataToUpdate].isFavourite)
-                    if (itemToUpdate != null) {
-                        updatedList[indexOfCryptoDataToUpdate] = itemToUpdate
-                    }
-                    it.copy(binanceCryptoData = updatedList)
-                }
-            }
-        }
-    }
-
-
-    // Converts PriceTickerData tp Binance24DataItem
-    private fun PriceTickerData?.toBinanceDataItem(isFavourite: Boolean): BinanceDataItem? {
-        if (this == null) return null
-        return BinanceDataItem(
-            symbol = symbol,
-            last = last,
-            high = high,
-            low = low,
-            open = open,
-            priceChange = priceChange,
-            priceChangePercent = priceChangePercent,
-            isFavourite = isFavourite
-        )
     }
 
     // This function cannot be called since connection hasnt been established yet at this point
