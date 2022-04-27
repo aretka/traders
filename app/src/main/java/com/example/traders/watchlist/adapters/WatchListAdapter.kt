@@ -39,11 +39,10 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
         } else {
 //            changing only click listener if isFavourite changed
             val item = currentList[position]
-            val symbol = item.symbol.replace("USDT", "")
             val condition = payloads[0] as Boolean
 
             if(!condition) {
-                val priceRoundNum = FixedCryptoList.valueOf(symbol).priceToRound
+                val priceRoundNum = FixedCryptoList.valueOf(item.symbol).priceToRound
                 holder.binding.cryptoPrice.text =
                     roundAndFormatDouble(item.last.toDouble(), priceRoundNum)
                 holder.binding.cryptoPriceChange.setPriceChangeText(
@@ -52,8 +51,8 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
                 )
                 holder.binding.cryptoPriceChange.setPriceChangeTextColor()
             } else {
-                val slug = FixedCryptoList.valueOf(symbol).slug
-                holder.binding.root.setOnClickListener { clickListener.onClick(slug, symbol) }
+                val slug = FixedCryptoList.valueOf(item.symbol).slug
+                holder.binding.root.setOnClickListener { clickListener.onClick(slug, item.symbol) }
             }
         }
 
@@ -61,13 +60,12 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
 
     override fun onBindViewHolder(holder: SimpleViewHolder<ListItemCryptoBinding>, position: Int) {
         val item = currentList[position]
-        val symbol = item.symbol.replace("USDT", "")
-        val slug = FixedCryptoList.valueOf(symbol).slug
-        val priceRoundNum = FixedCryptoList.valueOf(symbol).priceToRound
+        val slug = FixedCryptoList.valueOf(item.symbol).slug
+        val priceRoundNum = FixedCryptoList.valueOf(item.symbol).priceToRound
 
-        holder.binding.root.setOnClickListener { clickListener.onClick(slug, symbol) }
+        holder.binding.root.setOnClickListener { clickListener.onClick(slug, item.symbol) }
         holder.binding.cryptoPrice.text = roundAndFormatDouble(item.last.toDouble(), priceRoundNum)
-        holder.binding.cryptoNameShortcut.text = symbol
+        holder.binding.cryptoNameShortcut.text = item.symbol
         holder.binding.cryptoFullName.text = slug.replaceFirstChar { c -> c.uppercase() }
         holder.binding.cryptoPriceChange.setPriceChangeText(
             roundAndFormatDouble(item.priceChange.toDouble(), priceRoundNum),
@@ -76,7 +74,7 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
         holder.binding.cryptoPriceChange.setPriceChangeTextColor()
 
         Glide.with(holder.binding.cryptoLogo)
-            .load(FixedCryptoList.valueOf(item.symbol.replace("USDT", "")).logoUrl)
+            .load(FixedCryptoList.valueOf(item.symbol).logoUrl)
             .placeholder(R.drawable.ic_download)
             .error(R.drawable.ic_image_error)
             .into(holder.binding.cryptoLogo)

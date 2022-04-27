@@ -15,6 +15,6 @@ class WatchListInteractor @Inject constructor(
 
     suspend fun getCryptoPricesList() = binanceApi.get24HourData().body()
 
-    fun getAllFavourites() = cryptoDao.getAllFavourites().value
+    fun getAllFavourites() = cryptoDao.getAllFavouritesLive().value
 
 }

@@ -1,13 +1,11 @@
 package com.example.traders.watchlist
 
 import com.example.traders.BaseViewModel
-import com.example.traders.database.FilterPreferences
 import com.example.traders.database.SortOrder
+import com.example.traders.utils.exhaustive
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,13 +19,27 @@ class WatchListViewModel @Inject constructor(
 
     init {
         loadInitialCryptoList()
+        subscribeToCryptoPriceUpdates()
+        startCryptoPricesPolling()
+    }
+
+    fun updateFavouritesList() {
         launch {
+            watchListRepository.renewListWithFavourites()
+        }
+    }
+
+    private fun subscribeToCryptoPriceUpdates() {
+        launch {
+            _state.update {
+                it.copy(
+                    showFavourites = watchListRepository.isFavouritesOn(),
+                    sortOrder = watchListRepository.sortOrderType()
+                )
+            }
             watchListRepository.binanceCryptoList.collect { list ->
                 _state.update {
-                    it.copy(
-                        binanceCryptoData = list,
-                        showFavourites = watchListRepository.isFavouritesOn()
-                    )
+                    it.copy(binanceCryptoData = list)
                 }
             }
         }
@@ -36,6 +48,12 @@ class WatchListViewModel @Inject constructor(
     private fun loadInitialCryptoList() {
         launchWithProgress {
             watchListRepository.refreshCryptoPrices()
+        }
+    }
+
+    private fun startCryptoPricesPolling() {
+        launch {
+            watchListRepository.startCollectingBinanceTickerData()
         }
     }
 
@@ -54,43 +72,45 @@ class WatchListViewModel @Inject constructor(
                 watchListRepository.saveIsFavouriteOnPreference(isFavouritesOn)
                 it.copy(showFavourites = isFavouritesOn)
             }
+            delay(300)
+            _state.update { it.copy(shouldScrollTop = true) }
         }
     }
 
-    private fun sortList(preferences: FilterPreferences) {
-        when (preferences.sortOrder) {
-            SortOrder.DEFAULT -> emitDefaultList()
-            SortOrder.BY_NAME_ASC -> emitSortedByNameAsc()
-            SortOrder.BY_NAME_DESC -> emitSortedByNameDesc()
-            SortOrder.BY_CHANGE_ASC -> emitSortedByChangeAsc()
-            SortOrder.BY_CHANGE_DESC -> emitSortedByChangeDesc()
+    fun onSortNameButtonClicked() {
+        when(_state.value.sortOrder) {
+            SortOrder.BY_NAME_DESC -> updateSortOrder(SortOrder.BY_NAME_ASC)
+            SortOrder.BY_NAME_ASC -> updateSortOrder(SortOrder.DEFAULT)
+            else -> updateSortOrder(SortOrder.BY_NAME_DESC)
+        }.exhaustive
+        launch {
+            delay(300)
+            _state.update { it.copy(shouldScrollTop = true) }
         }
     }
 
-    private fun emitDefaultList() {
-//        TODO: sort by enum order
-//        val sortedList = _state.value.binanceCryptoData.sortedBy { it.isFavourite }
-//        _state.value = _state.value.copy(binanceCryptoData = sortedList)
+    fun onSortPriceChangeButtonClicked() {
+        when(_state.value.sortOrder) {
+            SortOrder.BY_CHANGE_DESC -> updateSortOrder(SortOrder.BY_CHANGE_ASC)
+            SortOrder.BY_CHANGE_ASC -> updateSortOrder(SortOrder.DEFAULT)
+            else -> updateSortOrder(SortOrder.BY_CHANGE_DESC)
+        }.exhaustive
+        launch {
+            delay(300)
+            _state.update { it.copy(shouldScrollTop = true) }
+        }
     }
 
-    private fun emitSortedByNameAsc() {
-        _state.value =
-            _state.value.copy(binanceCryptoData = _state.value.binanceCryptoData.sortedBy { it.symbol })
+    fun onScrolled() {
+        _state.update { it.copy(shouldScrollTop = false) }
     }
 
-    private fun emitSortedByNameDesc() {
-        _state.value =
-            _state.value.copy(binanceCryptoData = _state.value.binanceCryptoData.sortedByDescending { it.symbol })
-    }
-
-    private fun emitSortedByChangeAsc() {
-        _state.value =
-            _state.value.copy(binanceCryptoData = _state.value.binanceCryptoData.sortedBy { it.priceChangePercent })
-    }
-
-    private fun emitSortedByChangeDesc() {
-        _state.value =
-            _state.value.copy(binanceCryptoData = _state.value.binanceCryptoData.sortedByDescending { it.priceChangePercent })
+    private fun updateSortOrder(newSortOrder: SortOrder) {
+        launch {
+            watchListRepository.saveSortOrderOnPreference(newSortOrder)
+        }
+        _state.update { it.copy(sortOrder = newSortOrder) }
+        watchListRepository.sortList(newSortOrder)
     }
 
 // This function cannot be called since connection hasnt been established yet at this point

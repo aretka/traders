@@ -39,7 +39,10 @@ interface CryptoDatabaseDao {
 
 //    Favourite crypto
     @Query("SELECT * FROM favouritecrypto")
-    fun getAllFavourites() : LiveData<List<FavouriteCrypto>>
+    fun getAllFavouritesLive() : LiveData<List<FavouriteCrypto>>
+
+    @Query("SELECT * FROM favouritecrypto")
+    suspend fun getAllFavourites() : List<FavouriteCrypto>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFavouriteCrypto(favouriteCrypto: FavouriteCrypto)

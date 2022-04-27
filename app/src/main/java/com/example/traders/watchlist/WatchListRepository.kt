@@ -1,34 +1,32 @@
 package com.example.traders.watchlist
 
+import androidx.lifecycle.asLiveData
 import com.example.traders.database.CryptoDatabaseDao
 import com.example.traders.database.FavouriteCrypto
 import com.example.traders.database.PreferancesManager
+import com.example.traders.database.SortOrder
 import com.example.traders.hilt.ApplicationScopeDefault
 import com.example.traders.network.BinanceApi
 import com.example.traders.repository.enumContains
+import com.example.traders.utils.MappingUtils.enumConstantNames
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24HourData.Binance24DataItem
 import com.example.traders.watchlist.cryptoData.binance24HourData.BinanceDataItem
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
 import com.example.traders.webSocket.BinanceWSClient
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class WatchListRepository @Inject constructor(
     private val webSocketClient: BinanceWSClient,
     private val binanceApi: BinanceApi,
     private val cryptoDao: CryptoDatabaseDao,
-    private val preferencesManager: PreferancesManager,
-    @ApplicationScopeDefault val scope: CoroutineScope
+    private val preferencesManager: PreferancesManager
 ) {
-    //    TODO: start collecting ticker data at first refreshCryptoPrices call
-//
+
     private val _binanceCryptoList = MutableStateFlow<List<BinanceDataItem>>(emptyList())
     val binanceCryptoList = _binanceCryptoList.asStateFlow()
         .combine(preferencesManager.preferencesFlow) { list, preferences ->
@@ -39,17 +37,57 @@ class WatchListRepository @Inject constructor(
             }
         }
 
-    private var cryptoListFlowEnabled: Boolean = false
-
     suspend fun refreshCryptoPrices() {
-        startCollectingBinanceTickerData()
         val cryptoPricesResponse = getCryptoPricesList() ?: emptyList()
         val extractedPricesList =
             cryptoPricesResponse.getFixedCryptoList().map { it.toBinanceDataItem() }
 
+        val finalList = extractedPricesList.applyFavourites(getAllFavourites())
         _binanceCryptoList.update {
-            extractedPricesList.applyFavourites(getAllFavourites())
+            finalList
         }
+    }
+
+    suspend fun renewListWithFavourites() {
+        _binanceCryptoList.update {
+            it.applyFavourites(getAllFavourites())
+        }
+    }
+
+    fun sortList(sortOrder: SortOrder) {
+        when (sortOrder) {
+            SortOrder.DEFAULT -> emitDefaultList()
+            SortOrder.BY_NAME_ASC -> emitSortedByNameAsc()
+            SortOrder.BY_NAME_DESC -> emitSortedByNameDesc()
+            SortOrder.BY_CHANGE_ASC -> emitSortedByChangeAsc()
+            SortOrder.BY_CHANGE_DESC -> emitSortedByChangeDesc()
+        }
+    }
+
+    private fun emitDefaultList() {
+        val cryptoListOrder = FixedCryptoList::class.enumConstantNames().toMutableList()
+        val orderBySymbol = cryptoListOrder.withIndex().associate { it.value to it.index }
+        _binanceCryptoList.update { it.sortedBy { orderBySymbol[it.symbol] } }
+    }
+
+    private fun emitSortedByNameAsc() {
+        _binanceCryptoList.update { list ->  list.sortedBy { it.symbol } }
+    }
+
+    private fun emitSortedByNameDesc() {
+        _binanceCryptoList.update { list ->  list.sortedByDescending { it.symbol } }
+    }
+
+    private fun emitSortedByChangeAsc() {
+        _binanceCryptoList.update { list ->  list.sortedBy { it.priceChangePercent } }
+    }
+
+    private fun emitSortedByChangeDesc() {
+        _binanceCryptoList.update { list ->  list.sortedByDescending { it.priceChangePercent } }
+    }
+
+    suspend fun saveSortOrderOnPreference(sortOrder: SortOrder) {
+        preferencesManager.updateSortOrder(sortOrder)
     }
 
     suspend fun saveIsFavouriteOnPreference(isFavouritesOn: Boolean) {
@@ -57,7 +95,11 @@ class WatchListRepository @Inject constructor(
     }
 
     suspend fun isFavouritesOn(): Boolean {
-        return preferencesManager.preferencesFlow.last().isFavourite
+        return preferencesManager.preferencesFlow.first().isFavourite
+    }
+
+    suspend fun sortOrderType(): SortOrder {
+        return preferencesManager.preferencesFlow.first().sortOrder
     }
 
     private fun List<Binance24DataItem>.getFixedCryptoList(): List<Binance24DataItem> {
@@ -68,11 +110,11 @@ class WatchListRepository @Inject constructor(
 
     private suspend fun getCryptoPricesList() = binanceApi.get24HourData().body()
 
-    private fun getAllFavourites() = cryptoDao.getAllFavourites().value
+    private suspend fun getAllFavourites() = cryptoDao.getAllFavourites()
 
     private fun Binance24DataItem.toBinanceDataItem(): BinanceDataItem {
         return BinanceDataItem(
-            symbol = symbol,
+            symbol = symbol.replace("USDT", ""),
             last = last,
             high = high,
             low = low,
@@ -85,25 +127,17 @@ class WatchListRepository @Inject constructor(
     private fun List<BinanceDataItem>.applyFavourites(favouriteList: List<FavouriteCrypto>?): List<BinanceDataItem> {
         return map { item ->
             item.copy(
-                isFavourite = favouriteList?.any {
-                    it.symbol == item.symbol.replace(
-                        "USDT",
-                        ""
-                    )
-                } == true
+                isFavourite = favouriteList?.any { it.symbol == item.symbol } == true
             )
         }
     }
 
     //    I will have to start and pause collecting state
     // It collects message emitted from websocket sharedFlow and updates list item by reassigning BinanceDataItem to new value
-    private suspend fun startCollectingBinanceTickerData() {
-        if (cryptoListFlowEnabled) return
-        cryptoListFlowEnabled = true
-
+    suspend fun startCollectingBinanceTickerData() {
         webSocketClient.state.collectLatest { tickerData ->
             val indexOfCryptoDataToUpdate = _binanceCryptoList.value.indexOfFirst {
-                it.symbol == tickerData.symbol
+                it.symbol == tickerData.symbol.replace("USDT", "")
             }
 
             if (indexOfCryptoDataToUpdate != -1) {
@@ -124,7 +158,7 @@ class WatchListRepository @Inject constructor(
     private fun PriceTickerData?.toBinanceDataItem(isFavourite: Boolean): BinanceDataItem? {
         if (this == null) return null
         return BinanceDataItem(
-            symbol = symbol,
+            symbol = symbol.replace("USDT", ""),
             last = last,
             high = high,
             low = low,
