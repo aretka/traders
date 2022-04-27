@@ -72,8 +72,6 @@ class WatchListViewModel @Inject constructor(
                 watchListRepository.saveIsFavouriteOnPreference(isFavouritesOn)
                 it.copy(showFavourites = isFavouritesOn)
             }
-            delay(300)
-            _state.update { it.copy(shouldScrollTop = true) }
         }
     }
 
@@ -83,10 +81,6 @@ class WatchListViewModel @Inject constructor(
             SortOrder.BY_NAME_ASC -> updateSortOrder(SortOrder.DEFAULT)
             else -> updateSortOrder(SortOrder.BY_NAME_DESC)
         }.exhaustive
-        launch {
-            delay(300)
-            _state.update { it.copy(shouldScrollTop = true) }
-        }
     }
 
     fun onSortPriceChangeButtonClicked() {
@@ -95,10 +89,6 @@ class WatchListViewModel @Inject constructor(
             SortOrder.BY_CHANGE_ASC -> updateSortOrder(SortOrder.DEFAULT)
             else -> updateSortOrder(SortOrder.BY_CHANGE_DESC)
         }.exhaustive
-        launch {
-            delay(300)
-            _state.update { it.copy(shouldScrollTop = true) }
-        }
     }
 
     fun onScrolled() {
