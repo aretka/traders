@@ -28,15 +28,19 @@ Watchlist is the main launching screen comprised of top 30 crypto list elements 
   * Loader is shown while prices are being fetched
   * The prices are being updated utilizing websocket connection to binance server.
   * Pull-to-refresh is implemented. It refetches all crypto list.
+  * There are 2 sorting options: by name, by price change. 
+  * One filter option - extract favourite list
+  * Sort and filter preferences are stored in datastore and retreived when app is relaunched.
 </br></br>
 
- Whole crypto list            |        Pull to refresh      |  Loader
+ List sort and filtration |        Pull to refresh   |  Loader
 :------------------------:|:------------------------:|:---------------------:
-![allList](https://user-images.githubusercontent.com/57877668/153886934-1aafd94f-a442-4d88-ae26-1b3480754b54.gif) | ![pullToRefresh](https://user-images.githubusercontent.com/57877668/153887154-5d91ea31-7872-4e7b-9965-9e6ea1011da1.gif) | ![loader](https://user-images.githubusercontent.com/57877668/153886814-99b9d39d-c8cf-4583-a4e9-62ab6015799e.gif)
+![allList](https://user-images.githubusercontent.com/57877668/166565606-a8022b71-2661-4bce-8548-d10ba61ce344.gif) | ![pullToRefresh](https://user-images.githubusercontent.com/57877668/166565597-837a43ee-ba26-49b0-92e5-291f1ba74f1f.gif) | ![loader](https://user-images.githubusercontent.com/57877668/166565467-9ed97da0-2b27-449d-a64a-1ffb1dcce390.gif)
 
 ### 2.2. Single crypto screen
-Single crypto screen represents 3 tabs: crypto chart, price statistics(last 24h data, ROI etc) and project description.</br></br>
-<img src="https://user-images.githubusercontent.com/57877668/154049320-c46bd625-87d6-439b-b52b-f8b69df64dc7.gif" width="300"/></br>
+Single crypto screen represents 3 tabs: crypto chart, price statistics(last 24h data, ROI etc) and project description. There is a favourite toggle button on the top which saves chose crypto to room or removes it.</br></br>
+
+<img src="https://user-images.githubusercontent.com/57877668/166567064-a4d0f46f-f4f4-4db3-a082-66eada23f800.gif" width="300"/></br>
 
 #### 2.2.1.Chart screen tab
 This tab is the main single crypto screen which shows the recent crypto price info, candle chart and buy,sell buttons.</br>
@@ -47,6 +51,7 @@ This tab is the main single crypto screen which shows the recent crypto price in
 * Buy buttom opens dialog in order to execute crypto purchase. This dialog shows the current crypto price, USD balance, input field
 * Sell buttom opens dialog in order to execute crypto sell.
 * Input price is validated and customer is notified if input is invalid by showing message below input field.
+* Transaction is executed only when confirmed clicked on confirmation dialog.
 </br></br>
 
  1 month(daily candle)  |  3 months(daily candle) |  6 months(weekly candle) | 12 months(weekly candle)
@@ -56,7 +61,7 @@ This tab is the main single crypto screen which shows the recent crypto price in
 
  Buy dialog  |  Sell dialog  
 :-----------------------:|:-----------------------:
-<img src="https://user-images.githubusercontent.com/57877668/154036156-aba46310-50a9-4aad-8095-506693668a7c.png" width="250"/> | <img src="https://user-images.githubusercontent.com/57877668/154036539-9d0b5f9b-863c-41e5-92bc-112914ce551e.png" width="250"/>
+<img src="https://user-images.githubusercontent.com/57877668/166566374-7b4cde2c-147e-4473-81a9-3663294b1ff7.gif" width="300"/> | <img src="https://user-images.githubusercontent.com/57877668/166566369-c1ec0d83-9e77-4ea0-8f79-7d337dec48fc.gif" width="300"/>
 </br>
 
  Empty message  |  Insufficient balance message | Price too low message | Valid input(no message)
@@ -90,12 +95,14 @@ Portfolio tab comprises of 3 parts: total balance and chart, button area(), cryp
 * Deposit button opens dialog where customer is allowed to deposit US dollars.
 * Reset balance button simply resets all data by erasing all portfolio data.
 * Cryto list below button area is created using recyclerView. It contains couple viewHolders: header and crypto element.
+* Confrimation dialog are shown on deposit or reset balance click.
+* Transaction is executed only dialogs are confirmed. 
 
 </br></br>
 
- Whole screen  | Empty crypto list  |  Deposit usecase | Balance reset
-:-------------:|:------------------:|:----------------:|:------------:
-<img src="https://user-images.githubusercontent.com/57877668/154063406-dedc3636-eff1-4e9a-aa73-a60d13718af2.gif" width="230"/> | <img src="https://user-images.githubusercontent.com/57877668/154078787-0ab73d6a-4143-4e63-a0de-4c9f1b0f44b6.png" width="230"/> | <img src="https://user-images.githubusercontent.com/57877668/154078133-948cfe9e-eec2-4a94-b151-365aa4bf8c57.gif" width="230"> | <img src="https://user-images.githubusercontent.com/57877668/154078155-4808d26d-ef84-449b-b0d4-5327790d343d.gif" width="230">
+ Whole screen  | Empty crypto list  |  Deposit&reset balance usecase |
+:-------------:|:------------------:|:----------------:|
+<img src="https://user-images.githubusercontent.com/57877668/154063406-dedc3636-eff1-4e9a-aa73-a60d13718af2.gif" width="260"/> | <img src="https://user-images.githubusercontent.com/57877668/154078787-0ab73d6a-4143-4e63-a0de-4c9f1b0f44b6.png" width="260"/> | <img src="https://user-images.githubusercontent.com/57877668/166567689-fefe1228-c67f-499e-a854-42606b76b3a9.gif" width="260">
 
 </br></br>
 **Chart different cases**
@@ -109,21 +116,21 @@ This tab shows a list of executed transactions stored in room database.</br>
 * Whole screen is a single recyclerView consisting 3 different viewHolders: header, deposit and purchase/sell holders.
 * On init the list is fetched from local database and inserted into recyclerView.
 * Message of *"No transactions yet"* is displayed if list is empty.
-* Header contains title and erase button which erases all list.
+* Header contains title and erase button which erases all list. It contains confirmation dialog in cacse of missclick.
 * Each element contains symbol, slug, icon, date, amount, amount in usd, last price.
 </br></br>
 
 Whole transaction page  | OnEraseAllTransactions
 :----------------------:|:------------------:
-<img src="https://user-images.githubusercontent.com/57877668/154086157-49462d25-7582-4f30-8916-213b563bf060.gif" width="300"/> | <img src="https://user-images.githubusercontent.com/57877668/154086204-f872f4b2-0460-4077-83f1-7a5f35cf7970.gif" width="300"/>
+<img src="https://user-images.githubusercontent.com/57877668/166568315-63a81511-3223-46ea-aec9-0e7b0068e607.gif" width="300"/> | <img src="https://user-images.githubusercontent.com/57877668/166567761-af20d1a9-22d0-41ea-b575-aad3f17584ae.gif" width="300"/>
 
 <a name="future_features"></a>
 ## 3. Future features
-- Main watchlist sorting by name, by price change.
+- :heavy_check_mark: Main watchlist sorting by name, by price change.
 - Registration with google account.
-- Implementing favourites list.
-- Confirmation dialgos such as confirm purchase, confirm deposit etc.
-- Sort portfolio list
+- :heavy_check_mark: Implementing favourites list.
+- :heavy_check_mark: Confirmation dialgos such as confirm purchase, confirm deposit etc.
+- :heavy_check_mark: Sort portfolio list
 - Balance change over time screen to track how your crypto list changed over time.
 
 <a name="technologies"></a>
@@ -142,6 +149,7 @@ Whole transaction page  | OnEraseAllTransactions
   * Room - a local database designated to store data on your phone has been used for saving crypto porftolio and transaction history.
   * Retrofit with OKHTTP
   * Websocket - a persistent connection between a client and server which provides full-duplex communication channels over a single TCP connection. It was uesd for live crypto data fetching.
+  * Data store was utilized to store filter and sort preferences.
 
 <a name="installation"></a>
 ## 5. How to install?
