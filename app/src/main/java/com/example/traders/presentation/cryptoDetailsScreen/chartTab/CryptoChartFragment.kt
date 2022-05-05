@@ -16,9 +16,9 @@ import com.example.traders.*
 import com.example.traders.presentation.customviews.CandleChart
 import com.example.traders.databinding.FragmentCryptoItemChartBinding
 import com.example.traders.presentation.dialogs.buyDialog.BuyDialogFragment
-import com.example.traders.dialogs.confirmationDialog.ConfirmationDialogFragment
-import com.example.traders.dialogs.confirmationDialog.ConfirmationType
-import com.example.traders.dialogs.sellDialog.SellDialogFragment
+import com.example.traders.presentation.dialogs.confirmationDialog.ConfirmationDialogFragment
+import com.example.traders.presentation.dialogs.confirmationDialog.ConfirmationType
+import com.example.traders.presentation.dialogs.sellDialog.SellDialogFragment
 import com.example.traders.profile.portfolio.TransactionInfo
 import com.example.traders.utils.roundAndFormatDouble
 import com.example.traders.utils.setPriceChangeText

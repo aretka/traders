@@ -1,4 +1,4 @@
-package com.example.traders.dialogs.sellDialog
+package com.example.traders.presentation.dialogs.sellDialog
 
 import com.example.traders.profile.portfolio.TransactionInfo
 

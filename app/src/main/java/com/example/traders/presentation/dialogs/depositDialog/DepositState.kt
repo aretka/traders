@@ -1,6 +1,6 @@
-package com.example.traders.dialogs.depositDialog
+package com.example.traders.presentation.dialogs.depositDialog
 
-import com.example.traders.dialogs.DialogValidationMessage
+import com.example.traders.presentation.dialogs.DialogValidationMessage
 import java.math.BigDecimal
 
 data class DepositState(

@@ -1,26 +1,18 @@
-package com.example.traders.dialogs.depositDialog
+package com.example.traders.presentation.dialogs.depositDialog
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.traders.BaseViewModel
-import com.example.traders.database.Crypto
-import com.example.traders.database.Transaction
-import com.example.traders.database.TransactionType
-import com.example.traders.dialogs.DialogValidation
-import com.example.traders.dialogs.DialogValidationMessage
-import com.example.traders.dialogs.validateChars
-import com.example.traders.network.repository.CryptoRepository
+import com.example.traders.presentation.dialogs.DialogValidation
+import com.example.traders.presentation.dialogs.DialogValidationMessage
+import com.example.traders.presentation.dialogs.validateChars
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,7 +27,7 @@ class DepositViewModel @Inject constructor(
 
     fun onInputChanged(input: String) {
         val inputWithoutIlleagalChars = input.validateChars()
-        if(inputWithoutIlleagalChars == input) {
+        if (inputWithoutIlleagalChars == input) {
             validate(input)
         } else {
             _state.value = _state.value.copy(

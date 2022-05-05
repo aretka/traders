@@ -1,7 +1,7 @@
 package com.example.traders.presentation.dialogs.buyDialog
 
 import com.example.traders.database.Crypto
-import com.example.traders.dialogs.DialogValidationMessage
+import com.example.traders.presentation.dialogs.DialogValidationMessage
 import java.math.BigDecimal
 
 data class BuyState(

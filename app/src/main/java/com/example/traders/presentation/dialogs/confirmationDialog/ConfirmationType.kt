@@ -1,4 +1,4 @@
-package com.example.traders.dialogs.confirmationDialog
+package com.example.traders.presentation.dialogs.confirmationDialog
 
 import com.example.traders.database.Transaction
 import com.example.traders.profile.portfolio.TransactionInfo

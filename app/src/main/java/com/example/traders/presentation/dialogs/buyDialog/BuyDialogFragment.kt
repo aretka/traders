@@ -14,7 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
 import com.example.traders.databinding.DialogFragmentBuyBinding
-import com.example.traders.dialogs.DialogValidationMessage
+import com.example.traders.presentation.dialogs.DialogValidationMessage
 import com.example.traders.database.FixedCryptoList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect

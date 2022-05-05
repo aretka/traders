@@ -1,4 +1,4 @@
-package com.example.traders.dialogs.depositDialog
+package com.example.traders.presentation.dialogs.depositDialog
 
 import android.app.AlertDialog
 import android.app.Dialog

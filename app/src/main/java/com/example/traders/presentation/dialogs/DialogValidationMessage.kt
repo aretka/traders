@@ -1,4 +1,4 @@
-package com.example.traders.dialogs
+package com.example.traders.presentation.dialogs
 
 enum class DialogValidationMessage(val message: String) {
     IS_VALID(""),

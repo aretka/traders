@@ -1,4 +1,4 @@
-package com.example.traders.dialogs.sellDialog
+package com.example.traders.presentation.dialogs.sellDialog
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.traders.BaseViewModel
 import com.example.traders.database.Crypto
-import com.example.traders.database.TransactionType
-import com.example.traders.dialogs.DialogValidation
-import com.example.traders.dialogs.DialogValidationMessage
-import com.example.traders.dialogs.validateChars
-import com.example.traders.profile.portfolio.TransactionInfo
-import com.example.traders.network.repository.CryptoRepository
-import com.example.traders.utils.roundNum
 import com.example.traders.database.FixedCryptoList
+import com.example.traders.database.TransactionType
+import com.example.traders.network.repository.CryptoRepository
+import com.example.traders.presentation.dialogs.DialogValidation
+import com.example.traders.presentation.dialogs.DialogValidationMessage
+import com.example.traders.presentation.dialogs.validateChars
+import com.example.traders.profile.portfolio.TransactionInfo
+import com.example.traders.utils.roundNum
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -50,23 +50,25 @@ class SellDialogViewModel @AssistedInject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun onSellButtonClicked() {
         launch {
-            _events.emit(SellDialogEvent.Dismiss(
-                TransactionInfo(
-                    symbol = crypto.name,
-                    cryptoAmount = _state.value.inputVal.toString(),
-                    usdAmount = _state.value.usdToGet.toString(),
-                    lastPrice = lastPrice.toString(),
-                    transactionType = TransactionType.SELL,
-                    newUsdBalance = getNewUsdBalance(),
-                    newCryptoBalance = _state.value.cryptoLeft.toString()
+            _events.emit(
+                SellDialogEvent.Dismiss(
+                    TransactionInfo(
+                        symbol = crypto.name,
+                        cryptoAmount = _state.value.inputVal.toString(),
+                        usdAmount = _state.value.usdToGet.toString(),
+                        lastPrice = lastPrice.toString(),
+                        transactionType = TransactionType.SELL,
+                        newUsdBalance = getNewUsdBalance(),
+                        newCryptoBalance = _state.value.cryptoLeft.toString()
+                    )
                 )
-            ))
+            )
         }
     }
 
     fun onInputChanged(enteredVal: String) {
         val inputWithoutIlleagalChars = enteredVal.validateChars(crypto.amountToRound)
-        if(inputWithoutIlleagalChars == enteredVal) {
+        if (inputWithoutIlleagalChars == enteredVal) {
             validate(enteredVal)
             calculateNewBalance()
         } else {
@@ -115,7 +117,8 @@ class SellDialogViewModel @AssistedInject constructor(
 
     private fun getCryptoBalance() {
         launch {
-            val cryptoBalance = repository.getCryptoBySymbol(crypto.name) ?: Crypto(symbol = crypto.name)
+            val cryptoBalance =
+                repository.getCryptoBySymbol(crypto.name) ?: Crypto(symbol = crypto.name)
             val amountInUsd = (lastPrice * cryptoBalance.amount).roundNum()
             _state.value = _state.value.copy(
                 cryptoBalance = cryptoBalance,

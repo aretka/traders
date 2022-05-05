@@ -11,9 +11,9 @@ import com.example.traders.BaseFragment
 import com.example.traders.R
 import com.example.traders.database.Crypto
 import com.example.traders.databinding.FragmentPortfolioBinding
-import com.example.traders.dialogs.confirmationDialog.ConfirmationDialogFragment
-import com.example.traders.dialogs.confirmationDialog.ConfirmationType
-import com.example.traders.dialogs.depositDialog.DepositDialogFragment
+import com.example.traders.presentation.dialogs.confirmationDialog.ConfirmationDialogFragment
+import com.example.traders.presentation.dialogs.confirmationDialog.ConfirmationType
+import com.example.traders.presentation.dialogs.depositDialog.DepositDialogFragment
 import com.example.traders.profile.ProfileFragmentDirections
 import com.example.traders.profile.adapters.PortfolioListAdapter
 import com.example.traders.presentation.watchlist.adapters.SingleCryptoListener

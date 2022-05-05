@@ -1,4 +1,4 @@
-package com.example.traders.dialogs
+package com.example.traders.presentation.dialogs
 
 import java.math.BigDecimal
 import javax.inject.Inject
