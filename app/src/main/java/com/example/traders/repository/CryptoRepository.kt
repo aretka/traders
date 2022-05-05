@@ -60,7 +60,7 @@ class CryptoRepository @Inject constructor(
 
     suspend fun deleteAllTransactions() = cryptoDao.deleteAllTransactions()
     fun getAllTransactionsLive() = cryptoDao.getAllTransactionsLive()
-    fun getAllFavourites() = cryptoDao.getAllFavourites()
+    fun getAllFavouritesLive() = cryptoDao.getAllFavouritesLive()
     suspend fun insertFavouriteCrypto(favouriteCrypto: FavouriteCrypto) =
         cryptoDao.insertFavouriteCrypto(favouriteCrypto)
 

@@ -3,6 +3,7 @@ package com.example.traders.webSocket
 import android.os.Build
 import android.util.Log
 import com.example.traders.utils.MappingUtils
+import com.example.traders.utils.MappingUtils.enumConstantNames
 import com.example.traders.utils.returnTickerWithRoundedPrice
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTicker
@@ -102,8 +103,4 @@ class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
         private const val TAG = "WebSocketClient"
         private val gson = Gson()
     }
-
-    // Converts enum names to String array
-    fun KClass<out Enum<*>>.enumConstantNames() =
-        this.java.enumConstants.map(Enum<*>::name)
 }
