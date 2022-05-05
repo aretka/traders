@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/userProfileFragment"
-        android:name="com.example.traders.profile.ProfileFragment"
+        android:name="com.example.traders.presentation.profile.ProfileFragment"
         android:label="fragment_user_profile"
         tools:layout="@layout/fragment_portfolio" >
         <action
@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/cryptoItemFragment"
-        android:name="com.example.traders.singleCryptoScreen.CryptoItemFragment"
+        android:name="com.example.traders.presentation.cryptoDetailsScreen.CryptoItemFragment"
         android:label="CryptoItemFragment">
         <argument
             android:name="slug"

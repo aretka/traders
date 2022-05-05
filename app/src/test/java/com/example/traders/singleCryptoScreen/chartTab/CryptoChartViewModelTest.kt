@@ -2,12 +2,15 @@ package com.example.traders.singleCryptoScreen.chartTab
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.example.traders.repository.CryptoRepository
+import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.TestDispatcherRule
-import com.example.traders.watchlist.cryptoData.FixedCryptoList
-import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
-import com.example.traders.watchlist.cryptoData.cryptoChartData.CryptoChartData
-import com.example.traders.webSocket.BinanceWSClient
+import com.example.traders.database.FixedCryptoList
+import com.example.traders.network.models.binance24hTickerData.PriceTickerData
+import com.example.traders.network.models.cryptoChartData.CryptoChartData
+import com.example.traders.network.webSocket.BinanceWSClient
+import com.example.traders.presentation.cryptoDetailsScreen.chartTab.BtnId
+import com.example.traders.presentation.cryptoDetailsScreen.chartTab.ChartState
+import com.example.traders.presentation.cryptoDetailsScreen.chartTab.CryptoChartViewModel
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever

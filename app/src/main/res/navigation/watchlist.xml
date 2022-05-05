@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/watchListFragment"
-        android:name="com.example.traders.watchlist.WatchListFragment"
+        android:name="com.example.traders.presentation.watchlist.WatchListFragment"
         android:label="@string/fragment_watch_list_label"
         tools:layout="@layout/fragment_watch_list">
         <action
@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/cryptoItemFragment"
-        android:name="com.example.traders.singleCryptoScreen.CryptoItemFragment"
+        android:name="com.example.traders.presentation.cryptoDetailsScreen.CryptoItemFragment"
         android:label="CryptoItem" >
         <argument
             android:name="slug"

@@ -1,9 +1,9 @@
 package com.example.traders.network
 
-import com.example.traders.watchlist.cryptoData.cryptoChartData.CryptoChartData
-import com.example.traders.watchlist.cryptoData.cryptoDescData.CryptoDescData
-import com.example.traders.watchlist.cryptoData.cryptoPriceData.CryptoPriceResponse
-import com.example.traders.watchlist.cryptoData.cryptoStatsData.CryptoStatistics
+import com.example.traders.network.models.cryptoChartData.CryptoChartData
+import com.example.traders.network.models.cryptoDescData.CryptoDescData
+import com.example.traders.network.models.cryptoPriceData.CryptoPriceResponse
+import com.example.traders.network.models.cryptoStatsData.CryptoStatistics
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

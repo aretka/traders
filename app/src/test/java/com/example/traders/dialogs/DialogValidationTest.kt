@@ -1,5 +1,7 @@
 package com.example.traders.dialogs
 
+import com.example.traders.presentation.dialogs.DialogValidation
+import com.example.traders.presentation.dialogs.DialogValidationMessage
 import org.junit.Before
 import org.junit.Test
 import java.math.BigDecimal

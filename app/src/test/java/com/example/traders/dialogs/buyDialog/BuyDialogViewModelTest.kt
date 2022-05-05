@@ -3,11 +3,13 @@ package com.example.traders.dialogs.buyDialog
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.example.traders.database.Crypto
-import com.example.traders.dialogs.DialogValidation
-import com.example.traders.repository.CryptoRepository
+import com.example.traders.presentation.dialogs.DialogValidation
+import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.utils.roundNum
 import com.example.traders.TestDispatcherRule
-import com.example.traders.watchlist.cryptoData.FixedCryptoList
+import com.example.traders.database.FixedCryptoList
+import com.example.traders.presentation.dialogs.buyDialog.BuyDialogEvent
+import com.example.traders.presentation.dialogs.buyDialog.BuyDialogViewModel
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi

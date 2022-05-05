@@ -62,7 +62,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <com.example.traders.customviews.CandleChart
+    <com.example.traders.presentation.customviews.CandleChart
         android:id="@+id/candle_chart"
         android:layout_width="match_parent"
         android:layout_height="300dp"
