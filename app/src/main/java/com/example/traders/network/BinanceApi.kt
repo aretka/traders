@@ -1,6 +1,6 @@
 package com.example.traders.network
 
-import com.example.traders.profile.cryptoData.CryptoTicker
+import com.example.traders.network.models.CryptoTicker
 import com.example.traders.network.models.binance24HourData.Binance24DataItem
 import retrofit2.Response
 import retrofit2.http.GET

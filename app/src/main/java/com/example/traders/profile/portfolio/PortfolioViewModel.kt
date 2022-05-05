@@ -2,8 +2,7 @@ package com.example.traders.profile.portfolio
 
 import com.example.traders.BaseViewModel
 import com.example.traders.database.Crypto
-import com.example.traders.profile.cryptoData.CryptoInUsd
-import com.example.traders.profile.cryptoData.CryptoTicker
+import com.example.traders.network.models.CryptoTicker
 import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.utils.roundNum
 import com.github.mikephil.charting.data.PieEntry
