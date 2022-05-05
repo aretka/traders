@@ -2,7 +2,7 @@ package com.example.traders.singleCryptoScreen.descriptionTab
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.example.traders.repository.CryptoRepository
+import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.TestDispatcherRule
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.cryptoDescData.CryptoDescData

@@ -3,7 +3,7 @@ package com.example.traders.singleCryptoScreen
 import androidx.lifecycle.SavedStateHandle
 import com.example.traders.BaseViewModel
 import com.example.traders.database.FavouriteCrypto
-import com.example.traders.repository.CryptoRepository
+import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.singleCryptoScreen.priceStatisticsTab.Hilt_CryptoPriceStatisticsFragment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay

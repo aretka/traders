@@ -1,7 +1,7 @@
 package com.example.traders.profile.history
 
 import com.example.traders.BaseViewModel
-import com.example.traders.repository.CryptoRepository
+import com.example.traders.network.repository.CryptoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

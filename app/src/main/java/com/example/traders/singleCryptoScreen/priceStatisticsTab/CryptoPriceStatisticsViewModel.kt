@@ -2,7 +2,7 @@ package com.example.traders.singleCryptoScreen.priceStatisticsTab
 
 import androidx.lifecycle.*
 import com.example.traders.BaseViewModel
-import com.example.traders.repository.CryptoRepository
+import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.cryptoStatsData.CryptoStatistics
 import dagger.assisted.Assisted

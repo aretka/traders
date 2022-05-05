@@ -5,9 +5,9 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.traders.BaseViewModel
-import com.example.traders.repository.CryptoRepository
+import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
-import com.example.traders.webSocket.BinanceWSClient
+import com.example.traders.network.webSocket.BinanceWSClient
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

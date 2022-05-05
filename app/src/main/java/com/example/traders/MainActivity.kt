@@ -10,7 +10,7 @@ import androidx.core.view.forEach
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.traders.utils.roundFormatBigDecimal
-import com.example.traders.webSocket.BinanceWSClient
+import com.example.traders.network.webSocket.BinanceWSClient
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.BigDecimal

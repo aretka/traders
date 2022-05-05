@@ -13,7 +13,7 @@ import com.example.traders.dialogs.DialogValidation
 import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.dialogs.validateChars
 import com.example.traders.profile.portfolio.TransactionInfo
-import com.example.traders.repository.CryptoRepository
+import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.utils.DateUtils
 import com.example.traders.utils.roundNum
 import com.example.traders.watchlist.cryptoData.FixedCryptoList

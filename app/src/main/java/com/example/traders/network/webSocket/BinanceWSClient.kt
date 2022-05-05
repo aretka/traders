@@ -1,4 +1,4 @@
-package com.example.traders.webSocket
+package com.example.traders.network.webSocket
 
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
 import kotlinx.coroutines.flow.SharedFlow

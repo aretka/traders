@@ -1,4 +1,4 @@
-package com.example.traders.repository
+package com.example.traders.network.repository
 
 import com.example.traders.database.*
 import com.example.traders.network.BinanceApi

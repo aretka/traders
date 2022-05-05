@@ -9,7 +9,7 @@ import com.example.traders.database.TransactionType
 import com.example.traders.dialogs.DialogValidation
 import com.example.traders.dialogs.DialogValidationMessage
 import com.example.traders.dialogs.validateChars
-import com.example.traders.repository.CryptoRepository
+import com.example.traders.network.repository.CryptoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

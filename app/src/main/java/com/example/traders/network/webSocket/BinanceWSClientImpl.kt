@@ -1,4 +1,4 @@
-package com.example.traders.webSocket
+package com.example.traders.network.webSocket
 
 import android.os.Build
 import android.util.Log

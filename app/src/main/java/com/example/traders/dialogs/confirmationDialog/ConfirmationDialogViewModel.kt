@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.traders.BaseViewModel
 import com.example.traders.database.Crypto
 import com.example.traders.database.TransactionType
-import com.example.traders.repository.CryptoRepository
+import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.utils.DateUtils.getCurrentTime
 import com.example.traders.utils.exhaustive
 import dagger.assisted.Assisted

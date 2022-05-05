@@ -5,13 +5,13 @@ import com.example.traders.database.FavouriteCrypto
 import com.example.traders.database.PreferancesManager
 import com.example.traders.database.SortOrder
 import com.example.traders.network.BinanceApi
-import com.example.traders.repository.enumContains
+import com.example.traders.network.repository.enumContains
 import com.example.traders.utils.MappingUtils.enumConstantNames
 import com.example.traders.watchlist.cryptoData.FixedCryptoList
 import com.example.traders.watchlist.cryptoData.binance24HourData.Binance24DataItem
 import com.example.traders.watchlist.cryptoData.binance24HourData.BinanceDataItem
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
-import com.example.traders.webSocket.BinanceWSClient
+import com.example.traders.network.webSocket.BinanceWSClient
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -76,11 +76,11 @@ class WatchListRepository @Inject constructor(
     }
 
     private fun emitSortedByChangeAsc() {
-        _binanceCryptoList.update { list ->  list.sortedBy { it.priceChangePercent } }
+        _binanceCryptoList.update { list ->  list.sortedBy { it.priceChangePercent.toBigDecimal() } }
     }
 
     private fun emitSortedByChangeDesc() {
-        _binanceCryptoList.update { list ->  list.sortedByDescending { it.priceChangePercent } }
+        _binanceCryptoList.update { list ->  list.sortedByDescending { it.priceChangePercent.toBigDecimal() } }
     }
 
     suspend fun saveSortOrderOnPreference(sortOrder: SortOrder) {

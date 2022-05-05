@@ -3,7 +3,7 @@ package com.example.traders.dialogs.depositDialog
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.example.traders.dialogs.DialogValidation
-import com.example.traders.repository.CryptoRepository
+import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.TestDispatcherRule
 import com.nhaarman.mockitokotlin2.mock
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -1,7 +1,7 @@
 package com.example.traders.di
 
-import com.example.traders.webSocket.BinanceWSClient
-import com.example.traders.webSocket.BinanceWSClientImpl
+import com.example.traders.network.webSocket.BinanceWSClient
+import com.example.traders.network.webSocket.BinanceWSClientImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
