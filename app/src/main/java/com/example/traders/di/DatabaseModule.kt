@@ -1,11 +1,10 @@
-package com.example.traders.hilt
+package com.example.traders.di
 
 import android.content.Context
 import androidx.room.Room
 import com.example.traders.database.Converters
 import com.example.traders.database.CryptoDatabase
 import com.example.traders.database.CryptoDatabaseDao
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

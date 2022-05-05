@@ -1,4 +1,4 @@
-package com.example.traders.hilt
+package com.example.traders.di
 
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,9 +1,8 @@
-package com.example.traders.hilt
+package com.example.traders.di
 
 import android.app.Activity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import com.example.traders.MainActivity
 import com.example.traders.R
 import dagger.Module
 import dagger.Provides

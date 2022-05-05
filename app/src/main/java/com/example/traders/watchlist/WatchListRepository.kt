@@ -1,11 +1,9 @@
 package com.example.traders.watchlist
 
-import androidx.lifecycle.asLiveData
 import com.example.traders.database.CryptoDatabaseDao
 import com.example.traders.database.FavouriteCrypto
 import com.example.traders.database.PreferancesManager
 import com.example.traders.database.SortOrder
-import com.example.traders.hilt.ApplicationScopeDefault
 import com.example.traders.network.BinanceApi
 import com.example.traders.repository.enumContains
 import com.example.traders.utils.MappingUtils.enumConstantNames
@@ -14,7 +12,6 @@ import com.example.traders.watchlist.cryptoData.binance24HourData.Binance24DataI
 import com.example.traders.watchlist.cryptoData.binance24HourData.BinanceDataItem
 import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
 import com.example.traders.webSocket.BinanceWSClient
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
