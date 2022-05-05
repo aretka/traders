@@ -1,4 +1,4 @@
-package com.example.traders.profile.adapters
+package com.example.traders.presentation.profile.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -1,6 +1,6 @@
-package com.example.traders.profile.portfolio
+package com.example.traders.presentation.profile.portfolio
 
-import com.example.traders.BaseViewModel
+import com.example.traders.presentation.BaseViewModel
 import com.example.traders.database.Crypto
 import com.example.traders.network.models.CryptoTicker
 import com.example.traders.network.repository.CryptoRepository

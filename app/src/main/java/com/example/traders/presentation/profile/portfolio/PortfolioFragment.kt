@@ -1,4 +1,4 @@
-package com.example.traders.profile.portfolio
+package com.example.traders.presentation.profile.portfolio
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,15 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.example.traders.BaseFragment
+import com.example.traders.presentation.BaseFragment
 import com.example.traders.R
 import com.example.traders.database.Crypto
 import com.example.traders.databinding.FragmentPortfolioBinding
 import com.example.traders.presentation.dialogs.confirmationDialog.ConfirmationDialogFragment
 import com.example.traders.presentation.dialogs.confirmationDialog.ConfirmationType
 import com.example.traders.presentation.dialogs.depositDialog.DepositDialogFragment
-import com.example.traders.profile.ProfileFragmentDirections
-import com.example.traders.profile.adapters.PortfolioListAdapter
+import com.example.traders.presentation.profile.ProfileFragmentDirections
+import com.example.traders.presentation.profile.adapters.PortfolioListAdapter
 import com.example.traders.presentation.watchlist.adapters.SingleCryptoListener
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData

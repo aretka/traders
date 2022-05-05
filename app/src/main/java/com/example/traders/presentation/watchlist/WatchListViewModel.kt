@@ -1,9 +1,7 @@
 package com.example.traders.presentation.watchlist
 
-import com.example.traders.BaseViewModel
+import com.example.traders.presentation.BaseViewModel
 import com.example.traders.database.SortOrder
-import com.example.traders.presentation.watchlist.WatchListRepository
-import com.example.traders.presentation.watchlist.WatchListState
 import com.example.traders.utils.exhaustive
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*

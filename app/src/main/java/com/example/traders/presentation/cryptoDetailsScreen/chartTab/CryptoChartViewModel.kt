@@ -4,7 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.traders.BaseViewModel
+import com.example.traders.presentation.BaseViewModel
 import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.database.FixedCryptoList
 import com.example.traders.network.webSocket.BinanceWSClient

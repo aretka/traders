@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
-import com.example.traders.BaseFragment
+import com.example.traders.presentation.BaseFragment
 import com.example.traders.R
 import com.example.traders.databinding.FragmentCryptoItemBinding
 import com.example.traders.presentation.watchlist.adapters.CryptoViewPagerAdapter

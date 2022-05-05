@@ -19,12 +19,13 @@ import com.example.traders.presentation.dialogs.buyDialog.BuyDialogFragment
 import com.example.traders.presentation.dialogs.confirmationDialog.ConfirmationDialogFragment
 import com.example.traders.presentation.dialogs.confirmationDialog.ConfirmationType
 import com.example.traders.presentation.dialogs.sellDialog.SellDialogFragment
-import com.example.traders.profile.portfolio.TransactionInfo
+import com.example.traders.presentation.profile.portfolio.TransactionInfo
 import com.example.traders.utils.roundAndFormatDouble
 import com.example.traders.utils.setPriceChangeText
 import com.example.traders.utils.setPriceChangeTextColor
 import com.example.traders.database.FixedCryptoList
 import com.example.traders.network.models.binance24hTickerData.PriceTickerData
+import com.example.traders.presentation.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

@@ -17,6 +17,7 @@ import com.example.traders.utils.setPriceChangeText
 import com.example.traders.utils.setPriceChangeTextColor
 import com.example.traders.database.FixedCryptoList
 import com.example.traders.network.models.cryptoStatsData.*
+import com.example.traders.presentation.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

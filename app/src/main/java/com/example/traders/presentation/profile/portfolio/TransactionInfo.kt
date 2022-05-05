@@ -1,4 +1,4 @@
-package com.example.traders.profile.portfolio
+package com.example.traders.presentation.profile.portfolio
 
 import android.os.Parcelable
 import com.example.traders.database.TransactionType

@@ -1,7 +1,7 @@
 package com.example.traders.presentation.dialogs.confirmationDialog
 
 import com.example.traders.database.Transaction
-import com.example.traders.profile.portfolio.TransactionInfo
+import com.example.traders.presentation.profile.portfolio.TransactionInfo
 import java.math.BigDecimal
 
 sealed class ConfirmationType {

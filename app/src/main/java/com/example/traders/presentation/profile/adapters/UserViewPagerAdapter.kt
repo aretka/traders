@@ -1,11 +1,11 @@
-package com.example.traders.profile.adapters
+package com.example.traders.presentation.profile.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.traders.profile.history.HistoryFragment
-import com.example.traders.profile.portfolio.PortfolioFragment
+import com.example.traders.presentation.profile.history.HistoryFragment
+import com.example.traders.presentation.profile.portfolio.PortfolioFragment
 
 class UserViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fragmentManager, lifecycle) {
     companion object {

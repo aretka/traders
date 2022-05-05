@@ -1,6 +1,6 @@
-package com.example.traders.profile.history
+package com.example.traders.presentation.profile.history
 
-import com.example.traders.BaseViewModel
+import com.example.traders.presentation.BaseViewModel
 import com.example.traders.network.repository.CryptoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

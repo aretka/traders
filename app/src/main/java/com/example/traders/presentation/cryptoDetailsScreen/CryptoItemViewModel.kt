@@ -1,7 +1,7 @@
 package com.example.traders.presentation.cryptoDetailsScreen
 
 import androidx.lifecycle.SavedStateHandle
-import com.example.traders.BaseViewModel
+import com.example.traders.presentation.BaseViewModel
 import com.example.traders.database.FavouriteCrypto
 import com.example.traders.network.repository.CryptoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

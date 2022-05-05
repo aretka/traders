@@ -1,4 +1,4 @@
-package com.example.traders.profile.adapters
+package com.example.traders.presentation.profile.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.example.traders.R
 import com.example.traders.databinding.ListItemCryptoBinding
 import com.example.traders.databinding.ListPortfolioHeaderBinding
-import com.example.traders.profile.portfolio.CryptoInUsd
+import com.example.traders.presentation.profile.portfolio.CryptoInUsd
 import com.example.traders.presentation.watchlist.adapters.SingleCryptoListener
 import com.example.traders.database.FixedCryptoList
 

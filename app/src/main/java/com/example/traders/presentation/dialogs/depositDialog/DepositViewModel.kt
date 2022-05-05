@@ -2,7 +2,7 @@ package com.example.traders.presentation.dialogs.depositDialog
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.traders.BaseViewModel
+import com.example.traders.presentation.BaseViewModel
 import com.example.traders.presentation.dialogs.DialogValidation
 import com.example.traders.presentation.dialogs.DialogValidationMessage
 import com.example.traders.presentation.dialogs.validateChars

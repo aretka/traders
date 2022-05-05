@@ -1,4 +1,4 @@
-package com.example.traders.profile.portfolio
+package com.example.traders.presentation.profile.portfolio
 
 import java.math.BigDecimal
 

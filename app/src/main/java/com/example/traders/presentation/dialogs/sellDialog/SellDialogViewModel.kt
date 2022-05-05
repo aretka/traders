@@ -4,7 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.traders.BaseViewModel
+import com.example.traders.presentation.BaseViewModel
 import com.example.traders.database.Crypto
 import com.example.traders.database.FixedCryptoList
 import com.example.traders.database.TransactionType
@@ -12,7 +12,7 @@ import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.presentation.dialogs.DialogValidation
 import com.example.traders.presentation.dialogs.DialogValidationMessage
 import com.example.traders.presentation.dialogs.validateChars
-import com.example.traders.profile.portfolio.TransactionInfo
+import com.example.traders.presentation.profile.portfolio.TransactionInfo
 import com.example.traders.utils.roundNum
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory

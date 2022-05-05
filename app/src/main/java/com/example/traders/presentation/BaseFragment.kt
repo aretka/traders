@@ -1,4 +1,4 @@
-package com.example.traders
+package com.example.traders.presentation
 
 import android.os.Bundle
 import android.util.Log

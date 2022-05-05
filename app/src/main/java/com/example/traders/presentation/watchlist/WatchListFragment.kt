@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.example.traders.BaseFragment
+import com.example.traders.presentation.BaseFragment
 import com.example.traders.R
 import com.example.traders.database.SortOrder
 import com.example.traders.databinding.FragmentWatchListBinding

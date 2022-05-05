@@ -1,16 +1,16 @@
-package com.example.traders.profile.history
+package com.example.traders.presentation.profile.history
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.example.traders.BaseFragment
+import com.example.traders.presentation.BaseFragment
 import com.example.traders.database.Transaction
 import com.example.traders.databinding.FragmentHistoryBinding
 import com.example.traders.presentation.dialogs.confirmationDialog.ConfirmationDialogFragment
 import com.example.traders.presentation.dialogs.confirmationDialog.ConfirmationType
-import com.example.traders.profile.adapters.HistoryListAdapter
+import com.example.traders.presentation.profile.adapters.HistoryListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
