@@ -7,6 +7,7 @@ import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.network.models.binance24HourData.Binance24DataItem
 import com.example.traders.network.models.binance24hTickerData.PriceTickerData
 import com.example.traders.network.webSocket.BinanceWSClient
+import com.example.traders.presentation.watchlist.WatchListViewModel
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi

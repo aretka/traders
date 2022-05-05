@@ -1,4 +1,4 @@
-package com.example.traders.watchlist
+package com.example.traders.presentation.watchlist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,6 @@ import com.example.traders.BaseFragment
 import com.example.traders.R
 import com.example.traders.database.SortOrder
 import com.example.traders.databinding.FragmentWatchListBinding
-import com.example.traders.presentation.watchlist.WatchListState
 import com.example.traders.presentation.watchlist.adapters.SingleCryptoListener
 import com.example.traders.presentation.watchlist.adapters.WatchListAdapter
 import dagger.hilt.android.AndroidEntryPoint

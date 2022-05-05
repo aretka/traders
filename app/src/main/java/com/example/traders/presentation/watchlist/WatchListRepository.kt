@@ -1,4 +1,4 @@
-package com.example.traders.watchlist
+package com.example.traders.presentation.watchlist
 
 import com.example.traders.database.CryptoDatabaseDao
 import com.example.traders.database.FavouriteCrypto
