@@ -1,4 +1,4 @@
-package com.example.traders.singleCryptoScreen
+package com.example.traders.presentation.cryptoDetailsScreen
 
 sealed class CryptoItemEvents {
     object AddToFavourites : CryptoItemEvents()

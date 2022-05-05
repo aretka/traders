@@ -1,4 +1,4 @@
-package com.example.traders.singleCryptoScreen.descriptionTab
+package com.example.traders.presentation.cryptoDetailsScreen.descriptionTab
 
 import androidx.lifecycle.viewModelScope
 import com.example.traders.BaseViewModel

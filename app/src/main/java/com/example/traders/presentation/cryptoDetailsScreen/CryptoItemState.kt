@@ -1,4 +1,4 @@
-package com.example.traders.singleCryptoScreen
+package com.example.traders.presentation.cryptoDetailsScreen
 
 data class CryptoItemState(
     val isBtnActive: Boolean = true,

@@ -1,4 +1,4 @@
-package com.example.traders.singleCryptoScreen.priceStatisticsTab
+package com.example.traders.presentation.cryptoDetailsScreen.priceStatisticsTab
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -7,9 +7,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.traders.database.FixedCryptoList
-import com.example.traders.singleCryptoScreen.chartTab.CryptoChartFragment
-import com.example.traders.singleCryptoScreen.descriptionTab.CryptoDescriptionFragment
-import com.example.traders.singleCryptoScreen.priceStatisticsTab.CryptoPriceStatisticsFragment
+import com.example.traders.presentation.cryptoDetailsScreen.chartTab.CryptoChartFragment
+import com.example.traders.presentation.cryptoDetailsScreen.descriptionTab.CryptoDescriptionFragment
+import com.example.traders.presentation.cryptoDetailsScreen.priceStatisticsTab.CryptoPriceStatisticsFragment
 
 class CryptoViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, val crypto: FixedCryptoList) :
     FragmentStateAdapter(fragmentManager, lifecycle) {

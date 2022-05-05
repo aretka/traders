@@ -1,4 +1,4 @@
-package com.example.traders.singleCryptoScreen.priceStatisticsTab
+package com.example.traders.presentation.cryptoDetailsScreen.priceStatisticsTab
 
 import androidx.lifecycle.*
 import com.example.traders.BaseViewModel

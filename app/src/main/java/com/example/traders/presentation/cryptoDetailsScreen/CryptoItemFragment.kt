@@ -1,4 +1,4 @@
-package com.example.traders.singleCryptoScreen
+package com.example.traders.presentation.cryptoDetailsScreen
 
 import android.os.Bundle
 import android.view.LayoutInflater

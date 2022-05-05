@@ -1,4 +1,4 @@
-package com.example.traders.singleCryptoScreen.chartTab
+package com.example.traders.presentation.cryptoDetailsScreen.chartTab
 
 import com.example.traders.network.models.binance24hTickerData.PriceTickerData
 

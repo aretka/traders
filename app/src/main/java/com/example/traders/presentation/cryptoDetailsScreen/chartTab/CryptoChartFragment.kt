@@ -1,4 +1,4 @@
-package com.example.traders.singleCryptoScreen.chartTab
+package com.example.traders.presentation.cryptoDetailsScreen.chartTab
 
 import android.os.Build
 import android.os.Bundle
@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.traders.*
 import com.example.traders.presentation.customviews.CandleChart
 import com.example.traders.databinding.FragmentCryptoItemChartBinding
-import com.example.traders.dialogs.buyDialog.BuyDialogFragment
+import com.example.traders.presentation.dialogs.buyDialog.BuyDialogFragment
 import com.example.traders.dialogs.confirmationDialog.ConfirmationDialogFragment
 import com.example.traders.dialogs.confirmationDialog.ConfirmationType
 import com.example.traders.dialogs.sellDialog.SellDialogFragment

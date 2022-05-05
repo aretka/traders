@@ -1,4 +1,4 @@
-package com.example.traders.dialogs.buyDialog
+package com.example.traders.presentation.dialogs.buyDialog
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -47,17 +47,19 @@ class BuyDialogViewModel @AssistedInject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun onBuyButtonClicked() {
         launch {
-            _events.tryEmit(BuyDialogEvent.Dismiss(
-                TransactionInfo(
-                    symbol = crypto.name,
-                    cryptoAmount = _state.value.cryptoToGet.toString(),
-                    usdAmount = _state.value.inputVal.toString(),
-                    lastPrice = lastPrice.toString(),
-                    transactionType = TransactionType.PURCHASE,
-                    newUsdBalance = _state.value.usdLeft.toString(),
-                    newCryptoBalance = getNewCryptoBalance()
+            _events.tryEmit(
+                BuyDialogEvent.Dismiss(
+                    TransactionInfo(
+                        symbol = crypto.name,
+                        cryptoAmount = _state.value.cryptoToGet.toString(),
+                        usdAmount = _state.value.inputVal.toString(),
+                        lastPrice = lastPrice.toString(),
+                        transactionType = TransactionType.PURCHASE,
+                        newUsdBalance = _state.value.usdLeft.toString(),
+                        newCryptoBalance = getNewCryptoBalance()
+                    )
                 )
-            ))
+            )
         }
     }
 

@@ -8,6 +8,9 @@ import com.example.traders.database.FixedCryptoList
 import com.example.traders.network.models.binance24hTickerData.PriceTickerData
 import com.example.traders.network.models.cryptoChartData.CryptoChartData
 import com.example.traders.network.webSocket.BinanceWSClient
+import com.example.traders.presentation.cryptoDetailsScreen.chartTab.BtnId
+import com.example.traders.presentation.cryptoDetailsScreen.chartTab.ChartState
+import com.example.traders.presentation.cryptoDetailsScreen.chartTab.CryptoChartViewModel
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
