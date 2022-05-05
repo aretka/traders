@@ -4,8 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.example.traders.TestDispatcherRule
 import com.example.traders.network.repository.CryptoRepository
-import com.example.traders.watchlist.cryptoData.binance24HourData.Binance24DataItem
-import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
+import com.example.traders.network.models.binance24HourData.Binance24DataItem
+import com.example.traders.network.models.binance24hTickerData.PriceTickerData
 import com.example.traders.network.webSocket.BinanceWSClient
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever

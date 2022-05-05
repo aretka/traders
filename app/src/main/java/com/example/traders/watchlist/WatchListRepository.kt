@@ -7,10 +7,10 @@ import com.example.traders.database.SortOrder
 import com.example.traders.network.BinanceApi
 import com.example.traders.network.repository.enumContains
 import com.example.traders.utils.MappingUtils.enumConstantNames
-import com.example.traders.watchlist.cryptoData.FixedCryptoList
-import com.example.traders.watchlist.cryptoData.binance24HourData.Binance24DataItem
-import com.example.traders.watchlist.cryptoData.binance24HourData.BinanceDataItem
-import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
+import com.example.traders.database.FixedCryptoList
+import com.example.traders.network.models.binance24HourData.Binance24DataItem
+import com.example.traders.network.models.binance24HourData.BinanceDataItem
+import com.example.traders.network.models.binance24hTickerData.PriceTickerData
 import com.example.traders.network.webSocket.BinanceWSClient
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject

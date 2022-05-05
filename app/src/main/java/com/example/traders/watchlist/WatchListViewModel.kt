@@ -2,9 +2,9 @@ package com.example.traders.watchlist
 
 import com.example.traders.BaseViewModel
 import com.example.traders.database.SortOrder
+import com.example.traders.presentation.watchlist.WatchListState
 import com.example.traders.utils.exhaustive
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject

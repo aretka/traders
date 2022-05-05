@@ -1,6 +1,6 @@
 package com.example.traders.network.webSocket
 
-import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
+import com.example.traders.network.models.binance24hTickerData.PriceTickerData
 import kotlinx.coroutines.flow.SharedFlow
 
 interface BinanceWSClient {

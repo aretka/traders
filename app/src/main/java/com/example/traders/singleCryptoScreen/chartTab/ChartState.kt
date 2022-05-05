@@ -1,6 +1,6 @@
 package com.example.traders.singleCryptoScreen.chartTab
 
-import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
+import com.example.traders.network.models.binance24hTickerData.PriceTickerData
 
 data class ChartState(
     val chartDataFor90d: List<List<Float>>? = null,

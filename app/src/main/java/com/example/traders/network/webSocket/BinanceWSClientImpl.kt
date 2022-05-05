@@ -5,9 +5,9 @@ import android.util.Log
 import com.example.traders.utils.MappingUtils
 import com.example.traders.utils.MappingUtils.enumConstantNames
 import com.example.traders.utils.returnTickerWithRoundedPrice
-import com.example.traders.watchlist.cryptoData.FixedCryptoList
-import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTicker
-import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
+import com.example.traders.database.FixedCryptoList
+import com.example.traders.network.models.binance24hTickerData.PriceTicker
+import com.example.traders.network.models.binance24hTickerData.PriceTickerData
 import com.google.gson.Gson
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
-import kotlin.reflect.KClass
 
 class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
 

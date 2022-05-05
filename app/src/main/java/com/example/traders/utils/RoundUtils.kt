@@ -1,7 +1,7 @@
 package com.example.traders.utils
 
-import com.example.traders.watchlist.cryptoData.FixedCryptoList
-import com.example.traders.watchlist.cryptoData.binance24hTickerData.PriceTickerData
+import com.example.traders.database.FixedCryptoList
+import com.example.traders.network.models.binance24hTickerData.PriceTickerData
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat

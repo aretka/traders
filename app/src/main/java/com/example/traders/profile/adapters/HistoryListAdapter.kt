@@ -13,7 +13,7 @@ import com.example.traders.database.TransactionType
 import com.example.traders.databinding.ListTransactionCryptoBinding
 import com.example.traders.databinding.ListTransactionHeaderBinding
 import com.example.traders.databinding.ListTransactionUsdBinding
-import com.example.traders.watchlist.cryptoData.FixedCryptoList
+import com.example.traders.database.FixedCryptoList
 
 class HistoryListAdapter(val clearHistoryListener: () -> Unit) :
     ListAdapter<HistoryItem, RecyclerView.ViewHolder>(CryptoDiffCallback()) {

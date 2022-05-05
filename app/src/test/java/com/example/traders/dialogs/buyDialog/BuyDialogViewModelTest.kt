@@ -7,7 +7,7 @@ import com.example.traders.dialogs.DialogValidation
 import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.utils.roundNum
 import com.example.traders.TestDispatcherRule
-import com.example.traders.watchlist.cryptoData.FixedCryptoList
+import com.example.traders.database.FixedCryptoList
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi

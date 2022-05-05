@@ -12,12 +12,11 @@ import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.traders.*
 import com.example.traders.databinding.FragmentCryptoItemPriceStatisticsBinding
-import com.example.traders.dialogs.buyDialog.BuyDialogViewModel
 import com.example.traders.utils.roundAndFormatDouble
 import com.example.traders.utils.setPriceChangeText
 import com.example.traders.utils.setPriceChangeTextColor
-import com.example.traders.watchlist.cryptoData.FixedCryptoList
-import com.example.traders.watchlist.cryptoData.cryptoStatsData.*
+import com.example.traders.database.FixedCryptoList
+import com.example.traders.network.models.cryptoStatsData.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

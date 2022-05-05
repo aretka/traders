@@ -16,7 +16,7 @@ import com.example.traders.dialogs.confirmationDialog.ConfirmationType
 import com.example.traders.dialogs.depositDialog.DepositDialogFragment
 import com.example.traders.profile.ProfileFragmentDirections
 import com.example.traders.profile.adapters.PortfolioListAdapter
-import com.example.traders.watchlist.adapters.SingleCryptoListener
+import com.example.traders.presentation.watchlist.adapters.SingleCryptoListener
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet

@@ -10,8 +10,8 @@ import com.example.traders.R
 import com.example.traders.databinding.ListItemCryptoBinding
 import com.example.traders.databinding.ListPortfolioHeaderBinding
 import com.example.traders.profile.cryptoData.CryptoInUsd
-import com.example.traders.watchlist.adapters.SingleCryptoListener
-import com.example.traders.watchlist.cryptoData.FixedCryptoList
+import com.example.traders.presentation.watchlist.adapters.SingleCryptoListener
+import com.example.traders.database.FixedCryptoList
 
 class PortfolioListAdapter(private val singleCryptoListener: SingleCryptoListener) :
     ListAdapter<DataItem, RecyclerView.ViewHolder>(CryptoDiffCallback()) {

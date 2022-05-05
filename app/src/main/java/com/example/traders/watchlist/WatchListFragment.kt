@@ -10,8 +10,9 @@ import com.example.traders.BaseFragment
 import com.example.traders.R
 import com.example.traders.database.SortOrder
 import com.example.traders.databinding.FragmentWatchListBinding
-import com.example.traders.watchlist.adapters.SingleCryptoListener
-import com.example.traders.watchlist.adapters.WatchListAdapter
+import com.example.traders.presentation.watchlist.WatchListState
+import com.example.traders.presentation.watchlist.adapters.SingleCryptoListener
+import com.example.traders.presentation.watchlist.adapters.WatchListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
