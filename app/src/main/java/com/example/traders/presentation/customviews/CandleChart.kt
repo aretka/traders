@@ -1,4 +1,4 @@
-package com.example.traders.customviews
+package com.example.traders.presentation.customviews
 
 import android.content.Context
 import android.graphics.Canvas

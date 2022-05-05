@@ -13,7 +13,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.traders.*
-import com.example.traders.customviews.CandleChart
+import com.example.traders.presentation.customviews.CandleChart
 import com.example.traders.databinding.FragmentCryptoItemChartBinding
 import com.example.traders.dialogs.buyDialog.BuyDialogFragment
 import com.example.traders.dialogs.confirmationDialog.ConfirmationDialogFragment
