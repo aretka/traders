@@ -44,7 +44,7 @@ class CryptoItemViewModel @Inject constructor(
             updateFavouritesInDb(symbol)
             _state.value = _state.value.copy(isFavourite = !_state.value.isFavourite)
             delay(1500L)
-            _state.value = _state.value.copy(isBtnActive = false)
+            _state.value = _state.value.copy(isBtnActive = true)
         }
     }
 
