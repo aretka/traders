@@ -1,6 +1,7 @@
-package com.example.traders.network
+package com.example.traders.di
 
 import com.example.traders.debug.FlipperInitializer.addFlipperNetworkInterceptor
+import com.example.traders.network.MessariApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

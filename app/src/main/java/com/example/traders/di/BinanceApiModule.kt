@@ -1,6 +1,8 @@
-package com.example.traders.network
+package com.example.traders.di
 
 import com.example.traders.debug.FlipperInitializer.addFlipperNetworkInterceptor
+import com.example.traders.network.AuthenticationInterceptor
+import com.example.traders.network.BinanceApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
