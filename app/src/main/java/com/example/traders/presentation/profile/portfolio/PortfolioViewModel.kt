@@ -38,12 +38,6 @@ class PortfolioViewModel @Inject constructor(
         _state.value = _state.value.copy(chartReadyForUpdate = false)
     }
 
-    fun deleteAllDbRows() {
-        launch {
-            repository.deleteAllCryptoFromDb()
-        }
-    }
-
     fun updatePortfolioState() {
         if (listNotEmptyAndNotEqualsToPrevList()) {
             _state.value = _state.value.copy(prevList = livePortfolioList.value ?: emptyList())

@@ -44,12 +44,7 @@ class CryptoItemFragment : BaseFragment() {
         with(viewModel) {
             lifecycleScope.launchWhenStarted {
                 state.collect { state ->
-                    binding.favouriteBtn.isEnabled = state.isBtnActive
-                    if (viewModel.state.value.isFavourite) {
-                        binding.favouriteBtn.setImageResource(R.drawable.ic_star_active)
-                    } else {
-                        binding.favouriteBtn.setImageResource(R.drawable.ic_star_inactive)
-                    }
+                    binding.updateUI(state)
                 }
             }
             lifecycleScope.launchWhenStarted {
@@ -101,4 +96,14 @@ class CryptoItemFragment : BaseFragment() {
             }
         }.attach()
     }
+
+    private fun FragmentCryptoItemBinding.updateUI(state: CryptoItemState) {
+        favouriteBtn.isEnabled = state.isBtnActive
+        if (state.isFavourite) {
+            favouriteBtn.setImageResource(R.drawable.ic_star_active)
+        } else {
+            favouriteBtn.setImageResource(R.drawable.ic_star_inactive)
+        }
+    }
 }
+

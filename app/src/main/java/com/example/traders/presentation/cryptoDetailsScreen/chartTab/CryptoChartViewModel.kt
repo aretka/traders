@@ -1,6 +1,7 @@
 package com.example.traders.presentation.cryptoDetailsScreen.chartTab
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -8,6 +9,7 @@ import com.example.traders.presentation.BaseViewModel
 import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.database.FixedCryptoList
 import com.example.traders.network.webSocket.BinanceWSClient
+import com.github.mikephil.charting.data.Entry
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -44,7 +46,7 @@ class CryptoChartViewModel @AssistedInject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun fetchCryptoChartData(candleType: CandleType) {
+    private fun fetchCryptoChartData(candleType: CandleType) {
         val startDate = getStartDate(candleType.numDays)
 
         launch {
@@ -52,10 +54,21 @@ class CryptoChartViewModel @AssistedInject constructor(
                 ?: return@launch
 
             when (candleType) {
-                CandleType.DAILY -> _chartState.value =
-                    _chartState.value.copy(chartDataFor90d = response.data.values)
-                CandleType.WEEKLY -> _chartState.value =
-                    _chartState.value.copy(chartDataFor360d = response.data.values)
+                CandleType.DAILY -> {
+//                    Extract close values to a single dimension list
+                    val lineChartData = response.data.values.map { it[it.size-2]  }
+                    _chartState.value = _chartState.value.copy(
+                        chartDataFor90d = response.data.values,
+                        lineChartData90d = lineChartData
+                    )
+                }
+                CandleType.WEEKLY -> {
+                    val lineChartData = response.data.values.map { it[it.size-2] }
+                    _chartState.value = _chartState.value.copy(
+                        chartDataFor360d = response.data.values,
+                        lineChartData360d = lineChartData
+                    )
+                }
             }
 
             if (chartDataIsFetched()) {

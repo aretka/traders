@@ -1,18 +1,20 @@
 package com.example.traders.presentation.customviews
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.PorterDuff
+import android.graphics.*
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewConfiguration
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import com.example.traders.R
 import com.example.traders.utils.roundAndFormatDouble
+import com.robinhood.spark.SparkView
+import java.util.*
 
-class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs) {
+class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs), ScrubListener {
     private var cryptoData: List<List<Float>> = emptyList()
     private var linePositions: MutableList<List<Float>>   = mutableListOf()
     private var candlePositions: MutableList<List<Float>> = mutableListOf()
@@ -32,6 +34,29 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private var minValPosition = 0f
     private var currentPricePosition = 0f
 
+    // scrubLine
+    val scrubLinePaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val scrubLinePath = Path()
+    // listeners
+    lateinit var scrubListener: OnScrubListener
+    lateinit var scrubGestureDetector: ScrubGestureDetector
+
+    init {
+        scrubLinePaint.style = Paint.Style.STROKE
+        scrubLinePaint.strokeWidth = 5f
+        scrubLinePaint.color = ResourcesCompat.getColor(getResources(), R.color.red, null)
+        scrubLinePaint.strokeCap = Paint.Cap.ROUND
+
+        val handler = Handler(Looper.getMainLooper())
+        val touchSlop = ViewConfiguration.get(context).scaledTouchSlop.toFloat()
+        scrubGestureDetector = ScrubGestureDetector(this, handler, touchSlop)
+        scrubGestureDetector.enabled = true
+        setOnTouchListener(scrubGestureDetector)
+    }
+
+    fun setScrubListener(listener: (obj: Object) -> Unit) {
+        scrubListener = OnScrubListener(listener)
+    }
 
     fun importListValues(list: List<List<Float>>) {
         //listof([volume, open, high, low, close], [], ..., [])
@@ -135,5 +160,28 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs) 
         canvas?.drawColor(Color.WHITE, PorterDuff.Mode.CLEAR)
         canvas?.drawColor(Color.WHITE)
         if(cryptoData.size > 0) drawCandles(canvas)
+    }
+
+//    interface OnScrubListener {
+//        fun onScrubbed()
+//    }
+    class OnScrubListener(private val clickListener: (value: Object) -> Unit) {
+        fun onScrubbed(value: Object) = clickListener(value)
+    }
+
+    override fun onScrubbed(x: Float, y: Float) {
+        if (adapter == null || adapter.getCount() == 0) return
+        if (scrubListener != null) {
+            parent.requestDisallowInterceptTouchEvent(true)
+            val index = SparkView.getNearestIndex(xPoints, x)
+            if (scrubListener != null) {
+                scrubListener.onScrubbed(adapter.getItem(index))
+            }
+        }
+
+    }
+
+    override fun onScrubEnded() {
+        TODO("Not yet implemented")
     }
 }
