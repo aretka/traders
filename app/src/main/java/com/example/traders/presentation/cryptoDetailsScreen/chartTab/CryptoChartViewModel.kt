@@ -50,22 +50,16 @@ class CryptoChartViewModel @AssistedInject constructor(
         val startDate = getStartDate(candleType.numDays)
 
         launch {
-//            val response = repository.getCryptoChartData(crypto.slug, startDate, candleType.candleInterval).body()
             val list = repository.getCryptoChartData(crypto.slug, startDate, candleType.candleInterval)
             when (candleType) {
                 CandleType.DAILY -> {
-//                    Extract close values to a single dimension list
-//                    val lineChartData = response.data.values.map { it[it.size-2]  }
                     _chartState.value = _chartState.value.copy(
                         chartDataFor90d = list,
-//                        lineChartData90d = lineChartData
                     )
                 }
                 CandleType.WEEKLY -> {
-//                    val lineChartData = response.data.values.map { it[it.size-2] }
                     _chartState.value = _chartState.value.copy(
                         chartDataFor360d = list,
-//                        lineChartData360d = lineChartData
                     )
                 }
             }

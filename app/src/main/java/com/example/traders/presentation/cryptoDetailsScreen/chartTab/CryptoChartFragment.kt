@@ -104,37 +104,21 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
         when (state.activeButtonId) {
             BtnId.MONTH1_BTN -> {
                 state.chartDataFor90d?.let {
-//                    val dataset = LineDataSet(state.lineChartData90d, "Line chart")
-//                    val data = LineData(arrayListOf<ILineDataSet>(dataset))
-//                    binding.lineChart.data = data
-//                    Log.e("ChartFragment", "updateChart: ${state.lineChartData90d}", )
-//                    lineChartAdapter.updateData(
-//                        state.lineChartData90d.subList(
-//                            it.size - 30,
-//                            it.size
-//                        )
-//                    )
-//                    binding.lineChart.adapter = lineChartAdapter
-//                    binding.lineChart.invalidate()
-//                    importValuesToChart(binding.candleChart, it.subList(it.size - 30, it.size))
                     binding.candleChart.importListValues(it.subList(it.size - 30, it.size))
                 }
             }
             BtnId.MONTH3_BTN -> {
                 state.chartDataFor90d?.let {
-//                    importValuesToChart(binding.candleChart, it)
                     binding.candleChart.importListValues(it)
                 }
             }
             BtnId.MONTH6_BTN -> {
                 state.chartDataFor360d?.let {
-//                    importValuesToChart(binding.candleChart, it.subList(it.size - 25, it.size))
                     binding.candleChart.importListValues(it.subList(it.size - 25, it.size))
                 }
             }
             BtnId.MONTH12_BTN -> {
                 state.chartDataFor360d?.let {
-//                    importValuesToChart(binding.candleChart, it)
                     binding.candleChart.importListValues(it)
                 }
             }
@@ -157,10 +141,6 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
             BtnId.MONTH6_BTN -> setActiveButtonStyle(binding.month6Btn)
             BtnId.MONTH12_BTN -> setActiveButtonStyle(binding.month12Btn)
         }
-    }
-
-    private fun importValuesToChart(candleChart: CandleChart, values: List<List<Float>>) {
-//        candleChart.importListValues(values)
     }
 
     private fun setActiveButtonStyle(chartBtn: Button) {
