@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.traders.presentation.BaseViewModel
 import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.database.FixedCryptoList
+import com.example.traders.network.models.cryptoChartData.CryptoChart
 import com.example.traders.network.webSocket.BinanceWSClient
 import com.github.mikephil.charting.data.Entry
 import dagger.assisted.Assisted
@@ -16,6 +17,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -76,11 +78,24 @@ class CryptoChartViewModel @AssistedInject constructor(
 
     fun collectBinanceTickerData() {
         launch {
-            webSocketClient.state.collect {
-                if (it.symbol.replace("USDT", "") == crypto.name.uppercase()) {
-                    _chartState.value = _chartState.value.copy(tickerData = it)
+            webSocketClient.state.collect { ticker ->
+                if (ticker.symbol.replace("USDT", "") == crypto.name.uppercase()) {
+                    if(!_chartState.value.showChartPrice) {
+                        _chartState.value = _chartState.value.copy(tickerData = ticker.toCryptoChart())
+                    }
                 }
             }
+        }
+    }
+
+    fun onChartLongPressClick(crypto: CryptoChart?) {
+        if(crypto != null) {
+            _chartState.update { it.copy(
+                tickerData = crypto,
+                showChartPrice = true
+            ) }
+        } else {
+            _chartState.update { it.copy(showChartPrice = false) }
         }
     }
 

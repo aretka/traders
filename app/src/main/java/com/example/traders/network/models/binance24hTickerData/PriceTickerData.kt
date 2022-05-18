@@ -1,5 +1,6 @@
 package com.example.traders.network.models.binance24hTickerData
 
+import com.example.traders.network.models.cryptoChartData.CryptoChart
 import com.google.gson.annotations.SerializedName
 
 data class PriceTickerData(
@@ -25,4 +26,12 @@ data class PriceTickerData(
     @SerializedName("P")
     val priceChangePercent: String = "",
 
-)
+) {
+    fun toCryptoChart(): CryptoChart {
+        return CryptoChart(
+            close = last.toFloat(),
+            priceChange = priceChange.toFloat(),
+            percentPriceChange = priceChangePercent.toFloat()
+        )
+    }
+}

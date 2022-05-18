@@ -34,7 +34,9 @@ class CryptoRepository @Inject constructor(
                 open = it[1],
                 high = it[2],
                 low = it[3],
-                close = it[4]
+                close = it[4],
+                priceChange = it[1] - it[4],
+                percentPriceChange = 100*(it[4] - it[1])/it[1]
             ) } ?: emptyList()
         } else {
             emptyList()

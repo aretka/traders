@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="@string/live_price"
+            android:text="@string/last_price"
             android:textSize="@dimen/extra_small_text_size"
             android:textStyle="italic" />
 
