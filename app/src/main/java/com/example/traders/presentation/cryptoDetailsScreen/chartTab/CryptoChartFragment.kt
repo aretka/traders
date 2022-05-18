@@ -108,15 +108,15 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
 //                    val data = LineData(arrayListOf<ILineDataSet>(dataset))
 //                    binding.lineChart.data = data
 //                    Log.e("ChartFragment", "updateChart: ${state.lineChartData90d}", )
-                    lineChartAdapter.updateData(
-                        state.lineChartData90d.subList(
-                            it.size - 30,
-                            it.size
-                        )
-                    )
-                    binding.lineChart.adapter = lineChartAdapter
+//                    lineChartAdapter.updateData(
+//                        state.lineChartData90d.subList(
+//                            it.size - 30,
+//                            it.size
+//                        )
+//                    )
+//                    binding.lineChart.adapter = lineChartAdapter
 //                    binding.lineChart.invalidate()
-//                    importValuesToChart(binding.candleChart, it.subList(it.size - 30, it.size))
+                    importValuesToChart(binding.candleChart, it.subList(it.size - 30, it.size))
                 }
             }
             BtnId.MONTH3_BTN -> {
@@ -178,7 +178,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
         month12Btn.setOnClickListener { viewModel.onChartBtnSelected(BtnId.MONTH12_BTN) }
         buyBtn.setOnClickListener { showBuyDialog() }
         sellBtn.setOnClickListener { showSellDialog() }
-        lineChartAdapter = LineChartAdapter(emptyList())
+//        lineChartAdapter = LineChartAdapter(emptyList())
     }
 
     private fun FragmentCryptoItemChartBinding.updateBuySellBtnAccessibility(state: ChartState) {

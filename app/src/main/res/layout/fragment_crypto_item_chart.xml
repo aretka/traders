@@ -62,19 +62,18 @@
 
 
     <com.example.traders.presentation.customviews.CandleChart
-        android:visibility="gone"
         android:id="@+id/candle_chart"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:background="@color/white" />
 
-    <com.robinhood.spark.SparkView
-        android:id="@+id/line_chart"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@color/white"
-        app:spark_lineColor="@color/green"
-        />
+<!--    <com.robinhood.spark.SparkView-->
+<!--        android:id="@+id/line_chart"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="300dp"-->
+<!--        android:background="@color/white"-->
+<!--        app:spark_lineColor="@color/green"-->
+<!--        />-->
 
 <!--    <com.github.mikephil.charting.charts.LineChart-->
 <!--        android:id="@+id/line_chart"-->
