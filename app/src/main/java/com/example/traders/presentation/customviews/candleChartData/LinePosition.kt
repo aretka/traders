@@ -1,4 +1,4 @@
-package com.example.traders.presentation.customviews
+package com.example.traders.presentation.customviews.candleChartData
 
 data class LinePosition(
     val yTop: Float,

@@ -3,6 +3,9 @@ package com.example.traders.network.repository
 import com.example.traders.database.*
 import com.example.traders.network.BinanceApi
 import com.example.traders.network.MessariApi
+import com.example.traders.network.models.cryptoChartData.CryptoChart
+import com.example.traders.network.models.cryptoChartData.CryptoChartData
+import retrofit2.Response
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,7 +24,22 @@ class CryptoRepository @Inject constructor(
         slug: String,
         afterDate: String,
         interval: String
-    ) = api.getCryptoChartData(slug, afterDate, interval)
+    ) : List<CryptoChart> {
+        val response = api.getCryptoChartData(slug, afterDate, interval)
+        return if(response.body() != null) {
+            response.body()?.data?.values?.map {
+                // it = [volume, open, high, low, close]
+                CryptoChart(
+                volume = it[0],
+                open = it[1],
+                high = it[2],
+                low = it[3],
+                close = it[4]
+            ) } ?: emptyList()
+        } else {
+            emptyList()
+        }
+    }
 
     suspend fun getCryptoDescriptionData(id: String) = api.getCryptoDescriptionData(id)
 
