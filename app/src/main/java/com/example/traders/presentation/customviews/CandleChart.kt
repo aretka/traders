@@ -51,7 +51,7 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
         setScrubGestureDetector()
     }
 
-    fun setScrubListener(listener: () -> Unit) {
+    fun setScrubListener(listener: (CryptoChart?) -> Unit) {
         scrubListener = OnScrubListener(listener)
     }
 
@@ -184,12 +184,8 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
         }
     }
 
-//    override fun setOnClickListener(l: OnClickListener?) {
-//        Toast.makeText(context, "this works", Toast.LENGTH_SHORT).show()
-//    }
-
-    class OnScrubListener(private val clickListener: () -> Unit) {
-        fun onScrubbed() = clickListener()
+    class OnScrubListener(private val clickListener: (CryptoChart?) -> Unit) {
+        fun onScrubbed(cryptoChart: CryptoChart?) = clickListener(cryptoChart)
     }
 
     private fun setScrubLine(x: Float) {
@@ -229,13 +225,14 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
         val xPoints = linePositions.map { it.x }
         val index = getNearestIndex(xPoints, x)
         if (scrubListener != null) {
-            scrubListener!!.onScrubbed()
+            scrubListener!!.onScrubbed(cryptoData[index])
         }
         setScrubLine(xPoints[index])
     }
 
     override fun onScrubEnded() {
         scrubLinePath.reset()
+        scrubListener?.onScrubbed(null)
         invalidate()
     }
 

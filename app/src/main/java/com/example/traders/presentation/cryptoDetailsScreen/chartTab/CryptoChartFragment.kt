@@ -2,6 +2,7 @@ package com.example.traders.presentation.cryptoDetailsScreen.chartTab
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.example.traders.R
 import com.example.traders.database.FixedCryptoList
 import com.example.traders.databinding.FragmentCryptoItemChartBinding
 import com.example.traders.network.models.binance24hTickerData.PriceTickerData
+import com.example.traders.network.models.cryptoChartData.CryptoChart
 import com.example.traders.presentation.BaseFragment
 import com.example.traders.presentation.customviews.CandleChart
 import com.example.traders.presentation.dialogs.buyDialog.BuyDialogFragment
@@ -37,7 +39,6 @@ import javax.inject.Inject
 class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
     private lateinit var binding: FragmentCryptoItemChartBinding
     private lateinit var buttonList: List<AppCompatButton>
-    private lateinit var lineChartAdapter: LineChartAdapter
 
     @Inject
     lateinit var viewModelAssistedFactory: CryptoChartViewModel.Factory
@@ -88,13 +89,13 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
         confirmationDialog.show(parentFragmentManager, "buy_sell_confirmation")
     }
 
-    private fun FragmentCryptoItemChartBinding.setHeaderPrices(priceTicker: PriceTickerData?) {
+    private fun FragmentCryptoItemChartBinding.setHeaderPrices(priceTicker: CryptoChart?) {
         priceTicker?.let {
             livePriceText.text =
-                "$ " + roundAndFormatDouble(it.last.toDouble(), crypto.priceToRound)
+                "$ " + roundAndFormatDouble(it.close.toDouble(), crypto.priceToRound)
             priceChangeText.setPriceChangeText(
                 roundAndFormatDouble(it.priceChange.toDouble(), crypto.priceToRound),
-                roundAndFormatDouble(it.priceChangePercent.toDouble()),
+                roundAndFormatDouble(it.percentPriceChange.toDouble()),
             )
             priceChangeText.setPriceChangeTextColor()
         }
@@ -162,7 +163,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
         month12Btn.setOnClickListener { viewModel.onChartBtnSelected(BtnId.MONTH12_BTN) }
         buyBtn.setOnClickListener { showBuyDialog() }
         sellBtn.setOnClickListener { showSellDialog() }
-//        lineChartAdapter = LineChartAdapter(emptyList())
+        candleChart.setScrubListener { viewModel.onChartLongPressClick(it) }
     }
 
     private fun FragmentCryptoItemChartBinding.updateBuySellBtnAccessibility(state: ChartState) {
@@ -177,7 +178,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
 
     private fun showSellDialog() {
         val newSellFragment = SellDialogFragment(
-            lastPrice = BigDecimal(viewModel.chartState.value.tickerData?.last),
+            lastPrice = BigDecimal(viewModel.chartState.value.tickerData?.close.toString()),
             crypto = crypto
         )
         newSellFragment.show(parentFragmentManager, "sell_dialog")
@@ -185,7 +186,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
 
     private fun showBuyDialog() {
         val newBuyFragment = BuyDialogFragment(
-            lastPrice = BigDecimal(viewModel.chartState.value.tickerData?.last ?: "0"),
+            lastPrice = BigDecimal(viewModel.chartState.value.tickerData?.close.toString()),
             crypto = crypto
         )
         newBuyFragment.show(parentFragmentManager, "buy_dialog")

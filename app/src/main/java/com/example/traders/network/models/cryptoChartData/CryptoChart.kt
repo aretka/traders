@@ -1,9 +1,11 @@
 package com.example.traders.network.models.cryptoChartData
 
 data class CryptoChart(
-    val volume: Float,
-    val open: Float,
-    val high: Float,
-    val low: Float,
-    val close: Float
+    val volume: Float = 0f,
+    val open: Float = 0f,
+    val high: Float = 0f,
+    val low: Float = 0f,
+    val close: Float = 0f,
+    val priceChange: Float,
+    val percentPriceChange: Float,
 )
