@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/price_and_change_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:background="@color/white"
         android:paddingStart="20dp"
         android:paddingTop="20dp"
@@ -66,9 +65,21 @@
         android:id="@+id/candle_chart"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/price_and_change_container" />
+        android:background="@color/white" />
+
+<!--    <com.robinhood.spark.SparkView-->
+<!--        android:id="@+id/line_chart"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="300dp"-->
+<!--        android:background="@color/white"-->
+<!--        app:spark_lineColor="@color/green"-->
+<!--        />-->
+
+<!--    <com.github.mikephil.charting.charts.LineChart-->
+<!--        android:id="@+id/line_chart"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="300dp"-->
+<!--        android:background="@color/white"/>-->
 
     <LinearLayout
         android:id="@+id/chart_btns_container"
@@ -78,9 +89,7 @@
         android:paddingBottom="20dp"
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
-        android:weightSum="4"
-        app:layout_constraintTop_toBottomOf="@+id/candle_chart"
-        app:layout_constraintStart_toStartOf="parent">
+        android:weightSum="4">
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/month1_btn"
             android:background="@drawable/active_chart_btn"
@@ -108,9 +117,7 @@
         android:layout_width="match_parent"
         android:weightSum="2"
         android:paddingStart="30dp"
-        android:paddingEnd="30dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chart_btns_container">
+        android:paddingEnd="30dp">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buy_btn"
@@ -138,4 +145,4 @@
     </LinearLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
