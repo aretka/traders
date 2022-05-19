@@ -16,6 +16,7 @@ import com.example.traders.presentation.customviews.candleChartData.LinePosition
 import com.example.traders.utils.roundAndFormatDouble
 import java.util.Collections.binarySearch
 import kotlin.math.abs
+import kotlin.properties.Delegates
 
 class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs), ScrubListener {
     private var cryptoData: List<CryptoChart> = emptyList()
@@ -36,6 +37,7 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
     private var maxValPosition = 0f
     private var minValPosition = 0f
     private var currentPricePosition = 0f
+    private var digitsRounded by Delegates.notNull<Int>()
 
     // scrubLine
     val scrubLinePaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -53,6 +55,10 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
 
     fun setScrubListener(listener: (CryptoChart?) -> Unit) {
         scrubListener = OnScrubListener(listener)
+    }
+
+    fun addRoundNumber(digitsRounded: Int) {
+        this.digitsRounded = digitsRounded
     }
 
     fun importListValues(list: List<CryptoChart>) {
@@ -152,7 +158,6 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
 
     private fun drawCandles( canvas: Canvas? ) {
         if(cryptoData.size > 0) {
-            Log.e("tag", "drawCandles", )
             for(i in 0..linePositions.size - 1) {
                 // height is compared inversely duo to top position of height is 0
                 if(candlePositions[i].candleClose < candlePositions[i].candleOpen) {
@@ -168,19 +173,26 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
                 if(linePositions[i].yTop == maxValPosition){
                     canvas?.drawLine(linePositions[i].x,linePositions[i].yTop, mWidth, linePositions[i].yTop, mGreenLinePaint)
                     mTextPaint.color = ResourcesCompat.getColor(getResources(), R.color.green, null);
-                    canvas?.drawText(roundAndFormatDouble(cryptoData[i].high.toDouble()), mWidth - 115F, linePositions[i].yTop - 5F, mTextPaint)
+                    canvas?.drawText(roundAndFormatDouble(cryptoData[i].high.toDouble(), digitsRounded), mWidth - 115F, linePositions[i].yTop - 5F, mTextPaint)
                 }
                 if(linePositions[i].yBot == minValPosition) {
                     canvas?.drawLine(linePositions[i].x,linePositions[i].yBot, mWidth, linePositions[i].yBot, mRedLinePaint)
                     mTextPaint.color = ResourcesCompat.getColor(getResources(), R.color.red, null);
-                    canvas?.drawText(roundAndFormatDouble(cryptoData[i].low.toDouble()), mWidth - 115F, linePositions[i].yBot - 5F, mTextPaint)
+                    canvas?.drawText(roundAndFormatDouble(cryptoData[i].low.toDouble(), digitsRounded), mWidth - 115F, linePositions[i].yBot - 5F, mTextPaint)
                 }
             }
 
             // Draw most recent price
             mTextPaint.color = ResourcesCompat.getColor(getResources(), R.color.light_gray, null);
             canvas?.drawLine(candlePositions.last().x,candlePositions.last().candleClose, mWidth, candlePositions.last().candleClose, mTextPaint)
-            canvas?.drawText(roundAndFormatDouble(cryptoData.last().close.toDouble()), mWidth - 115F, candlePositions.last().candleClose - 5F, mTextPaint)
+            canvas?.drawText(
+                roundAndFormatDouble(
+                    numToRound = cryptoData.last().close.toDouble(),
+                    digitsRounded = digitsRounded
+                ),
+                mWidth - 115F,
+                candlePositions.last().candleClose - 5F,
+                mTextPaint)
         }
     }
 
@@ -205,7 +217,7 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
         if(index == -1) return index + 1
 
         // if index closest to right return last element
-        if(abs(index) == xPoints.size) return xPoints.size - 1
+        if(abs(index) >= xPoints.size) return xPoints.size - 1
 
         // otherwise return element closest to the x coordinate
         val point1Index = abs(index+1)

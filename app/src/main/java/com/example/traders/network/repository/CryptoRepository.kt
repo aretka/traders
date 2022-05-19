@@ -1,10 +1,16 @@
 package com.example.traders.network.repository
 
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import com.example.traders.database.*
 import com.example.traders.network.BinanceApi
 import com.example.traders.network.MessariApi
 import com.example.traders.network.models.cryptoChartData.CryptoChart
 import com.example.traders.network.models.cryptoChartData.CryptoChartData
+import com.example.traders.presentation.cryptoDetailsScreen.chartTab.CandleType
+import com.example.traders.utils.DateUtils
+import com.example.traders.utils.DateUtils.getCandleDate
 import retrofit2.Response
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -20,23 +26,25 @@ class CryptoRepository @Inject constructor(
     // Messari api
     suspend fun getCryptoPrices() = api.getCryptoPrices()
     suspend fun getCryptoPriceStatistics(slug: String) = api.getCryptoPriceStatistics(slug)
+    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun getCryptoChartData(
         slug: String,
-        afterDate: String,
-        interval: String
+        candleType: CandleType
     ) : List<CryptoChart> {
-        val response = api.getCryptoChartData(slug, afterDate, interval)
+        val afterDate = getCandleDate(candleType.numDays)
+        val response = api.getCryptoChartData(slug, afterDate, candleType.candleInterval)
         return if(response.body() != null) {
-            response.body()?.data?.values?.map {
+            response.body()?.data?.values?.mapIndexed { index, crypto ->
                 // it = [volume, open, high, low, close]
                 CryptoChart(
-                volume = it[0],
-                open = it[1],
-                high = it[2],
-                low = it[3],
-                close = it[4],
-                priceChange = it[1] - it[4],
-                percentPriceChange = 100*(it[4] - it[1])/it[1]
+                volume = crypto[0],
+                open = crypto[1],
+                high = crypto[2],
+                low = crypto[3],
+                close = crypto[4],
+                priceChange = priceChange(crypto),
+                percentPriceChange = percentPriceChange(crypto),
+                date = getCandleDate(daysBefore(index, candleType, response.body()!!.data.values.size))
             ) } ?: emptyList()
         } else {
             emptyList()
@@ -88,6 +96,17 @@ class CryptoRepository @Inject constructor(
         cryptoDao.deleteFavouriteCrypto(symbol)
 
     suspend fun getFavouriteBySymbol(symbol: String) = cryptoDao.getFavouriteBySymbol(symbol)
+
+    private fun priceChange(crypto: List<Float>) = crypto[1] - crypto[4]
+
+    private fun percentPriceChange(crypto: List<Float>) = 100*(crypto[4] - crypto[1])/crypto[1]
+
+    private fun daysBefore(index: Int, candleType: CandleType, size: Int): Long {
+        return when(candleType) {
+            CandleType.DAILY -> size.toLong() - index - 1
+            CandleType.WEEKLY -> (size.toLong() - index - 1) * 7
+        }
+    }
 }
 
 inline fun <reified T : Enum<T>> enumContains(symbol: String): Boolean {

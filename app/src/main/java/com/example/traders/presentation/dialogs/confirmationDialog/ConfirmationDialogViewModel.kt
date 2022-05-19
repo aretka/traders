@@ -1,14 +1,13 @@
 package com.example.traders.presentation.dialogs.confirmationDialog
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.traders.presentation.BaseViewModel
 import com.example.traders.database.Crypto
 import com.example.traders.database.TransactionType
 import com.example.traders.network.repository.CryptoRepository
+import com.example.traders.presentation.BaseViewModel
 import com.example.traders.utils.DateUtils.getCurrentTime
 import com.example.traders.utils.exhaustive
 import dagger.assisted.Assisted
@@ -78,10 +77,10 @@ class ConfirmationDialogViewModel @AssistedInject constructor(
         repository.updateCrypto(usdAmount, "USD")
     }
 
-//    Deletes crypto if cryptoAmount is 0
+    //    Deletes crypto if cryptoAmount is 0
     private suspend fun updateCryptoBalance(symbol: String, cryptoAmount: BigDecimal) {
         val oldCrypto = repository.getCryptoBySymbol(symbol) ?: Crypto(symbol = symbol)
-        if(cryptoAmount.compareTo(BigDecimal.ZERO) == 0) {
+        if (cryptoAmount.compareTo(BigDecimal.ZERO) == 0) {
             repository.deleteCrypto(oldCrypto)
         } else {
             repository.insertCrypto(oldCrypto.copy(amount = cryptoAmount))

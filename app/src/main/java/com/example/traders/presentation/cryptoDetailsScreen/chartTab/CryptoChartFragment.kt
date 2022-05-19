@@ -2,7 +2,6 @@ package com.example.traders.presentation.cryptoDetailsScreen.chartTab
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +15,8 @@ import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
 import com.example.traders.database.FixedCryptoList
 import com.example.traders.databinding.FragmentCryptoItemChartBinding
-import com.example.traders.network.models.binance24hTickerData.PriceTickerData
 import com.example.traders.network.models.cryptoChartData.CryptoChart
 import com.example.traders.presentation.BaseFragment
-import com.example.traders.presentation.customviews.CandleChart
 import com.example.traders.presentation.dialogs.buyDialog.BuyDialogFragment
 import com.example.traders.presentation.dialogs.confirmationDialog.ConfirmationDialogFragment
 import com.example.traders.presentation.dialogs.confirmationDialog.ConfirmationType
@@ -60,6 +57,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setFragmentResultListener(
             "transaction_info"
         ) { _, bundle ->
@@ -70,6 +68,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
                 throw Exception("Bundle value is not received(nothing was emitted or wrong key, mistype)")
             }
         }
+
         lifecycleScope.launch {
             viewModel.chartState.collect { state ->
                 binding.setHeaderPrices(state.tickerData)
@@ -98,6 +97,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
                 roundAndFormatDouble(it.percentPriceChange.toDouble()),
             )
             priceChangeText.setPriceChangeTextColor()
+            cryptoDate.text = it.date
         }
     }
 
@@ -151,7 +151,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
     }
 
     private fun setInactiveButtonStyle(chartBtn: Button) {
-        chartBtn.setTextColor(ContextCompat.getColor(chartBtn.context, R.color.dark_gray))
+        chartBtn.setTextColor(ContextCompat.getColor(chartBtn.context, R.color.light_gray))
         chartBtn.background =
             ContextCompat.getDrawable(chartBtn.context, R.drawable.inactive_chart_btn)
     }
@@ -163,6 +163,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
         month12Btn.setOnClickListener { viewModel.onChartBtnSelected(BtnId.MONTH12_BTN) }
         buyBtn.setOnClickListener { showBuyDialog() }
         sellBtn.setOnClickListener { showSellDialog() }
+        candleChart.addRoundNumber(crypto.priceToRound)
         candleChart.setScrubListener { viewModel.onChartLongPressClick(it) }
     }
 

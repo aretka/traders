@@ -1,5 +1,6 @@
 package com.example.traders.presentation.customviews
 
+import android.annotation.SuppressLint
 import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
@@ -17,6 +18,7 @@ class ScrubGestureDetector(
         scrubListener.onScrubbed(downX, downY)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         if(!enabled) return false
 
