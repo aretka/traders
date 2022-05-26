@@ -116,7 +116,7 @@ This tab shows a list of executed transactions stored in room database.</br>
 * Whole screen is a single recyclerView consisting 3 different viewHolders: header, deposit and purchase/sell holders.
 * On init the list is fetched from local database and inserted into recyclerView.
 * Message of *"No transactions yet"* is displayed if list is empty.
-* Header contains title and erase button which erases all list. It contains confirmation dialog in cacse of missclick.
+* Header contains title and erase button which erases all list. It contains confirmation dialog in case of missclick.
 * Each element contains symbol, slug, icon, date, amount, amount in usd, last price.
 </br></br>
 
