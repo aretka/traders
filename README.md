@@ -47,6 +47,7 @@ This tab is the main single crypto screen which shows the recent crypto price in
 **Main functionality points:**
 * Header info(latest price, and price change) is collected from websocket.
 * Price chart is a custom view where crypto chart data is transfered to candle chart(no libraries used).
+* Candle chart listens to long presses and show price, date, prace change of that candle if pressed for at least 0.25s.
 * Price chart data is fetched from messari.io api and passed to this view. It contains 4 options of date range(last 1/3/6/12 months).
 * Buy buttom opens dialog in order to execute crypto purchase. This dialog shows the current crypto price, USD balance, input field
 * Sell buttom opens dialog in order to execute crypto sell.
