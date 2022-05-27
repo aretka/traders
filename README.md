@@ -57,7 +57,7 @@ This tab is the main single crypto screen which shows the recent crypto price in
 
  1 month(daily candle)  |  3 months(daily candle) |  6 months(weekly candle) | 12 months(weekly candle)
 :-----------------------:|:-----------------------:|:------------------------:|:-----------------------:
-<img src="https://user-images.githubusercontent.com/57877668/153913533-8ef36a19-97d0-466b-91d9-d93f0f1dfd0e.png" width="230"/> | <img src="https://user-images.githubusercontent.com/57877668/153913569-2aca0494-6d5c-4856-a0a7-96384091c326.png" width="230"/> | <img src="https://user-images.githubusercontent.com/57877668/153913591-18110e02-8b2c-4eb6-b53b-1c274b0d79cd.png" width="230"/> | <img src="https://user-images.githubusercontent.com/57877668/153913630-ef04ac6c-7597-4217-89a0-cb6fb9120a73.png" width="230"/>
+<img src="https://user-images.githubusercontent.com/57877668/170682983-1863ca43-7604-430c-a6a7-6cb6669d0698.gif" width="230"/> | <img src="https://user-images.githubusercontent.com/57877668/170682699-f8f18723-dcfc-46ca-9382-3424361d194e.png" width="230"/> | <img src="https://user-images.githubusercontent.com/57877668/170682745-c4369fd5-2ec6-45ae-b6b4-389c607f8227.png" width="230"/> | <img src="https://user-images.githubusercontent.com/57877668/170682616-e2795345-1de7-4c24-98e2-76a8e1783a6e.png" width="230"/>
 </br>
 
  Buy dialog  |  Sell dialog  
