@@ -53,7 +53,7 @@
         <entry key="app/src/main/res/layout/dialog_fragment_sell.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_buy_dialog.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_crypto_item.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/fragment_crypto_item_chart.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_crypto_item_chart.xml" value="0.67" />
         <entry key="app/src/main/res/layout/fragment_crypto_item_description.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_crypto_item_price_statistics.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_history.xml" value="0.33" />

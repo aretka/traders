@@ -26,6 +26,16 @@
             android:textStyle="italic" />
 
         <TextView
+            android:id="@+id/crypto_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            app:layout_constraintStart_toEndOf="@+id/price_label"
+            app:layout_constraintBottom_toBottomOf="@+id/price_label"
+            android:text="2022:01:24"
+            android:textSize="@dimen/xx_small_text_size" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -60,26 +70,11 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     <com.example.traders.presentation.customviews.CandleChart
         android:id="@+id/candle_chart"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:background="@color/white" />
-
-<!--    <com.robinhood.spark.SparkView-->
-<!--        android:id="@+id/line_chart"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="300dp"-->
-<!--        android:background="@color/white"-->
-<!--        app:spark_lineColor="@color/green"-->
-<!--        />-->
-
-<!--    <com.github.mikephil.charting.charts.LineChart-->
-<!--        android:id="@+id/line_chart"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="300dp"-->
-<!--        android:background="@color/white"/>-->
 
     <LinearLayout
         android:id="@+id/chart_btns_container"
@@ -99,16 +94,19 @@
             android:id="@+id/month3_btn"
             android:background="@drawable/inactive_chart_btn"
             style="@style/crypto_chart_btn_style"
+            android:textColor="@color/light_gray"
             android:text="@string/month3"/>
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/month6_btn"
             android:background="@drawable/inactive_chart_btn"
             style="@style/crypto_chart_btn_style"
+            android:textColor="@color/light_gray"
             android:text="@string/month6"/>
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/month12_btn"
             android:background="@drawable/inactive_chart_btn"
             style="@style/crypto_chart_btn_style"
+            android:textColor="@color/light_gray"
             android:text="@string/month12"/>
     </LinearLayout>
 

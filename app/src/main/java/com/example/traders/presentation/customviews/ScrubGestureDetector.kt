@@ -1,5 +1,6 @@
 package com.example.traders.presentation.customviews
 
+import android.annotation.SuppressLint
 import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
@@ -17,6 +18,7 @@ class ScrubGestureDetector(
         scrubListener.onScrubbed(downX, downY)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         if(!enabled) return false
 
@@ -43,6 +45,7 @@ class ScrubGestureDetector(
                     // if we moved before longpress, remove the callback if we exceeded the tap slop
                     val deltaX = x - downX
                     val deltaY = y - downY
+//                    "Touch slop" refers to the distance in pixels a user's touch can wander before the gesture is interpreted as scrolling.
                     if (deltaX >= touchSlop || deltaY >= touchSlop) {
                         handler.removeCallbacks(longPressRunnable)
                         // We got a MOVE event that exceeded tap slop but before the long-press

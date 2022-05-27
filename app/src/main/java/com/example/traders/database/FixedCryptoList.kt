@@ -8,7 +8,6 @@ enum class FixedCryptoList(val slug: String, val logoUrl: String, val amountToRo
     ADA("cardano", "https://cryptologos.cc/logos/cardano-ada-logo.png?v=014",2,3),
     XRP("xrp", "https://cryptologos.cc/logos/xrp-xrp-logo.png?v=014",2,3),
     DOT("polkadot", "https://cryptologos.cc/logos/polkadot-new-dot-logo.png?v=014"),
-    LUNA("terra", "https://cryptologos.cc/logos/terra-luna-luna-logo.png?v=014"),
     DOGE("dogecoin", "https://cryptologos.cc/logos/dogecoin-doge-logo.png?v=014", 2, 3),
     AVAX("avalanche", "https://cryptologos.cc/logos/avalanche-avax-logo.png?v=014"),
     MATIC("polygon", "https://cryptologos.cc/logos/polygon-matic-logo.png?v=014", 2,3),

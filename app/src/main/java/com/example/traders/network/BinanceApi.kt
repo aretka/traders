@@ -8,7 +8,6 @@ import retrofit2.http.Query
 
 interface BinanceApi {
 
-
     @GET("/api/v3/ticker/24hr")
     suspend fun get24HourData(): Response<List<Binance24DataItem>>
 

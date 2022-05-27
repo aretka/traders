@@ -8,4 +8,5 @@ data class CryptoChart(
     val close: Float = 0f,
     val priceChange: Float,
     val percentPriceChange: Float,
+    val date: String
 )
