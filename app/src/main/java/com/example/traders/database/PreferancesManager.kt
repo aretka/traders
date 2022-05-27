@@ -20,7 +20,7 @@ enum class SortOrder { BY_NAME_DESC, BY_NAME_ASC, BY_CHANGE_DESC, BY_CHANGE_ASC,
 data class FilterPreferences(val sortOrder: SortOrder, val isFavourite: Boolean)
 
 @Singleton
-class PreferancesManager@Inject constructor(@ApplicationContext context: Context) {
+class PreferancesManager @Inject constructor(@ApplicationContext context: Context) {
     private val datastore = context.createDataStore("user_preferences")
 
     val preferencesFlow = datastore.data

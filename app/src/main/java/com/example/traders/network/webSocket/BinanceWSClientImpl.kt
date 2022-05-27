@@ -21,7 +21,7 @@ class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
 
     private val _state = MutableSharedFlow<PriceTickerData>(
         replay = 1,
-        extraBufferCapacity = 1,
+        extraBufferCapacity = 30,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
 

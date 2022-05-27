@@ -23,7 +23,7 @@ class BinanceApiModule {
             .addConverterFactory(GsonConverterFactory.create())
             .client(
                 OkHttpClient.Builder()
-                    .addInterceptor(AuthenticationInterceptor())
+//                    .addInterceptor(AuthenticationInterceptor())
                     .addFlipperNetworkInterceptor()
                     .build()
             )
