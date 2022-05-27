@@ -23,7 +23,7 @@ class WatchListRepository @Inject constructor(
     private val cryptoDao: CryptoDatabaseDao,
     private val preferencesManager: PreferancesManager
 ) {
-
+// Sorting is not applied here since list should only be sorted only when sort type changes
     private val _binanceCryptoList = MutableStateFlow<List<BinanceDataItem>>(emptyList())
     val binanceCryptoList = _binanceCryptoList.asStateFlow()
         .combine(preferencesManager.preferencesFlow) { list, preferences ->

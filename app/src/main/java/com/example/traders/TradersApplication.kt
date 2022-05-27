@@ -5,7 +5,7 @@ import com.example.traders.debug.FlipperInitializer
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-open class TradersApplication : Application() {
+class TradersApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()

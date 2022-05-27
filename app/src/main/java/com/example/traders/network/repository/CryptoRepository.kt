@@ -89,12 +89,8 @@ class CryptoRepository @Inject constructor(
     suspend fun deleteAllTransactions() = cryptoDao.deleteAllTransactions()
     fun getAllTransactionsLive() = cryptoDao.getAllTransactionsLive()
     fun getAllFavouritesLive() = cryptoDao.getAllFavouritesLive()
-    suspend fun insertFavouriteCrypto(favouriteCrypto: FavouriteCrypto) =
-        cryptoDao.insertFavouriteCrypto(favouriteCrypto)
-
-    suspend fun deleteFavouriteCrypto(symbol: String) =
-        cryptoDao.deleteFavouriteCrypto(symbol)
-
+    suspend fun insertFavouriteCrypto(favouriteCrypto: FavouriteCrypto) = cryptoDao.insertFavouriteCrypto(favouriteCrypto)
+    suspend fun deleteFavouriteCrypto(symbol: String) = cryptoDao.deleteFavouriteCrypto(symbol)
     suspend fun getFavouriteBySymbol(symbol: String) = cryptoDao.getFavouriteBySymbol(symbol)
 
     private fun priceChange(crypto: List<Float>) = crypto[1] - crypto[4]
