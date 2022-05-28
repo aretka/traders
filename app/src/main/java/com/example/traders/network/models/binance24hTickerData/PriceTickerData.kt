@@ -2,11 +2,9 @@ package com.example.traders.network.models.binance24hTickerData
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.traders.network.models.cryptoChartData.CryptoChart
-import com.example.traders.utils.DateUtils
+import com.example.traders.network.models.cryptoChartData.CryptoChartCandle
 import com.example.traders.utils.DateUtils.getCandleDate
 import com.google.gson.annotations.SerializedName
-import javax.inject.Inject
 
 data class PriceTickerData(
 
@@ -34,8 +32,8 @@ data class PriceTickerData(
 ) {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun toCryptoChart(): CryptoChart {
-        return CryptoChart(
+    fun toCryptoChart(): CryptoChartCandle {
+        return CryptoChartCandle(
             close = last.toFloat(),
             priceChange = priceChange.toFloat(),
             percentPriceChange = priceChangePercent.toFloat(),

@@ -61,7 +61,7 @@ class PortfolioFragment : BaseFragment() {
             }
         }
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             viewModel.state.collect {
                 binding.updateUiData(it)
             }

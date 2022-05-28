@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CryptoItemViewModel @Inject constructor(
     private val repository: CryptoRepository,
-    private val savedState: SavedStateHandle
+    savedState: SavedStateHandle
 ) : BaseViewModel() {
     val symbol = savedState.get<String>("symbol")
 //    private var _isFavourite = savedState.get<Boolean>("isFavourite") ?: false
@@ -39,11 +39,13 @@ class CryptoItemViewModel @Inject constructor(
 
     fun onFavouriteBtnClicked(symbol: String) {
         launch {
-            _state.value = _state.value.copy(isBtnActive = false)
             updateFavouritesInDb(symbol)
-            _state.value = _state.value.copy(isFavourite = !_state.value.isFavourite)
+            _state.value = _state.value.copy(
+                isFavourite = !_state.value.isFavourite,
+                isFavBtnActive = false
+            )
             delay(1500L)
-            _state.value = _state.value.copy(isBtnActive = true)
+            _state.value = _state.value.copy(isFavBtnActive = true)
         }
     }
 

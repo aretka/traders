@@ -7,6 +7,5 @@ data class WatchListState(
     val binanceCryptoData: List<BinanceDataItem> = emptyList(),
     val isRefreshing: Boolean = false,
     val showFavourites: Boolean = false,
-    val sortOrder: SortOrder = SortOrder.DEFAULT,
-    val shouldScrollTop: Boolean = false
+    val sortOrder: SortOrder = SortOrder.DEFAULT
 )

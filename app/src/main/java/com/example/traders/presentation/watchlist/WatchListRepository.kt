@@ -25,7 +25,7 @@ class WatchListRepository @Inject constructor(
 ) {
 // Sorting is not applied here since list should only be sorted only when sort type changes
     private val _binanceCryptoList = MutableStateFlow<List<BinanceDataItem>>(emptyList())
-    val binanceCryptoList = _binanceCryptoList.asStateFlow()
+    val binanceCryptoList = _binanceCryptoList
         .combine(preferencesManager.preferencesFlow) { list, preferences ->
             if (preferences.isFavourite) {
                 list.filter { it.isFavourite }
@@ -40,9 +40,7 @@ class WatchListRepository @Inject constructor(
             cryptoPricesResponse.getFixedCryptoList().map { it.toBinanceDataItem() }
 
         val finalList = extractedPricesList.applyFavourites(getAllFavourites())
-        _binanceCryptoList.update {
-            finalList
-        }
+        _binanceCryptoList.update { finalList }
     }
 
     suspend fun renewListWithFavourites() {
@@ -132,7 +130,7 @@ class WatchListRepository @Inject constructor(
     //    I will have to start and pause collecting state
     // It collects message emitted from websocket sharedFlow and updates list item by reassigning BinanceDataItem to new value
     suspend fun startCollectingBinanceTickerData() {
-        webSocketClient.state.collectLatest { tickerData ->
+        webSocketClient.state.collect { tickerData ->
             val indexOfCryptoDataToUpdate = _binanceCryptoList.value.indexOfFirst {
                 it.symbol == tickerData.symbol.replace("USDT", "")
             }

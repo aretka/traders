@@ -15,10 +15,6 @@ import com.example.traders.presentation.watchlist.adapters.WatchListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
-/*
-* TODO: viewModel read all favourite list and update list
-*
-* */
 @AndroidEntryPoint
 class WatchListFragment : BaseFragment() {
 
@@ -33,7 +29,6 @@ class WatchListFragment : BaseFragment() {
     ): View {
         binding = FragmentWatchListBinding.inflate(layoutInflater, container, false)
 
-        binding.setPullToRefreshListener()
         binding.setListAdapter()
         binding.setUpListeners()
 
@@ -44,22 +39,15 @@ class WatchListFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         with(viewModel) {
             updateFavouritesList()
-            isLoading.observe(viewLifecycleOwner) {
-                binding.changeLoaderVisibility(it)
+            isLoading.observe(viewLifecycleOwner) { isVisible ->
+                binding.changeLoaderVisibility(isVisible)
             }
             lifecycleScope.launchWhenStarted {
                 state.collect { state ->
-                    binding.pullToRefresh.isRefreshing = state.isRefreshing
                     binding.updateUi(state)
                     adapter?.submitList(state.binanceCryptoData)
                 }
             }
-        }
-    }
-
-    private fun FragmentWatchListBinding.setPullToRefreshListener() {
-        pullToRefresh.setOnRefreshListener {
-            viewModel.getCryptoOnRefresh()
         }
     }
 
@@ -83,10 +71,7 @@ class WatchListFragment : BaseFragment() {
     }
 
     private fun FragmentWatchListBinding.updateUi(state: WatchListState) {
-        if(state.shouldScrollTop) {
-            itemsList.smoothScrollToPosition(0)
-            viewModel.onScrolled()
-        }
+        pullToRefresh.isRefreshing = state.isRefreshing
 
         if(state.showFavourites) {
             favouriteBtn.setImageResource(R.drawable.ic_star_active)
@@ -112,6 +97,10 @@ class WatchListFragment : BaseFragment() {
     }
 
     private fun FragmentWatchListBinding.setUpListeners() {
+        pullToRefresh.setOnRefreshListener {
+            viewModel.getCryptoOnRefresh()
+        }
+
         favouriteBtn.setOnClickListener {
             viewModel.onFavouriteButtonClicked()
         }

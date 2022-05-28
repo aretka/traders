@@ -1,17 +1,13 @@
 package com.example.traders.network.repository
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.traders.database.*
 import com.example.traders.network.BinanceApi
 import com.example.traders.network.MessariApi
-import com.example.traders.network.models.cryptoChartData.CryptoChart
-import com.example.traders.network.models.cryptoChartData.CryptoChartData
+import com.example.traders.network.models.cryptoChartData.CryptoChartCandle
 import com.example.traders.presentation.cryptoDetailsScreen.chartTab.CandleType
-import com.example.traders.utils.DateUtils
 import com.example.traders.utils.DateUtils.getCandleDate
-import retrofit2.Response
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,13 +26,14 @@ class CryptoRepository @Inject constructor(
     suspend fun getCryptoChartData(
         slug: String,
         candleType: CandleType
-    ) : List<CryptoChart> {
+    ) : List<CryptoChartCandle> {
         val afterDate = getCandleDate(candleType.numDays)
         val response = api.getCryptoChartData(slug, afterDate, candleType.candleInterval)
         return if(response.body() != null) {
             response.body()?.data?.values?.mapIndexed { index, crypto ->
                 // it = [volume, open, high, low, close]
-                CryptoChart(
+//                returnCryptoChart()
+                CryptoChartCandle(
                 volume = crypto[0],
                 open = crypto[1],
                 high = crypto[2],
@@ -103,6 +100,10 @@ class CryptoRepository @Inject constructor(
             CandleType.WEEKLY -> (size.toLong() - index - 1) * 7
         }
     }
+
+//    private fun returnCryptoChart(): CryptoChart {
+//        return CryptoChart()
+//    }
 }
 
 inline fun <reified T : Enum<T>> enumContains(symbol: String): Boolean {

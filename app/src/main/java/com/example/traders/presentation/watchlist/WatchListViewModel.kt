@@ -62,10 +62,6 @@ class WatchListViewModel @Inject constructor(
         }.exhaustive
     }
 
-    fun onScrolled() {
-        _state.update { it.copy(shouldScrollTop = false) }
-    }
-
     private fun updateSortOrder(newSortOrder: SortOrder) {
         launch {
             watchListRepository.saveSortOrderOnPreference(newSortOrder)

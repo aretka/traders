@@ -5,7 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.traders.database.FixedCryptoList
-import com.example.traders.network.models.cryptoChartData.CryptoChart
+import com.example.traders.network.models.cryptoChartData.CryptoChartCandle
 import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.network.webSocket.BinanceWSClient
 import com.example.traders.presentation.BaseViewModel
@@ -56,11 +56,11 @@ class CryptoChartViewModel @AssistedInject constructor(
         }
     }
 
-    fun onChartLongPressClick(crypto: CryptoChart?) {
-        if (crypto != null) {
+    fun onChartLongPressClick(cryptoCandle: CryptoChartCandle?) {
+        if (cryptoCandle != null) {
             _chartState.update {
                 it.copy(
-                    tickerData = crypto,
+                    tickerData = cryptoCandle,
                     showChartPrice = true
                 )
             }
@@ -77,12 +77,12 @@ class CryptoChartViewModel @AssistedInject constructor(
             when (candleType) {
                 CandleType.DAILY -> {
                     _chartState.value = _chartState.value.copy(
-                        chartDataFor90d = list,
+                        chartCandleDataFor90D = list,
                     )
                 }
                 CandleType.WEEKLY -> {
                     _chartState.value = _chartState.value.copy(
-                        chartDataFor360d = list,
+                        chartCandleDataFor360D = list,
                     )
                 }
             }
@@ -94,7 +94,7 @@ class CryptoChartViewModel @AssistedInject constructor(
     }
 
     private fun chartDataIsFetched(): Boolean {
-        return _chartState.value.chartDataFor90d != null && _chartState.value.chartDataFor360d != null
+        return _chartState.value.chartCandleDataFor90D != null && _chartState.value.chartCandleDataFor360D != null
     }
 
     @AssistedFactory
