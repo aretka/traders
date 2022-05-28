@@ -53,8 +53,9 @@ class CryptoItemViewModel @Inject constructor(
         launch {
             symbol?.let {
                 val favouriteCrypto: FavouriteCrypto? = repository.getFavouriteBySymbol(it)
+//                favouriteCrypto not null means that it is in favourite list
                 favouriteCrypto?.let {
-                    _state.value = _state.value.copy(isFavourite = !_state.value.isFavourite)
+                    _state.value = _state.value.copy(isFavourite = true)
                 }
             }
         }

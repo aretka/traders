@@ -32,7 +32,7 @@ data class PriceTickerData(
 ) {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun toCryptoChart(): CryptoChartCandle {
+    fun toCryptoChartCandle(): CryptoChartCandle {
         return CryptoChartCandle(
             close = last.toFloat(),
             priceChange = priceChange.toFloat(),

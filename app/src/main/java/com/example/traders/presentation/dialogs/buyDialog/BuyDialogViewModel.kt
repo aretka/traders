@@ -24,8 +24,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
-private const val TAG = "BuyDialogViewModel"
-
 class BuyDialogViewModel @AssistedInject constructor(
     private val repository: CryptoRepository,
     private val dialogValidation: DialogValidation,

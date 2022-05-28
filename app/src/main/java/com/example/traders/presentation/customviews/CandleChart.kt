@@ -18,7 +18,7 @@ import kotlin.math.abs
 import kotlin.properties.Delegates
 
 class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs), ScrubListener {
-    private var cryptoDatumCandles: List<CryptoChartCandle> = emptyList()
+    private var cryptoChartCandles: List<CryptoChartCandle> = emptyList()
     private var linePositions: MutableList<LinePosition>   = mutableListOf()
     private var candlePositions: MutableList<CandlePosition> = mutableListOf()
     private var mWidth = 0f
@@ -61,9 +61,8 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
     }
 
     fun importListValues(list: List<CryptoChartCandle>) {
-        //listof([volume, open, high, low, close], [], ..., [])
-        if(list == cryptoDatumCandles) return
-        cryptoDatumCandles = list
+        if(list == cryptoChartCandles) return
+        cryptoChartCandles = list
         minVal = list.minOf { it.low }
         maxVal = list.maxOf { it.high }
         setWidthAndHeigth()
@@ -97,7 +96,6 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
         val handler = Handler(Looper.getMainLooper())
         val touchSlop = ViewConfiguration.get(context).scaledTouchSlop.toFloat()
         scrubGestureDetector = ScrubGestureDetector(this, handler, touchSlop)
-        scrubGestureDetector.enabled = true
         setOnTouchListener(scrubGestureDetector)
     }
 
@@ -107,8 +105,8 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
     }
 
     private fun calculateCandleSizes() {
-        candleWidth = mWidth * chartSizeMultiplier / (cryptoDatumCandles.size-1) * 0.6f
-        candleSpacing = mWidth * chartSizeMultiplier / (cryptoDatumCandles.size-1) * 0.4f
+        candleWidth = mWidth * chartSizeMultiplier / (cryptoChartCandles.size-1) * 0.6f
+        candleSpacing = mWidth * chartSizeMultiplier / (cryptoChartCandles.size-1) * 0.4f
         mGreenPaint.strokeWidth = candleWidth
         mRedPaint.strokeWidth = candleWidth
     }
@@ -126,9 +124,9 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
 
         //listof([volume, open, high, low, close], [], ..., [])
 
-        for(i in 0..(cryptoDatumCandles.size -1)) {
-            yLineTop = mHeight - ((mHeight * 0.9f) * ((cryptoDatumCandles[i].high - minVal)/minMaxDiff) + (mHeight * 0.05f))
-            yLineBottom = mHeight - ((mHeight * 0.9f) * ((cryptoDatumCandles[i].low - minVal)/minMaxDiff) + (mHeight * 0.05f))
+        for(i in 0..(cryptoChartCandles.size -1)) {
+            yLineTop = mHeight - ((mHeight * 0.9f) * ((cryptoChartCandles[i].high - minVal)/minMaxDiff) + (mHeight * 0.05f))
+            yLineBottom = mHeight - ((mHeight * 0.9f) * ((cryptoChartCandles[i].low - minVal)/minMaxDiff) + (mHeight * 0.05f))
             val linePosition = LinePosition(
                 yTop = yLineTop,
                 yBot = yLineBottom,
@@ -137,11 +135,11 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
             linePositions.add(linePosition)
 //            linePositions.add(listOf(yLineTop, yLineBottom, xVal))
 
-            if(cryptoDatumCandles[i].high == maxVal) maxValPosition = yLineTop
-            if(cryptoDatumCandles[i].low == minVal) minValPosition = yLineBottom
+            if(cryptoChartCandles[i].high == maxVal) maxValPosition = yLineTop
+            if(cryptoChartCandles[i].low == minVal) minValPosition = yLineBottom
 
-            yCandleOpen = mHeight - ((mHeight * 0.9f) * ((cryptoDatumCandles[i].open - minVal)/minMaxDiff) + (mHeight * 0.05f))
-            yCandleClose = mHeight - ((mHeight * 0.9f) * ((cryptoDatumCandles[i].close - minVal)/minMaxDiff) + (mHeight * 0.05f))
+            yCandleOpen = mHeight - ((mHeight * 0.9f) * ((cryptoChartCandles[i].open - minVal)/minMaxDiff) + (mHeight * 0.05f))
+            yCandleClose = mHeight - ((mHeight * 0.9f) * ((cryptoChartCandles[i].close - minVal)/minMaxDiff) + (mHeight * 0.05f))
             val candlePosition = CandlePosition(
                 candleOpen = yCandleOpen,
                 candleClose = yCandleClose,
@@ -150,14 +148,15 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
             candlePositions.add(candlePosition)
 //            candlePositions.add(listOf(yCandleOpen, yCandleClose, xVal))
 
-            if(i == (cryptoDatumCandles.size-1)) currentPricePosition = yCandleClose
+            if(i == (cryptoChartCandles.size-1)) currentPricePosition = yCandleClose
             xVal += (candleSpacing) + candleWidth
         }
     }
 
     private fun drawCandles( canvas: Canvas? ) {
-        if(cryptoDatumCandles.size > 0) {
+        if(cryptoChartCandles.size > 0) {
             for(i in 0..linePositions.size - 1) {
+                // draw candles
                 // height is compared inversely duo to top position of height is 0
                 if(candlePositions[i].candleClose < candlePositions[i].candleOpen) {
                     // draw line
@@ -168,16 +167,17 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
                     canvas?.drawLine(linePositions[i].x, linePositions[i].yTop, linePositions[i].x, linePositions[i].yBot, mRedLinePaint)
                     canvas?.drawLine(candlePositions[i].x, candlePositions[i].candleOpen, candlePositions[i].x, candlePositions[i].candleClose, mRedPaint)
                 }
-                // Drawing high, low, current lines
+
+                // draw high, low, current lines when found in list
                 if(linePositions[i].yTop == maxValPosition){
                     canvas?.drawLine(linePositions[i].x,linePositions[i].yTop, mWidth, linePositions[i].yTop, mGreenLinePaint)
                     mTextPaint.color = ResourcesCompat.getColor(getResources(), R.color.green, null);
-                    canvas?.drawText(roundAndFormatDouble(cryptoDatumCandles[i].high.toDouble(), digitsRounded), mWidth - 115F, linePositions[i].yTop - 5F, mTextPaint)
+                    canvas?.drawText(roundAndFormatDouble(cryptoChartCandles[i].high.toDouble(), digitsRounded), mWidth - 115F, linePositions[i].yTop - 5F, mTextPaint)
                 }
                 if(linePositions[i].yBot == minValPosition) {
                     canvas?.drawLine(linePositions[i].x,linePositions[i].yBot, mWidth, linePositions[i].yBot, mRedLinePaint)
                     mTextPaint.color = ResourcesCompat.getColor(getResources(), R.color.red, null);
-                    canvas?.drawText(roundAndFormatDouble(cryptoDatumCandles[i].low.toDouble(), digitsRounded), mWidth - 115F, linePositions[i].yBot - 5F, mTextPaint)
+                    canvas?.drawText(roundAndFormatDouble(cryptoChartCandles[i].low.toDouble(), digitsRounded), mWidth - 115F, linePositions[i].yBot - 5F, mTextPaint)
                 }
             }
 
@@ -186,7 +186,7 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
             canvas?.drawLine(candlePositions.last().x,candlePositions.last().candleClose, mWidth, candlePositions.last().candleClose, mTextPaint)
             canvas?.drawText(
                 roundAndFormatDouble(
-                    numToRound = cryptoDatumCandles.last().close.toDouble(),
+                    numToRound = cryptoChartCandles.last().close.toDouble(),
                     digitsRounded = digitsRounded
                 ),
                 mWidth - 115F,
@@ -231,18 +231,20 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
     }
 
     override fun onScrubbed(x: Float, y: Float) {
-//        if (adapter == null || adapter.getCount() == 0) return
+        /* parent.requestDisallowInterceptTouchEvent(true)
+        * This causes not only the immediate parent but any other parent objects that might
+        * intercept the touch to ignore it for the duration of the particular event
+        * */
         parent.requestDisallowInterceptTouchEvent(true)
         val xPoints = linePositions.map { it.x }
         val index = getNearestIndex(xPoints, x)
-        if (scrubListener != null) {
-            scrubListener!!.onScrubbed(cryptoDatumCandles[index])
-        }
+        scrubListener?.onScrubbed(cryptoChartCandles[index])
         setScrubLine(xPoints[index])
     }
 
     override fun onScrubEnded() {
         scrubLinePath.reset()
+//        it passes null to the user of this class to inform that scrub ended
         scrubListener?.onScrubbed(null)
         invalidate()
     }

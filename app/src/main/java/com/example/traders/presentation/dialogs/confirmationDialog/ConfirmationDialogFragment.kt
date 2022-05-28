@@ -19,13 +19,14 @@ class ConfirmationDialogFragment(
     private val message: String,
     private val confirmationType: ConfirmationType
 ) : DialogFragment() {
-    private lateinit var binding: DialogConfirmationBinding
     @Inject
     lateinit var viewModelAssistedFactory: ConfirmationDialogViewModel.Factory
 
     private val viewModel: ConfirmationDialogViewModel by viewModels() {
         ConfirmationDialogViewModel.provideFactory(viewModelAssistedFactory, confirmationType)
     }
+
+    private lateinit var binding: DialogConfirmationBinding
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -34,7 +35,7 @@ class ConfirmationDialogFragment(
             val inflater = requireActivity().layoutInflater
 
             binding = DialogConfirmationBinding.inflate(inflater)
-            binding.confirmationMsg.text = message
+            binding.confirmationMessage.text = message
             binding.setClickListeners()
             val dialog = builder.setView(binding.root)
                 .setCancelable(false)

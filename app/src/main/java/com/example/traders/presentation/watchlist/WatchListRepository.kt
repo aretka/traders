@@ -132,7 +132,7 @@ class WatchListRepository @Inject constructor(
     suspend fun startCollectingBinanceTickerData() {
         webSocketClient.state.collect { tickerData ->
             val indexOfCryptoDataToUpdate = _binanceCryptoList.value.indexOfFirst {
-                it.symbol == tickerData.symbol.replace("USDT", "")
+                it.symbol == tickerData.symbol
             }
 
             if (indexOfCryptoDataToUpdate != -1) {

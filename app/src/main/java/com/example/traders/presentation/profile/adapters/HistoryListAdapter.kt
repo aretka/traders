@@ -20,7 +20,6 @@ class HistoryListAdapter(val clearHistoryListener: () -> Unit) :
 
     fun addHeaderAndSubmitList(list: List<Transaction>) {
         val items = when (list) {
-            null -> listOf(HistoryItem.Header)
             emptyList<Transaction>() -> listOf(HistoryItem.Header)
             else -> listOf(HistoryItem.Header) + list.map {
                 if (it.symbol == "USD") {
@@ -113,16 +112,12 @@ class HistoryListAdapter(val clearHistoryListener: () -> Unit) :
                     }
                 }
                 lastPrice.text = lastPrice.context.getString(R.string.usd_sign, item.lastPrice.toString())
-//                when (item.symbol) {
-//                    "USD" -> icon.setImageResource(R.drawable.ic_dollar)
-//                    else -> {
-                        Glide.with(icon)
-                            .load(FixedCryptoList.valueOf(item.symbol).logoUrl)
-                            .placeholder(R.drawable.ic_download)
-                            .error(R.drawable.ic_image_error)
-                            .into(icon)
-//                    }
-//                }
+                Glide.with(icon)
+                    .load(FixedCryptoList.valueOf(item.symbol).logoUrl)
+                    .placeholder(R.drawable.ic_download)
+                    .error(R.drawable.ic_image_error)
+                    .into(icon)
+
             }
 
         }

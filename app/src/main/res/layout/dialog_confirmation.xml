@@ -8,7 +8,7 @@
     tools:context=".presentation.dialogs.confirmationDialog.ConfirmationDialogFragment">
 
     <TextView
-        android:id="@+id/confirmation_msg"
+        android:id="@+id/confirmation_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="20dp"
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/confirmation_msg"
+        app:layout_constraintTop_toBottomOf="@id/confirmation_message"
         android:weightSum="2"
         android:layout_marginTop="15dp">
         <androidx.appcompat.widget.AppCompatButton

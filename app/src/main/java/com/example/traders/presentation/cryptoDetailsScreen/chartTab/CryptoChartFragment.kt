@@ -56,7 +56,6 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         setFragmentResultListener(
             "transaction_info"
@@ -69,7 +68,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
             }
         }
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             viewModel.chartState.collect { state ->
                 binding.setHeaderPrices(state.tickerData)
                 binding.updateBuySellBtnAccessibility(state)
@@ -77,7 +76,6 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
                 updateChart(state)
             }
         }
-        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun showConfirmationDialog(transactionInfo: TransactionInfo) {

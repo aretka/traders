@@ -29,23 +29,11 @@ class CryptoRepository @Inject constructor(
     ) : List<CryptoChartCandle> {
         val afterDate = getCandleDate(candleType.numDays)
         val response = api.getCryptoChartData(slug, afterDate, candleType.candleInterval)
-        return if(response.body() != null) {
-            response.body()?.data?.values?.mapIndexed { index, crypto ->
-                // it = [volume, open, high, low, close]
-//                returnCryptoChart()
-                CryptoChartCandle(
-                volume = crypto[0],
-                open = crypto[1],
-                high = crypto[2],
-                low = crypto[3],
-                close = crypto[4],
-                priceChange = priceChange(crypto),
-                percentPriceChange = percentPriceChange(crypto),
-                date = getCandleDate(daysBefore(index, candleType, response.body()!!.data.values.size))
-            ) } ?: emptyList()
-        } else {
-            emptyList()
-        }
+        
+        return response.body()?.data?.values?.mapIndexed { index, crypto ->
+            // crypto = listOf<Float>(volume, open, high, low, close)
+            returnCryptoChartCandle(crypto, index, candleType, response.body()!!.data.values.size)
+        } ?: emptyList()
     }
 
     suspend fun getCryptoDescriptionData(id: String) = api.getCryptoDescriptionData(id)
@@ -101,9 +89,24 @@ class CryptoRepository @Inject constructor(
         }
     }
 
-//    private fun returnCryptoChart(): CryptoChart {
-//        return CryptoChart()
-//    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun returnCryptoChartCandle(
+        crypto: List<Float>,
+        index: Int,
+        candleType: CandleType,
+        size: Int
+    ) : CryptoChartCandle{
+        return CryptoChartCandle(
+            volume = crypto[0],
+            open = crypto[1],
+            high = crypto[2],
+            low = crypto[3],
+            close = crypto[4],
+            priceChange = priceChange(crypto),
+            percentPriceChange = percentPriceChange(crypto),
+            date = getCandleDate(daysBefore(index, candleType, size))
+        )
+    }
 }
 
 inline fun <reified T : Enum<T>> enumContains(symbol: String): Boolean {

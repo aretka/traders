@@ -21,7 +21,6 @@ import javax.inject.Inject
 class BinanceWSClientImpl @Inject constructor() : WebSocketClient(WEB_SOCKET_URI), BinanceWSClient {
 
     private val _state = MutableSharedFlow<PriceTickerData>(
-        replay = 1,
         extraBufferCapacity = 30,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
