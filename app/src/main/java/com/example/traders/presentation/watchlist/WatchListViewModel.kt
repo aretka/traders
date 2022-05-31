@@ -1,9 +1,11 @@
 package com.example.traders.presentation.watchlist
 
+import android.util.Log
 import com.example.traders.presentation.BaseViewModel
 import com.example.traders.database.SortOrder
 import com.example.traders.utils.exhaustive
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,16 +18,16 @@ class WatchListViewModel @Inject constructor(
     private val _state = MutableStateFlow(WatchListState())
     val state = _state.asStateFlow()
 
+    private lateinit var cryptoCollector: Job
+
     init {
         loadInitialCryptoList()
-        subscribeToCryptoPriceUpdates()
         startCryptoPricesPolling()
     }
 
-    fun updateFavouritesList() {
-        launch {
-            watchListRepository.renewListWithFavourites()
-        }
+    fun onViewCreatedCalled() {
+        updateFavouritesList()
+        subscribeToCryptoPriceUpdates()
     }
 
     fun getCryptoOnRefresh() {
@@ -62,6 +64,16 @@ class WatchListViewModel @Inject constructor(
         }.exhaustive
     }
 
+    fun onFragmentStop() {
+        cryptoCollector.cancel()
+    }
+
+    private fun updateFavouritesList() {
+        launch {
+            watchListRepository.renewListWithFavourites()
+        }
+    }
+
     private fun updateSortOrder(newSortOrder: SortOrder) {
         launch {
             watchListRepository.saveSortOrderOnPreference(newSortOrder)
@@ -71,14 +83,15 @@ class WatchListViewModel @Inject constructor(
     }
 
     private fun subscribeToCryptoPriceUpdates() {
-        launch {
+        cryptoCollector = launch {
             _state.update {
                 it.copy(
                     showFavourites = watchListRepository.isFavouritesOn(),
                     sortOrder = watchListRepository.sortOrderType()
                 )
             }
-            watchListRepository.binanceCryptoList.collect { list ->
+
+            watchListRepository.binanceCryptoList.cancellable().collect { list ->
                 _state.update {
                     it.copy(binanceCryptoData = list)
                 }
@@ -98,6 +111,7 @@ class WatchListViewModel @Inject constructor(
             watchListRepository.startCollectingBinanceTickerData()
         }
     }
+
 
 // This function cannot be called since connection hasnt been established yet at this point
 // Subscribe and unsubscribe must be called when connection is successfully established and terminated respectively

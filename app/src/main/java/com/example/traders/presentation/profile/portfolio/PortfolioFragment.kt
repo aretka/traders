@@ -134,11 +134,9 @@ class PortfolioFragment : BaseFragment() {
 
     private fun FragmentPortfolioBinding.setUpAdapter() {
         adapter = PortfolioListAdapter(SingleCryptoListener { slug, symbol ->
-            if (symbol != null) {
-                val direction = ProfileFragmentDirections
-                    .actionUserProfileFragmentToCryptoItemFragment(slug, symbol)
-                navController.navigate(direction)
-            }
+            val direction = ProfileFragmentDirections
+                .actionUserProfileFragmentToCryptoItemFragment(slug, symbol)
+            navController.navigate(direction)
         })
         portfolioList.adapter = adapter
     }

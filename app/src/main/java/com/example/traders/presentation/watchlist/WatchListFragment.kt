@@ -38,7 +38,8 @@ class WatchListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(viewModel) {
-            updateFavouritesList()
+//            TODO: Is naming is ok?
+            onViewCreatedCalled()
             isLoading.observe(viewLifecycleOwner) { isVisible ->
                 binding.changeLoaderVisibility(isVisible)
             }
@@ -53,11 +54,9 @@ class WatchListFragment : BaseFragment() {
 
     private fun FragmentWatchListBinding.setListAdapter() {
         adapter = WatchListAdapter(SingleCryptoListener { slug, symbol ->
-            if (symbol != null) {
-                val direction = WatchListFragmentDirections
-                    .actionWatchListFragmentToCryptoItem(slug, symbol)
-                navController.navigate(direction)
-            }
+            val direction = WatchListFragmentDirections
+                .actionWatchListFragmentToCryptoItem(slug, symbol)
+            navController.navigate(direction)
         })
         itemsList.adapter = adapter
     }
@@ -112,6 +111,11 @@ class WatchListFragment : BaseFragment() {
         sortByChangeButtons.setOnClickListener {
             viewModel.onSortPriceChangeButtonClicked()
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.onFragmentStop()
     }
 
     override fun onDestroy() {
