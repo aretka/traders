@@ -38,7 +38,7 @@ Watchlist is the main launching screen comprised of top 30 crypto list elements 
 ![allList](https://user-images.githubusercontent.com/57877668/166565606-a8022b71-2661-4bce-8548-d10ba61ce344.gif) | ![pullToRefresh](https://user-images.githubusercontent.com/57877668/166565597-837a43ee-ba26-49b0-92e5-291f1ba74f1f.gif) | ![loader](https://user-images.githubusercontent.com/57877668/166565467-9ed97da0-2b27-449d-a64a-1ffb1dcce390.gif)
 
 ### 2.2. Single crypto screen
-Single crypto screen represents 3 tabs: crypto chart, price statistics(last 24h data, ROI etc) and project description. There is a favourite toggle button on the top which saves chose crypto to room or removes it.</br></br>
+Single crypto screen represents 3 tabs: crypto chart, price statistics(last 24h data, ROI etc) and project description. There is a favourite toggle button on the top which saves crypto to room or removes it.</br></br>
 
 <img src="https://user-images.githubusercontent.com/57877668/166567064-a4d0f46f-f4f4-4db3-a082-66eada23f800.gif" width="300"/></br>
 
