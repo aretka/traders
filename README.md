@@ -18,7 +18,7 @@ New features are being developed and the app is being improved utilizing the cut
 
 <a name="main_concepts"></a>
 ## 2. Main parts of the app
-It is single activity and multiple fragment app consisting of three main screens: **watch list**, **profile** and **single crypto** screen.
+It is single activity and multiple fragment app consisting of three main screens: **watch list**, **profile** and **crypto details** screen.
 
 ### 2.1. Watch list screen
 Watchlist is the main launching screen comprised of top 30 crypto list elements and each of the element consists of slug, symbol, price, and 24h precent and price change.</br>
