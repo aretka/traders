@@ -17,7 +17,7 @@ This version of the app consists of the main and most valuable functionalities/f
 New features are being developed and the app is being improved utilizing the cutting-edge technologies.
 
 <a name="main_concepts"></a>
-## 2. Main concepts of the app
+## 2. Main parts of the app
 It is single activity and multiple fragment app consisting of three main screens: **watch list**, **profile** and **single crypto** screen.
 
 ### 2.1. Watch list screen
