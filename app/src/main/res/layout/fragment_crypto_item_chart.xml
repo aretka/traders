@@ -33,7 +33,7 @@
             app:layout_constraintStart_toEndOf="@+id/price_label"
             app:layout_constraintBottom_toBottomOf="@+id/price_label"
             android:text="2022:01:24"
-            android:textSize="@dimen/xx_small_text_size" />
+            android:textSize="@dimen/extra_small_text_size" />
 
         <TextView
             android:layout_width="wrap_content"

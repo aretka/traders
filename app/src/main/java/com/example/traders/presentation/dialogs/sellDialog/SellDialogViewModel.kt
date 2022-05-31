@@ -32,14 +32,10 @@ class SellDialogViewModel @AssistedInject constructor(
 ) : BaseViewModel() {
     private val minCryptoToSell = getMinCryptoToSell()
 
-    private val _state = MutableStateFlow(
-        SellState(
-            minInputVal = minCryptoToSell
-        )
-    )
+    private val _state = MutableStateFlow(SellState(minInputVal = minCryptoToSell))
     val state = _state.asStateFlow()
 
-    private val _events = MutableSharedFlow<SellDialogEvent>(extraBufferCapacity = 1)
+    private val _events = MutableSharedFlow<SellDialogEvent>()
     val events = _events.asSharedFlow()
 
     init {

@@ -16,11 +16,11 @@ import kotlinx.coroutines.flow.asSharedFlow
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
+import javax.inject.Inject
 
-class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
+class BinanceWSClientImpl @Inject constructor() : WebSocketClient(WEB_SOCKET_URI), BinanceWSClient {
 
     private val _state = MutableSharedFlow<PriceTickerData>(
-        replay = 1,
         extraBufferCapacity = 30,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
@@ -101,5 +101,6 @@ class BinanceWSClientImpl(uri: URI) : WebSocketClient(uri), BinanceWSClient {
     companion object {
         private const val TAG = "WebSocketClient"
         private val gson = Gson()
+        private val WEB_SOCKET_URI = URI("wss://stream.binance.com:9443/stream")
     }
 }

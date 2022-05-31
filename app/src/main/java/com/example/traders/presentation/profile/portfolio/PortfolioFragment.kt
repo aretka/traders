@@ -45,7 +45,6 @@ class PortfolioFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        Result is not received from dialog fragment
         setFragmentResultListener(
             "deposit_data"
         ) { _, bundle ->
@@ -61,7 +60,7 @@ class PortfolioFragment : BaseFragment() {
             }
         }
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             viewModel.state.collect {
                 binding.updateUiData(it)
             }

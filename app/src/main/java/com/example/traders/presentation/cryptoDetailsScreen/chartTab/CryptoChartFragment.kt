@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
 import com.example.traders.database.FixedCryptoList
 import com.example.traders.databinding.FragmentCryptoItemChartBinding
-import com.example.traders.network.models.cryptoChartData.CryptoChart
+import com.example.traders.network.models.cryptoChartData.CryptoChartCandle
 import com.example.traders.presentation.BaseFragment
 import com.example.traders.presentation.dialogs.buyDialog.BuyDialogFragment
 import com.example.traders.presentation.dialogs.confirmationDialog.ConfirmationDialogFragment
@@ -56,7 +56,6 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         setFragmentResultListener(
             "transaction_info"
@@ -69,7 +68,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
             }
         }
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             viewModel.chartState.collect { state ->
                 binding.setHeaderPrices(state.tickerData)
                 binding.updateBuySellBtnAccessibility(state)
@@ -77,7 +76,6 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
                 updateChart(state)
             }
         }
-        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun showConfirmationDialog(transactionInfo: TransactionInfo) {
@@ -88,7 +86,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
         confirmationDialog.show(parentFragmentManager, "buy_sell_confirmation")
     }
 
-    private fun FragmentCryptoItemChartBinding.setHeaderPrices(priceTicker: CryptoChart?) {
+    private fun FragmentCryptoItemChartBinding.setHeaderPrices(priceTicker: CryptoChartCandle?) {
         priceTicker?.let {
             livePriceText.text =
                 "$ " + roundAndFormatDouble(it.close.toDouble(), crypto.priceToRound)
@@ -104,22 +102,22 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
     private fun updateChart(state: ChartState) {
         when (state.activeButtonId) {
             BtnId.MONTH1_BTN -> {
-                state.chartDataFor90d?.let {
+                state.chartCandleDataFor90D?.let {
                     binding.candleChart.importListValues(it.subList(it.size - 30, it.size))
                 }
             }
             BtnId.MONTH3_BTN -> {
-                state.chartDataFor90d?.let {
+                state.chartCandleDataFor90D?.let {
                     binding.candleChart.importListValues(it)
                 }
             }
             BtnId.MONTH6_BTN -> {
-                state.chartDataFor360d?.let {
+                state.chartCandleDataFor360D?.let {
                     binding.candleChart.importListValues(it.subList(it.size - 25, it.size))
                 }
             }
             BtnId.MONTH12_BTN -> {
-                state.chartDataFor360d?.let {
+                state.chartCandleDataFor360D?.let {
                     binding.candleChart.importListValues(it)
                 }
             }

@@ -28,34 +28,6 @@ class WatchListViewModel @Inject constructor(
         }
     }
 
-    private fun subscribeToCryptoPriceUpdates() {
-        launch {
-            _state.update {
-                it.copy(
-                    showFavourites = watchListRepository.isFavouritesOn(),
-                    sortOrder = watchListRepository.sortOrderType()
-                )
-            }
-            watchListRepository.binanceCryptoList.collect { list ->
-                _state.update {
-                    it.copy(binanceCryptoData = list)
-                }
-            }
-        }
-    }
-
-    private fun loadInitialCryptoList() {
-        launchWithProgress {
-            watchListRepository.refreshCryptoPrices()
-        }
-    }
-
-    private fun startCryptoPricesPolling() {
-        launch {
-            watchListRepository.startCollectingBinanceTickerData()
-        }
-    }
-
     fun getCryptoOnRefresh() {
         launch {
             _state.update { it.copy(isRefreshing = true) }
@@ -90,16 +62,41 @@ class WatchListViewModel @Inject constructor(
         }.exhaustive
     }
 
-    fun onScrolled() {
-        _state.update { it.copy(shouldScrollTop = false) }
-    }
-
     private fun updateSortOrder(newSortOrder: SortOrder) {
         launch {
             watchListRepository.saveSortOrderOnPreference(newSortOrder)
         }
         _state.update { it.copy(sortOrder = newSortOrder) }
         watchListRepository.sortList(newSortOrder)
+    }
+
+    private fun subscribeToCryptoPriceUpdates() {
+        launch {
+            _state.update {
+                it.copy(
+                    showFavourites = watchListRepository.isFavouritesOn(),
+                    sortOrder = watchListRepository.sortOrderType()
+                )
+            }
+            watchListRepository.binanceCryptoList.collect { list ->
+                _state.update {
+                    it.copy(binanceCryptoData = list)
+                }
+            }
+        }
+    }
+
+    private fun loadInitialCryptoList() {
+        launchWithProgress {
+            watchListRepository.refreshCryptoPrices()
+            watchListRepository.sortList(watchListRepository.sortOrderType())
+        }
+    }
+
+    private fun startCryptoPricesPolling() {
+        launch {
+            watchListRepository.startCollectingBinanceTickerData()
+        }
     }
 
 // This function cannot be called since connection hasnt been established yet at this point

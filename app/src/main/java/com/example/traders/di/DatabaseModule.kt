@@ -16,13 +16,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
-    @Singleton
-    @Provides
-    fun provideCryptoDatabaseDao(db: CryptoDatabase): CryptoDatabaseDao {
-        return db.getDatabaseDao()
-    }
-
-    @Singleton
     @Provides
     fun provideConverters() = Converters()
 
@@ -39,5 +32,11 @@ object DatabaseModule {
         ).fallbackToDestructiveMigration()
          .addTypeConverter(convertersInstance)
          .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideCryptoDatabaseDao(db: CryptoDatabase): CryptoDatabaseDao {
+        return db.getDatabaseDao()
     }
 }

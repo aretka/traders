@@ -1,6 +1,6 @@
 package com.example.traders.network.models.cryptoChartData
 
-data class CryptoChart(
+data class CryptoChartCandle(
     val volume: Float = 0f,
     val open: Float = 0f,
     val high: Float = 0f,

@@ -98,7 +98,7 @@ class CryptoItemFragment : BaseFragment() {
     }
 
     private fun FragmentCryptoItemBinding.updateUI(state: CryptoItemState) {
-        favouriteBtn.isEnabled = state.isBtnActive
+        favouriteBtn.isEnabled = state.isFavBtnActive
         if (state.isFavourite) {
             favouriteBtn.setImageResource(R.drawable.ic_star_active)
         } else {

@@ -28,7 +28,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
-class CryptoChartViewModelTest : TestCoroutineScope by TestCoroutineScope() {
+class CryptoChartCandleViewModelTest : TestCoroutineScope by TestCoroutineScope() {
 
     @Rule
     @JvmField
@@ -61,8 +61,8 @@ class CryptoChartViewModelTest : TestCoroutineScope by TestCoroutineScope() {
         val fixture = initFixture()
         fixture.chartState.test {
             val i = awaitItem()
-            assertTrue(i.chartDataFor360d != null)
-            assertTrue(i.chartDataFor90d != null)
+            assertTrue(i.chartCandleDataFor360D != null)
+            assertTrue(i.chartCandleDataFor90D != null)
         }
     }
 

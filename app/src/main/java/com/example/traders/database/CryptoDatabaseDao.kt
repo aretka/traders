@@ -6,6 +6,7 @@ import java.math.BigDecimal
 
 @Dao
 interface CryptoDatabaseDao {
+//    Portfolio crypto
     @Query("SELECT * FROM crypto")
     fun getAllCryptoLive(): LiveData<List<Crypto>>
 

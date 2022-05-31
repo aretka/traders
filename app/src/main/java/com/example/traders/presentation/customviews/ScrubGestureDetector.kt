@@ -10,7 +10,6 @@ class ScrubGestureDetector(
     private val handler: Handler,
     private val touchSlop: Float
 ) : View.OnTouchListener {
-    var enabled: Boolean = false
     private var downX: Float = 0f
     private var downY: Float = 0f
 
@@ -20,7 +19,6 @@ class ScrubGestureDetector(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        if(!enabled) return false
 
         val x = event!!.x
         val y = event.y

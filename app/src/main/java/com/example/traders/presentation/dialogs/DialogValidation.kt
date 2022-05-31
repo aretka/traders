@@ -2,8 +2,9 @@ package com.example.traders.presentation.dialogs
 
 import java.math.BigDecimal
 import javax.inject.Inject
+import javax.inject.Singleton
 
-// Provide with hilt
+@Singleton
 class DialogValidation @Inject constructor() {
     fun validate(input: BigDecimal?, minVal: BigDecimal, maxVal: BigDecimal): DialogValidationMessage {
         return when {

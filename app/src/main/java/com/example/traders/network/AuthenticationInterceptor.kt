@@ -6,7 +6,7 @@ import okhttp3.Response
 class AuthenticationInterceptor: Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val newRequest = chain.request().newBuilder()
-            .addHeader("X-MBX-APIKEY", "zHehIzQC9KdvgFnjc5P1LPFmWYRa4xwCxlE7uaITOKaxQxkKvcVtcUrczqyS8wTN")
+            .addHeader("X-MBX-APIKEY", "")
             .build()
 
         return chain.proceed(newRequest)

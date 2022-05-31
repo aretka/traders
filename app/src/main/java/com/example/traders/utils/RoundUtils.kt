@@ -29,5 +29,5 @@ fun returnTickerWithRoundedPrice(tickerData: PriceTickerData): PriceTickerData {
     val symbol = tickerData.symbol.replace("USDT", "")
     val numToRound = FixedCryptoList.valueOf(symbol).priceToRound
     val last = BigDecimal(tickerData.last).setScale(numToRound, RoundingMode.HALF_UP).toString()
-    return tickerData.copy(last = last)
+    return tickerData.copy(last = last, symbol = symbol)
 }

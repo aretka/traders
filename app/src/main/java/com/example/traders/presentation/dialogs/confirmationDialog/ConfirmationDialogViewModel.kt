@@ -42,11 +42,11 @@ class ConfirmationDialogViewModel @AssistedInject constructor(
     }
 
     private suspend fun deleteAllCryptoFromDb() {
-        async { repository.deleteAllCryptoFromDb() }.await()
+        repository.deleteAllCryptoFromDb()
     }
 
     private suspend fun deleteAllTransactions() {
-        async { repository.deleteAllTransactions() }.await()
+        repository.deleteAllTransactions()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

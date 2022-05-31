@@ -42,7 +42,7 @@ class PortfolioViewModel @Inject constructor(
         if (listNotEmptyAndNotEqualsToPrevList()) {
             _state.value = _state.value.copy(prevList = livePortfolioList.value ?: emptyList())
             launch {
-                collectRequiredPrices(getSublistOfNewCrypto())
+                collectRequiredPrices(sublistOfNewCrypto())
                 calculateTotalBalance()
                 calculateChartData()
             }
@@ -62,7 +62,7 @@ class PortfolioViewModel @Inject constructor(
         return livePortfolioList.value?.isNotEmpty() ?: false && _state.value.prevList != livePortfolioList.value
     }
 
-    private fun getSublistOfNewCrypto(): List<Crypto> {
+    private fun sublistOfNewCrypto(): List<Crypto> {
         return livePortfolioList.value?.filter { newState ->
             _state.value.cryptoListInUsd.filter { newState.symbol == it.symbol }.isEmpty()
         } ?: emptyList()
@@ -155,30 +155,10 @@ class PortfolioViewModel @Inject constructor(
     }
 
     private fun calculateChartData() {
-        val chartData = mutableListOf<PieEntry>()
-        if (_state.value.cryptoListInUsd.isEmpty()) {
-            chartData.add(PieEntry(100F, "Empty"))
-        } else if (_state.value.cryptoListInUsd.size <= 5) {
-            _state.value.cryptoListInUsd.forEach { crypto ->
-                chartData.add(PieEntry(crypto.amountInUsd.toFloat() ?: 0F, crypto.symbol))
-            }
-        } else {
-            val sortedList = _state.value.cryptoListInUsd.toMutableList()
-            sortedList.sortByDescending { it.amountInUsd }
-            for (i in 0..3) {
-                chartData.add(
-                    PieEntry(
-                        sortedList[i].amountInUsd.toFloat() ?: 0F,
-                        sortedList[i].symbol
-                    )
-                )
-            }
-
-            var othersUsdVal = BigDecimal(0)
-            for (i in 4..(sortedList.size - 1)) {
-                othersUsdVal += sortedList[i].amountInUsd
-            }
-            chartData.add(PieEntry(othersUsdVal.toFloat(), "Others"))
+        val chartData: List<PieEntry> = when(_state.value.cryptoListInUsd.size) {
+            0 -> emptyChartData()
+            in 1..5 -> middleSizeChartData()
+            else -> largeSizeChartData()
         }
 
         _state.value = _state.value.copy(
@@ -188,12 +168,38 @@ class PortfolioViewModel @Inject constructor(
         )
     }
 
+    private fun emptyChartData(): List<PieEntry> {
+        return listOf(PieEntry(100F, "Empty"))
+    }
+
+    private fun middleSizeChartData(): List<PieEntry> {
+        return _state.value.cryptoListInUsd.map { crypto ->
+            PieEntry(crypto.amountInUsd.toFloat() ?: 0F, crypto.symbol)
+        }
+    }
+
+    private fun largeSizeChartData(): List<PieEntry> {
+        val chartData: MutableList<PieEntry> = mutableListOf()
+        val sortedList = _state.value.cryptoListInUsd.sortedByDescending { it.amountInUsd }
+
+        sortedList.subList(0, 4).forEach {
+            chartData.add(
+                PieEntry(
+                    it.amountInUsd.toFloat(),
+                    it.symbol
+                )
+            )
+        }
+
+        val othersUsdVal = sortedList.subList(4, sortedList.size).sumOf { it.amountInUsd }
+        chartData.add(PieEntry(othersUsdVal.toFloat(), "Others"))
+
+        return chartData
+    }
+
     companion object {
         private val colors =
             listOf(-13710223, -932849, -1618884, -13330213, -4128884, -2164, -12148, -7542017, -29539)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-    }
 }

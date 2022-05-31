@@ -56,6 +56,7 @@ class PortfolioListAdapter(private val singleCryptoListener: SingleCryptoListene
 
     class HeaderViewHolder(val binding: ListPortfolioHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
+//        Bind function is not necessary because all the data is immutable and set in xml
         companion object {
             fun from(parent: ViewGroup): HeaderViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)

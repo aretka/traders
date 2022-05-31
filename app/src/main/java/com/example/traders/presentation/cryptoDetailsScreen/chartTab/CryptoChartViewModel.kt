@@ -5,13 +5,15 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.traders.database.FixedCryptoList
-import com.example.traders.network.models.cryptoChartData.CryptoChart
+import com.example.traders.network.models.cryptoChartData.CryptoChartCandle
 import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.network.webSocket.BinanceWSClient
 import com.example.traders.presentation.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
@@ -30,8 +32,7 @@ class CryptoChartViewModel @AssistedInject constructor(
 
     init {
         collectBinanceTickerData()
-        fetchCryptoChartData(CandleType.DAILY)
-        fetchCryptoChartData(CandleType.WEEKLY)
+        fetchCandleData()
     }
 
     fun onChartBtnSelected(btnId: BtnId) {
@@ -46,21 +47,18 @@ class CryptoChartViewModel @AssistedInject constructor(
     fun collectBinanceTickerData() {
         launch {
             webSocketClient.state.collect { ticker ->
-                if (ticker.symbol.replace("USDT", "") == crypto.name.uppercase()) {
-                    if (!_chartState.value.showChartPrice) {
-                        _chartState.value =
-                            _chartState.value.copy(tickerData = ticker.toCryptoChart())
-                    }
+                if (ticker.symbol == crypto.name && !_chartState.value.showChartPrice) {
+                    _chartState.update { it.copy(tickerData = ticker.toCryptoChartCandle()) }
                 }
             }
         }
     }
 
-    fun onChartLongPressClick(crypto: CryptoChart?) {
-        if (crypto != null) {
+    fun onChartLongPressClick(cryptoCandle: CryptoChartCandle?) {
+        if (cryptoCandle != null) {
             _chartState.update {
                 it.copy(
-                    tickerData = crypto,
+                    tickerData = cryptoCandle,
                     showChartPrice = true
                 )
             }
@@ -69,32 +67,32 @@ class CryptoChartViewModel @AssistedInject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun fetchCryptoChartData(candleType: CandleType) {
-
+    private fun fetchCandleData() {
         launch {
-            val list = repository.getCryptoChartData(crypto.slug, candleType)
-            when (candleType) {
-                CandleType.DAILY -> {
-                    _chartState.value = _chartState.value.copy(
-                        chartDataFor90d = list,
-                    )
-                }
-                CandleType.WEEKLY -> {
-                    _chartState.value = _chartState.value.copy(
-                        chartDataFor360d = list,
-                    )
-                }
-            }
-
-            if (chartDataIsFetched()) {
-                _chartState.value = _chartState.value.copy(chartBtnsEnabled = true)
-            }
+            val candleFutureData = listOf(
+                async { fetchCryptoChartData(CandleType.DAILY) },
+                async { fetchCryptoChartData(CandleType.WEEKLY) }
+            )
+            candleFutureData.awaitAll()
+            _chartState.update { it.copy(chartBtnsEnabled = true) }
         }
     }
 
-    private fun chartDataIsFetched(): Boolean {
-        return _chartState.value.chartDataFor90d != null && _chartState.value.chartDataFor360d != null
+    @RequiresApi(Build.VERSION_CODES.O)
+    private suspend fun fetchCryptoChartData(candleType: CandleType) {
+        val list = repository.getCryptoChartData(crypto.slug, candleType)
+        when (candleType) {
+            CandleType.DAILY -> {
+                _chartState.value = _chartState.value.copy(
+                    chartCandleDataFor90D = list,
+                )
+            }
+            CandleType.WEEKLY -> {
+                _chartState.value = _chartState.value.copy(
+                    chartCandleDataFor360D = list,
+                )
+            }
+        }
     }
 
     @AssistedFactory

@@ -1,13 +1,13 @@
 package com.example.traders.presentation.cryptoDetailsScreen.chartTab
 
-import com.example.traders.network.models.cryptoChartData.CryptoChart
+import com.example.traders.network.models.cryptoChartData.CryptoChartCandle
 
 data class ChartState(
-    val chartDataFor90d: List<CryptoChart>? = null,
-    val chartDataFor360d: List<CryptoChart>? = null,
+    val chartCandleDataFor90D: List<CryptoChartCandle>? = null,
+    val chartCandleDataFor360D: List<CryptoChartCandle>? = null,
     val lineChartData90d: List<Float> = emptyList(),
     val lineChartData360d: List<Float> = emptyList(),
-    val tickerData: CryptoChart? = null,
+    val tickerData: CryptoChartCandle? = null,
     val chartBtnsEnabled: Boolean = false,
     val isMonth1BtnActive: Boolean = true,
     val isMonth3BtnActive: Boolean = false,
