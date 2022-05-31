@@ -52,6 +52,7 @@ class PortfolioViewModel @Inject constructor(
                 calculateChartData()
             }
         }
+        // if we wrote else it would mean nothing has changed and we dont need to change anything
     }
 
     private fun listIsEmpty(): Boolean {

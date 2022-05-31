@@ -17,7 +17,12 @@ class AppModule {
     @ApplicationScopeDefault
     @Provides
     @Singleton
-    fun provideApplicationScope() = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    fun provideApplicationScopeDefault() = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+    @ApplicationScopeIO
+    @Provides
+    @Singleton
+    fun provideApplicationScopeIO() = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 }
 
 @Retention(AnnotationRetention.RUNTIME)
