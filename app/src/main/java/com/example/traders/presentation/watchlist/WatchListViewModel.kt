@@ -25,7 +25,7 @@ class WatchListViewModel @Inject constructor(
         startCryptoPricesPolling()
     }
 
-    fun onViewCreatedCalled() {
+    fun updatePrices() {
         updateFavouritesList()
         subscribeToCryptoPriceUpdates()
     }
@@ -91,7 +91,7 @@ class WatchListViewModel @Inject constructor(
                 )
             }
 
-            watchListRepository.binanceCryptoList.cancellable().collect { list ->
+            watchListRepository.binanceCryptoList.collect { list ->
                 _state.update {
                     it.copy(binanceCryptoData = list)
                 }

@@ -38,8 +38,7 @@ class WatchListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(viewModel) {
-//            TODO: Is naming is ok?
-            onViewCreatedCalled()
+            updatePrices()
             isLoading.observe(viewLifecycleOwner) { isVisible ->
                 binding.changeLoaderVisibility(isVisible)
             }
