@@ -1,5 +1,6 @@
 package com.example.traders.presentation.cryptoDetailsScreen.priceStatisticsTab
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.traders.presentation.BaseViewModel
 import com.example.traders.network.repository.CryptoRepository
@@ -8,6 +9,7 @@ import com.example.traders.network.models.cryptoStatsData.CryptoStatistics
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class CryptoPriceStatisticsViewModel @AssistedInject constructor(
@@ -19,8 +21,9 @@ class CryptoPriceStatisticsViewModel @AssistedInject constructor(
 
     init {
         launch {
+            Log.d("PriceStatistics", "Running on thread: ${Thread.currentThread().name} ")
             val responseBody = repository.getCryptoPriceStatistics(crypto.slug).body() ?: return@launch
-            _cryptoStatsResponse.value = responseBody
+            _cryptoStatsResponse.postValue(responseBody)
         }
     }
 

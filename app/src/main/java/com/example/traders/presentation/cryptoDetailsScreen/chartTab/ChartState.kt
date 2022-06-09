@@ -16,5 +16,6 @@ data class ChartState(
     val activeButtonId: BtnId = BtnId.MONTH1_BTN,
     val prevActiveButtonId: BtnId? = null,
     val dialogBtnsEnabled: Boolean = false,
-    val showChartPrice: Boolean = false
+    val showChartPrice: Boolean = false,
+    val latestCryptoTickerPrice: CryptoChartCandle? = null
 )

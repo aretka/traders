@@ -5,9 +5,11 @@ import androidx.annotation.RequiresApi
 import com.example.traders.database.*
 import com.example.traders.network.BinanceApi
 import com.example.traders.network.MessariApi
+import com.example.traders.network.models.binanceCandleData.BinanceCandleDataSublist
 import com.example.traders.network.models.cryptoChartData.CryptoChartCandle
 import com.example.traders.presentation.cryptoDetailsScreen.chartTab.CandleType
 import com.example.traders.utils.DateUtils.getCandleDate
+import com.example.traders.utils.DateUtils.getDateFromTimeStamp
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,20 +24,6 @@ class CryptoRepository @Inject constructor(
     // Messari api
     suspend fun getCryptoPrices() = api.getCryptoPrices()
     suspend fun getCryptoPriceStatistics(slug: String) = api.getCryptoPriceStatistics(slug)
-    @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun getCryptoChartData(
-        slug: String,
-        candleType: CandleType
-    ) : List<CryptoChartCandle> {
-        val afterDate = getCandleDate(candleType.numDays)
-        val response = api.getCryptoChartData(slug, afterDate, candleType.candleInterval)
-        
-        return response.body()?.data?.values?.mapIndexed { index, crypto ->
-            // crypto = listOf<Float>(volume, open, high, low, close)
-            returnCryptoChartCandle(crypto, index, candleType, response.body()!!.data.values.size)
-        } ?: emptyList()
-    }
-
     suspend fun getCryptoDescriptionData(id: String) = api.getCryptoDescriptionData(id)
 
     // Binance api
@@ -78,35 +66,6 @@ class CryptoRepository @Inject constructor(
     suspend fun deleteFavouriteCrypto(symbol: String) = cryptoDao.deleteFavouriteCrypto(symbol)
     suspend fun getFavouriteBySymbol(symbol: String) = cryptoDao.getFavouriteBySymbol(symbol)
 
-    private fun priceChange(crypto: List<Float>) = crypto[1] - crypto[4]
-
-    private fun percentPriceChange(crypto: List<Float>) = 100*(crypto[4] - crypto[1])/crypto[1]
-
-    private fun daysBefore(index: Int, candleType: CandleType, size: Int): Long {
-        return when(candleType) {
-            CandleType.DAILY -> size.toLong() - index - 1
-            CandleType.WEEKLY -> (size.toLong() - index - 1) * 7
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun returnCryptoChartCandle(
-        crypto: List<Float>,
-        index: Int,
-        candleType: CandleType,
-        size: Int
-    ) : CryptoChartCandle{
-        return CryptoChartCandle(
-            volume = crypto[0],
-            open = crypto[1],
-            high = crypto[2],
-            low = crypto[3],
-            close = crypto[4],
-            priceChange = priceChange(crypto),
-            percentPriceChange = percentPriceChange(crypto),
-            date = getCandleDate(daysBefore(index, candleType, size))
-        )
-    }
 }
 
 inline fun <reified T : Enum<T>> enumContains(symbol: String): Boolean {

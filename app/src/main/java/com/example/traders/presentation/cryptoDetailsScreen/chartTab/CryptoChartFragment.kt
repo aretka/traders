@@ -113,7 +113,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
             }
             BtnId.MONTH6_BTN -> {
                 state.chartCandleDataFor360D?.let {
-                    binding.candleChart.importListValues(it.subList(it.size - 25, it.size))
+                    binding.candleChart.importListValues(it.subList(it.size - 26, it.size))
                 }
             }
             BtnId.MONTH12_BTN -> {

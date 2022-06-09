@@ -13,6 +13,7 @@ import com.example.traders.presentation.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,7 @@ import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 class CryptoChartViewModel @AssistedInject constructor(
-    private val repository: CryptoRepository,
+    private val repository: ChartRepository,
     private val webSocketClient: BinanceWSClient,
     @Assisted private val crypto: FixedCryptoList
 ) : BaseViewModel() {
@@ -32,8 +33,8 @@ class CryptoChartViewModel @AssistedInject constructor(
     val chartState = _chartState.asStateFlow()
 
     init {
-        collectBinanceTickerData()
         fetchCandleData()
+        collectBinanceTickerData()
     }
 
     fun onChartBtnSelected(btnId: BtnId) {
@@ -42,16 +43,6 @@ class CryptoChartViewModel @AssistedInject constructor(
                 prevActiveButtonId = _chartState.value.activeButtonId,
                 activeButtonId = btnId
             )
-        }
-    }
-
-    fun collectBinanceTickerData() {
-        launch {
-            webSocketClient.state.collect { ticker ->
-                if (ticker.symbol == crypto.name && !_chartState.value.showChartPrice) {
-                    _chartState.update { it.copy(tickerData = ticker.toCryptoChartCandle()) }
-                }
-            }
         }
     }
 
@@ -64,7 +55,10 @@ class CryptoChartViewModel @AssistedInject constructor(
                 )
             }
         } else {
-            _chartState.update { it.copy(showChartPrice = false) }
+            _chartState.update { it.copy(
+                showChartPrice = false,
+                tickerData = it.latestCryptoTickerPrice
+            ) }
         }
     }
 
@@ -79,9 +73,23 @@ class CryptoChartViewModel @AssistedInject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    private fun collectBinanceTickerData() {
+        launch {
+            webSocketClient.state.collect { ticker ->
+                if (ticker.symbol == crypto.name && !_chartState.value.showChartPrice) {
+                    val updatedTickerPrice = ticker.toCryptoChartCandle()
+                    _chartState.update { it.copy(
+                        tickerData = updatedTickerPrice,
+                        latestCryptoTickerPrice = updatedTickerPrice
+                    ) }
+                }
+            }
+        }
+    }
+
     private suspend fun fetchCryptoChartData(candleType: CandleType) {
-        val list = repository.getCryptoChartData(crypto.slug, candleType)
+        val symbol = crypto.name.uppercase() + "USDT"
+        val list = repository.getBinanceCandleData(symbol, candleType)
         when (candleType) {
             CandleType.DAILY -> {
                 _chartState.value = _chartState.value.copy(
