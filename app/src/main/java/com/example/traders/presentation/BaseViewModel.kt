@@ -41,5 +41,5 @@ open class BaseViewModel : ViewModel(), CoroutineScope {
     }
 
     override val coroutineContext: CoroutineContext
-        get() = viewModelScope.coroutineContext + exceptionHandler + Dispatchers.Default
+        get() = viewModelScope.coroutineContext + exceptionHandler
 }

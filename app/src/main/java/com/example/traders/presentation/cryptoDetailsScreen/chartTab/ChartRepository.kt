@@ -10,14 +10,18 @@ import javax.inject.Inject
 class ChartRepository @Inject constructor(
     private val binanceApi: BinanceApi
 ) {
-    suspend fun getBinanceCandleData(symbol: String,candleType: CandleType) : List<CryptoChartCandle> {
-        val response = binanceApi.getBinanceCandleData(symbol, candleType.candleInterval, candleType.limit)
+    suspend fun getBinanceCandleData(
+        symbol: String,
+        candleType: CandleType
+    ): List<CryptoChartCandle> {
+        val response =
+            binanceApi.getBinanceCandleData(symbol, candleType.candleInterval, candleType.limit)
         return response.body()?.map { cryptoCandle ->
             returnBinanceChartCandle(cryptoCandle)
         } ?: emptyList()
     }
 
-    private fun returnBinanceChartCandle(cryptoCandle: BinanceCandleDataSublist) : CryptoChartCandle {
+    private fun returnBinanceChartCandle(cryptoCandle: BinanceCandleDataSublist): CryptoChartCandle {
         val binanceCandle = cryptoCandle.toCastedCandleData()
         return CryptoChartCandle(
             open = binanceCandle.open,
@@ -31,10 +35,11 @@ class ChartRepository @Inject constructor(
         )
     }
 
-    private fun binancePriceChange(binanceCandle: BinanceChartCandle) = binanceCandle.open - binanceCandle.close
+    private fun binancePriceChange(binanceCandle: BinanceChartCandle) =
+        binanceCandle.open - binanceCandle.close
 
     private fun binancePercentPriceChange(binanceCandle: BinanceChartCandle): Float {
-        return 100*(binanceCandle.close - binanceCandle.open)/binanceCandle.open
+        return 100 * (binanceCandle.close - binanceCandle.open) / binanceCandle.open
     }
 
 }
