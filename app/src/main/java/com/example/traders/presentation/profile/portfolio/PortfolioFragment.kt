@@ -22,7 +22,6 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PortfolioFragment : BaseFragment() {
@@ -53,7 +52,7 @@ class PortfolioFragment : BaseFragment() {
         }
         updateChartAndAdapterData()
         // Update portfolio on list change
-        viewModel.livePortfolioList.observe(viewLifecycleOwner) {
+        viewModel.live_portfolio_list.observe(viewLifecycleOwner) {
             it?.let {
                 binding.updateMessageVisibility(it)
                 viewModel.updatePortfolioState()
