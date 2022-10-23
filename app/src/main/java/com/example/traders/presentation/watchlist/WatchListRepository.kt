@@ -12,18 +12,20 @@ import com.example.traders.network.models.binance24HourData.Binance24DataItem
 import com.example.traders.network.models.binance24HourData.BinanceDataItem
 import com.example.traders.network.models.binance24hTickerData.PriceTickerData
 import com.example.traders.network.webSocket.BinanceWSClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class WatchListRepository @Inject constructor(
-    private val web_socket_client: BinanceWSClient,
+    private val webSocketClient: BinanceWSClient,
     private val binanceApi: BinanceApi,
     private val cryptoDao: CryptoDatabaseDao,
     private val preferencesManager: PreferancesManager
 ) {
-// Sorting is not applied here since list should only be sorted only when sort type changes
     private val _binanceCryptoList = MutableStateFlow<List<BinanceDataItem>>(emptyList())
     val binanceCryptoList = _binanceCryptoList
         .combine(preferencesManager.preferencesFlow) { list, preferences ->
@@ -34,11 +36,14 @@ class WatchListRepository @Inject constructor(
             }
         }
 
+    private var webSocketJob: Job? = null
+
     suspend fun refreshCryptoPrices() {
         val cryptoPricesResponse = getCryptoPricesList() ?: emptyList()
         val extractedPricesList =
             cryptoPricesResponse.getFixedCryptoList().map {
-                it.toBinanceDataItem() }
+                it.toBinanceDataItem()
+            }
 
         val finalList = extractedPricesList.applyFavourites(getAllFavourites())
         _binanceCryptoList.update { finalList }
@@ -46,7 +51,8 @@ class WatchListRepository @Inject constructor(
 
     suspend fun renewListWithFavourites() {
         _binanceCryptoList.update {
-            it.applyFavourites(getAllFavourites()) }
+            it.applyFavourites(getAllFavourites())
+        }
     }
 
     fun sortList(sortOrder: SortOrder) {
@@ -59,13 +65,13 @@ class WatchListRepository @Inject constructor(
         }
     }
 
-    fun emitDefaultList() {
+    private fun emitDefaultList() {
         val cryptoListOrder = FixedCryptoList::class.enumConstantNames().toMutableList()
         val orderBySymbol = cryptoListOrder.withIndex().associate { it.value to it.index }
         _binanceCryptoList.update { it.sortedBy { orderBySymbol[it.symbol] } }
     }
 
-    fun emitSortedByNameAsc() {
+    private fun emitSortedByNameAsc() {
         _binanceCryptoList.update { list ->  list.sortedBy { it.symbol } }
     }
 
@@ -129,25 +135,30 @@ class WatchListRepository @Inject constructor(
 
     //    I will have to start and pause collecting state
     // It collects message emitted from websocket sharedFlow and updates list item by reassigning BinanceDataItem to new value
-    suspend fun startCollectingBinanceTickerData() {
+    suspend fun startCollectingBinanceTickerData(scope: CoroutineScope) {
+        webSocketJob = scope.launch {
+            webSocketClient.state.collect { tickerData ->
+                val indexOfCryptoDataToUpdate = _binanceCryptoList.value.indexOfFirst {
+                    it.symbol == tickerData.symbol
+                }
 
-        web_socket_client.state.collect { tickerData ->
-            val indexOfCryptoDataToUpdate = _binanceCryptoList.value.indexOfFirst {
-                it.symbol == tickerData.symbol
-            }
-
-            if (indexOfCryptoDataToUpdate != -1) {
-                _binanceCryptoList.value = _binanceCryptoList.value.let {
-                    val updatedList = it.toMutableList()
-                    val itemToUpdate =
-                        tickerData.toBinanceDataItem(updatedList[indexOfCryptoDataToUpdate].isFavourite)
-                    if (itemToUpdate != null) {
-                        updatedList[indexOfCryptoDataToUpdate] = itemToUpdate
+                if (indexOfCryptoDataToUpdate != -1) {
+                    _binanceCryptoList.value = _binanceCryptoList.value.let {
+                        val updatedList = it.toMutableList()
+                        val itemToUpdate =
+                            tickerData.toBinanceDataItem(updatedList[indexOfCryptoDataToUpdate].isFavourite)
+                        if (itemToUpdate != null) {
+                            updatedList[indexOfCryptoDataToUpdate] = itemToUpdate
+                        }
+                        updatedList
                     }
-                    updatedList
                 }
             }
         }
+    }
+
+    fun stopCollectingBinanceTickerData() {
+        webSocketJob?.cancel()
     }
 
     // Converts PriceTickerData tp Binance24DataItem

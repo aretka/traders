@@ -1,6 +1,7 @@
 package com.example.traders.presentation.watchlist
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.example.traders.presentation.BaseViewModel
 import com.example.traders.database.SortOrder
 import com.example.traders.utils.exhaustive
@@ -108,7 +109,7 @@ class WatchListViewModel @Inject constructor(
 
     private fun startCryptoPricesPolling() {
         launch {
-            watchListRepository.startCollectingBinanceTickerData()
+            watchListRepository.startCollectingBinanceTickerData(viewModelScope)
         }
     }
 
