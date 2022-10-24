@@ -21,53 +21,38 @@ class PortfolioViewModel @Inject constructor(
     private val repository: CryptoRepository
 ) : BaseViewModel() {
 
-    private val _state = MutableStateFlow(
-        PortfolioState(
-            colors = colors
-        )
-    )
+    private val _state = MutableStateFlow(PortfolioState())
     val state = _state.asStateFlow()
-//    val state = _state.asStateFlow().combine(repository.getLiveAllCryptoPortfolio().asFlow()) {
-//        portfolioState, liveAllCryptoPortfolio ->
-//        updateStateData()
-//    }
 
-    val live_portfolio_list = repository.getLiveAllCryptoPortfolio()
+    val livePortfolioList = repository.getLiveAllCryptoPortfolio()
 
     fun chartUpdated() {
         _state.value = _state.value.copy(chartReadyForUpdate = false)
     }
 
     fun updatePortfolioState() {
-        if (listNotEmptyAndNotEqualsToPrevList()) {
-            _state.value = _state.value.copy(prevList = live_portfolio_list.value ?: emptyList())
+        if (listNonEmptyAndRenewed()) {
+            _state.value = _state.value.copy(prevList = livePortfolioList.value ?: emptyList())
             launch {
-
-
                 collectRequiredPrices(sublistOfNewCrypto())
                 calculateTotalBalance()
                 calculateChartData(
                 )
             }
-        } else if (listIsEmpty()) {
+        } else if (livePortfolioList.value?.isEmpty() == true) {
             setStateListsToEmpty()
             launch {
                 calculateChartData()
             }
         }
-        // if we wrote else it would mean nothing has changed and we dont need to change anything
     }
 
-    private fun listIsEmpty(): Boolean {
-        return live_portfolio_list.value?.isEmpty() ?: false
-    }
-
-    private fun listNotEmptyAndNotEqualsToPrevList(): Boolean {
-        return live_portfolio_list.value?.isNotEmpty() ?: false && _state.value.prevList != live_portfolio_list.value
+    private fun listNonEmptyAndRenewed(): Boolean {
+        return livePortfolioList.value?.isNotEmpty() ?: false && _state.value.prevList != livePortfolioList.value
     }
 
     private fun sublistOfNewCrypto(): List<Crypto> {
-        return live_portfolio_list.value?.filter { newState ->
+        return livePortfolioList.value?.filter { newState ->
             _state.value.cryptoListInUsd.filter { newState.symbol == it.symbol }.isEmpty()
         } ?: emptyList()
     }
@@ -90,11 +75,8 @@ class PortfolioViewModel @Inject constructor(
     }
 
     private suspend fun collectRequiredPrices(listToFetch: List<Crypto>) {
-
-        // Waits for required cryptoTickers to fetch
         val results = fetchBinanceTickerTasks(listToFetch).awaitAll()
 
-        // Takes all crypto elements into one array
         val allPricesFromApi = listOfSameItems() + results
 
         _state.value = _state.value.copy(
@@ -106,11 +88,9 @@ class PortfolioViewModel @Inject constructor(
     private fun getCryptoWithUsdPricesList(allPricesFromApi: List<CryptoTicker?>): MutableList<CryptoInUsd> {
         val cryptoWithUsdPricesList = mutableListOf<CryptoInUsd>()
 
-        // Add Usd to list if not exists
-        val usdAmount = live_portfolio_list.value!!.first { it.symbol == "USD" }.amount
+        val usdAmount = livePortfolioList.value!!.first { it.symbol == "USD" }.amount
         cryptoWithUsdPricesList.add(CryptoInUsd("USD", usdAmount, usdAmount))
 
-        // Calculate cryptoUsdVal
         for (cryptoTicker in allPricesFromApi) {
             cryptoTicker?.let { cryptoTicker ->
                 val amount = getCryptoAmount(cryptoTicker)
@@ -129,7 +109,7 @@ class PortfolioViewModel @Inject constructor(
     }
 
     private fun getCryptoAmount(cryptoTicker: CryptoTicker): BigDecimal {
-        return live_portfolio_list.value!!.first {
+        return livePortfolioList.value!!.first {
             it.symbol == cryptoTicker.symbol.replace(
                 "USDT",
                 ""
@@ -141,7 +121,6 @@ class PortfolioViewModel @Inject constructor(
         val binanceTickerTasks = mutableListOf<Deferred<CryptoTicker?>>()
         for (crypto in listToFetch) {
             if (crypto.symbol != "USD") {
-//                Log.e("API_FETCH", "NEW REQUEST OF ${crypto.symbol}")
                 binanceTickerTasks.add(
                     async { repository.getBinanceTickerBySymbol(crypto.symbol + "USDT").body() }
                 )
@@ -152,7 +131,7 @@ class PortfolioViewModel @Inject constructor(
 
     private fun listOfSameItems(): List<CryptoTicker?> {
         return _state.value.usdPricesFromBinance.filter { prevItem ->
-            live_portfolio_list.value?.filter {
+            livePortfolioList.value?.filter {
                 it.symbol == prevItem?.symbol?.replace("USDT", "")
             }!!.isNotEmpty()
         }
@@ -200,10 +179,4 @@ class PortfolioViewModel @Inject constructor(
 
         return chartData
     }
-
-    companion object {
-        private val colors =
-            listOf(-13710223, -932849, -1618884, -13330213, -4128884, -2164, -12148, -7542017, -29539)
-    }
-
 }
