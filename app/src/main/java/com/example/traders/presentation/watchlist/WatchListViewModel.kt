@@ -110,12 +110,4 @@ class WatchListViewModel @Inject constructor(
             watchListRepository.startCollectingBinanceTickerData()
         }
     }
-
-
-// This function cannot be called since connection hasnt been established yet at this point
-// Subscribe and unsubscribe must be called when connection is successfully established and terminated respectively
-//    private fun subscribeWebSocket() {
-//        Log.e("ALlCryptoViewModel", "initWebSocket called")
-//        webSocketClient.subscribe(listOf("btcusdt", "bnbusdt"), "ticker")
-//    }
 }

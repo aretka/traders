@@ -131,35 +131,28 @@ class WatchListRepository @Inject constructor(
     // It collects message emitted from websocket sharedFlow and updates list item by reassigning BinanceDataItem to new value
     suspend fun startCollectingBinanceTickerData() {
         webSocketClient.state.collect { tickerData ->
-            val indexOfCryptoDataToUpdate = _binanceCryptoList.value.indexOfFirst {
-                it.symbol == tickerData.symbol
-            }
-
-            if (indexOfCryptoDataToUpdate != -1) {
-                _binanceCryptoList.value = _binanceCryptoList.value.let {
-                    val updatedList = it.toMutableList()
-                    val itemToUpdate =
-                        tickerData.toBinanceDataItem(updatedList[indexOfCryptoDataToUpdate].isFavourite)
-                    if (itemToUpdate != null) {
-                        updatedList[indexOfCryptoDataToUpdate] = itemToUpdate
-                    }
-                    updatedList
+            val updatedList = _binanceCryptoList.value.map {
+                if (it.symbol == tickerData.symbol) {
+                    tickerData.toBinanceDataItem(it.isFavourite)
+                } else {
+                    it
                 }
             }
+
+            _binanceCryptoList.update { updatedList }
         }
     }
 
     // Converts PriceTickerData tp Binance24DataItem
-    private fun PriceTickerData?.toBinanceDataItem(isFavourite: Boolean): BinanceDataItem? {
-        if (this == null) return null
+    private fun PriceTickerData.toBinanceDataItem(isFavourite: Boolean): BinanceDataItem {
         return BinanceDataItem(
-            symbol = symbol.replace("USDT", ""),
-            last = last,
-            high = high,
-            low = low,
-            open = open,
-            priceChange = priceChange,
-            priceChangePercent = priceChangePercent,
+            symbol = this.symbol.replace("USDT", ""),
+            last = this.last,
+            high = this.high,
+            low = this.low,
+            open = this.open,
+            priceChange = this.priceChange,
+            priceChangePercent = this.priceChangePercent,
             isFavourite = isFavourite
         )
     }

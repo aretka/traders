@@ -1,7 +1,6 @@
 package com.example.traders.di
 
 import com.example.traders.debug.FlipperInitializer.addFlipperNetworkInterceptor
-import com.example.traders.network.AuthenticationInterceptor
 import com.example.traders.network.BinanceApi
 import dagger.Module
 import dagger.Provides
@@ -26,7 +25,6 @@ class BinanceApiModule {
             .addConverterFactory(GsonConverterFactory.create())
             .client(
                 OkHttpClient.Builder()
-//                    .addInterceptor(AuthenticationInterceptor())
                     .addFlipperNetworkInterceptor()
                     .build()
             )

@@ -59,8 +59,4 @@
         <item name="android:textSize">@dimen/very_small_text_size</item>
         <item name="android:textColor">@color/light_gray</item>
     </style>
-    // Cancel button style
-<!--    <style name="CancelButtonAppearance" parent="Widget.AppCompat.Button">-->
-<!--        <item></item>-->
-<!--    </style>-->
 </resources>
