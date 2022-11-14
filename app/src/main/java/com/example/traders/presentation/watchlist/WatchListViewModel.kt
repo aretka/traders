@@ -1,6 +1,5 @@
 package com.example.traders.presentation.watchlist
 
-import android.util.Log
 import com.example.traders.presentation.BaseViewModel
 import com.example.traders.database.SortOrder
 import com.example.traders.utils.exhaustive

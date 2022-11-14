@@ -2,10 +2,10 @@ package com.example.traders.singleCryptoScreen.descriptionTab
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.TestDispatcherRule
 import com.example.traders.database.FixedCryptoList
 import com.example.traders.network.models.cryptoDescData.CryptoDescData
+import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.presentation.cryptoDetailsScreen.descriptionTab.CryptoDescriptionViewModel
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
