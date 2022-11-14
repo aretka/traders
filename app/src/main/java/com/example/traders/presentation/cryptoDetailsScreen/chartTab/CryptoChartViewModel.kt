@@ -47,14 +47,14 @@ class CryptoChartViewModel @AssistedInject constructor(
         if (cryptoCandle != null) {
             _chartState.update {
                 it.copy(
-                    tickerData = cryptoCandle,
+                    mainTickerData = cryptoCandle,
                     showChartPrice = true
                 )
             }
         } else {
             _chartState.update { it.copy(
                 showChartPrice = false,
-                tickerData = it.latestCryptoTickerPrice
+                mainTickerData = it.latestCryptoTickerPrice
             ) }
         }
     }
@@ -76,7 +76,7 @@ class CryptoChartViewModel @AssistedInject constructor(
                 if (ticker.symbol == crypto.name && !_chartState.value.showChartPrice) {
                     val updatedTickerPrice = ticker.toCryptoChartCandle()
                     _chartState.update { it.copy(
-                        tickerData = updatedTickerPrice,
+                        mainTickerData = updatedTickerPrice,
                         latestCryptoTickerPrice = updatedTickerPrice
                     ) }
                 }

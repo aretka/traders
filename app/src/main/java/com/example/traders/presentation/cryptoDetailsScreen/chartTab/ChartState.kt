@@ -7,7 +7,7 @@ data class ChartState(
     val chartCandleDataFor360D: List<CryptoChartCandle>? = null,
     val lineChartData90d: List<Float> = emptyList(),
     val lineChartData360d: List<Float> = emptyList(),
-    val tickerData: CryptoChartCandle? = null,
+    val mainTickerData: CryptoChartCandle? = null,
     val chartBtnsEnabled: Boolean = false,
     val isMonth1BtnActive: Boolean = true,
     val isMonth3BtnActive: Boolean = false,

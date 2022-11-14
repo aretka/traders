@@ -34,9 +34,9 @@ data class PriceTickerData(
     @RequiresApi(Build.VERSION_CODES.O)
     fun toCryptoChartCandle(): CryptoChartCandle {
         return CryptoChartCandle(
-            close = last.toFloat(),
-            priceChange = priceChange.toFloat(),
-            percentPriceChange = priceChangePercent.toFloat(),
+            close = last.toFloatOrNull() ?: 0F,
+            priceChange = priceChange.toFloatOrNull() ?: 0F,
+            percentPriceChange = priceChangePercent.toFloatOrNull() ?: 0F,
             date = getCandleDate(0L)
         )
     }
