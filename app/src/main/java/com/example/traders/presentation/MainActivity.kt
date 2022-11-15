@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.traders.R
@@ -64,7 +63,6 @@ class MainActivity : AppCompatActivity() {
                         })
                 }
             }
-
         }
     }
 

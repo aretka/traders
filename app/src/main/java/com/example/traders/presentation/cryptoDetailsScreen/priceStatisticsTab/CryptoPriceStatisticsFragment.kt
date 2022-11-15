@@ -11,13 +11,13 @@ import android.widget.TextView
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.traders.*
+import com.example.traders.database.FixedCryptoList
 import com.example.traders.databinding.FragmentCryptoItemPriceStatisticsBinding
+import com.example.traders.network.models.cryptoStatsData.*
+import com.example.traders.presentation.BaseFragment
 import com.example.traders.utils.roundAndFormatDouble
 import com.example.traders.utils.setPriceChangeText
 import com.example.traders.utils.setPriceChangeTextColor
-import com.example.traders.database.FixedCryptoList
-import com.example.traders.network.models.cryptoStatsData.*
-import com.example.traders.presentation.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -32,48 +32,52 @@ class CryptoPriceStatisticsFragment(val crypto: FixedCryptoList) : BaseFragment(
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentCryptoItemPriceStatisticsBinding.inflate(inflater, container, false)
-        viewModel.cryptoStatsResponse.observe(viewLifecycleOwner, {
-            fillMainSectionData(
-                binding,
-                it.data
-            )
+        viewModel.cryptoStatsResponse.observe(
+            viewLifecycleOwner,
+            {
+                fillMainSectionData(
+                    binding,
+                    it.data
+                )
 
-            fillLast1Hour(
-                binding.last1hourOpen,
-                binding.last1hourHigh,
-                binding.last1hourLow,
-                binding.last1hourClose,
-                binding.last1hourVolume,
-                it.data.market_data.ohlcv_last_1_hour
-            )
-            fillLast24Hour(
-                binding.last24hourOpen,
-                binding.last24hourHigh,
-                binding.last24hourLow,
-                binding.last24hourClose,
-                binding.last24hourVolume,
-                it.data.market_data.ohlcv_last_24_hour
-            )
-            fillATH(
-                binding.ATHPrice,
-                binding.ATHDate,
-                binding.ATHDaysSince,
-                binding.ATHPercentDown,
-                binding.ATHBreakEvenMultiple,
-                it.data.all_time_high
-            )
-            fillRoiData(
-                binding.roiDataLast1Week,
-                binding.roiDataLast1Month,
-                binding.roiDataLast3Months,
-                binding.roiDataLast1Year,
-                it.data.roi_data
-            )
-        })
+                fillLast1Hour(
+                    binding.last1hourOpen,
+                    binding.last1hourHigh,
+                    binding.last1hourLow,
+                    binding.last1hourClose,
+                    binding.last1hourVolume,
+                    it.data.market_data.ohlcv_last_1_hour
+                )
+                fillLast24Hour(
+                    binding.last24hourOpen,
+                    binding.last24hourHigh,
+                    binding.last24hourLow,
+                    binding.last24hourClose,
+                    binding.last24hourVolume,
+                    it.data.market_data.ohlcv_last_24_hour
+                )
+                fillATH(
+                    binding.ATHPrice,
+                    binding.ATHDate,
+                    binding.ATHDaysSince,
+                    binding.ATHPercentDown,
+                    binding.ATHBreakEvenMultiple,
+                    it.data.all_time_high
+                )
+                fillRoiData(
+                    binding.roiDataLast1Week,
+                    binding.roiDataLast1Month,
+                    binding.roiDataLast3Months,
+                    binding.roiDataLast1Year,
+                    it.data.roi_data
+                )
+            }
+        )
 
         binding.expand1HourIcon.setOnClickListener { onIconClicked(it, binding.layout1Hour) }
 
@@ -232,6 +236,3 @@ class CryptoPriceStatisticsFragment(val crypto: FixedCryptoList) : BaseFragment(
         }
     }
 }
-
-
-

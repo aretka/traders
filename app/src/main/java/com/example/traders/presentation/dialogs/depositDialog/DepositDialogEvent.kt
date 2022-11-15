@@ -1,6 +1,5 @@
 package com.example.traders.presentation.dialogs.depositDialog
 
-import com.example.traders.database.Transaction
 import java.math.BigDecimal
 
 sealed class DepositDialogEvent {

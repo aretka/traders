@@ -8,11 +8,11 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
-import com.example.traders.presentation.BaseFragment
 import com.example.traders.R
-import com.example.traders.databinding.FragmentCryptoItemBinding
-import com.example.traders.presentation.watchlist.adapters.CryptoViewPagerAdapter
 import com.example.traders.database.FixedCryptoList
+import com.example.traders.databinding.FragmentCryptoItemBinding
+import com.example.traders.presentation.BaseFragment
+import com.example.traders.presentation.watchlist.adapters.CryptoViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +24,8 @@ class CryptoItemFragment : BaseFragment() {
     private lateinit var binding: FragmentCryptoItemBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCryptoItemBinding.inflate(inflater, container, false)
@@ -106,4 +107,3 @@ class CryptoItemFragment : BaseFragment() {
         }
     }
 }
-

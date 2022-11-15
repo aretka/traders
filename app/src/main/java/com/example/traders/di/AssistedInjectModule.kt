@@ -6,4 +6,4 @@ import dagger.hilt.android.components.FragmentComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
-interface AssistedInjectModule {}
+interface AssistedInjectModule

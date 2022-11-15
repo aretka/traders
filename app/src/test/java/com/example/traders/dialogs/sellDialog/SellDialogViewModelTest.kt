@@ -1,30 +1,30 @@
 package com.example.traders.dialogs.sellDialog
 //
-//import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-//import app.cash.turbine.test
-//import com.example.traders.TestDispatcherRule
-//import com.example.traders.database.Crypto
-//import com.example.traders.database.FixedCryptoList
-//import com.example.traders.network.repository.CryptoRepository
-//import com.example.traders.presentation.dialogs.DialogValidation
-//import com.example.traders.presentation.dialogs.sellDialog.SellDialogEvent
-//import com.example.traders.presentation.dialogs.sellDialog.SellDialogViewModel
-//import com.example.traders.utils.roundNum
-//import com.nhaarman.mockitokotlin2.mock
-//import com.nhaarman.mockitokotlin2.whenever
-//import kotlinx.coroutines.ExperimentalCoroutinesApi
-//import kotlinx.coroutines.launch
-//import kotlinx.coroutines.test.TestCoroutineScope
-//import kotlinx.coroutines.test.runBlockingTest
-//import org.junit.Assert.*
-//import org.junit.Before
-//import org.junit.Rule
-//import org.junit.Test
-//import org.junit.rules.RuleChain
-//import java.math.BigDecimal
+// import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+// import app.cash.turbine.test
+// import com.example.traders.TestDispatcherRule
+// import com.example.traders.database.Crypto
+// import com.example.traders.database.FixedCryptoList
+// import com.example.traders.network.repository.CryptoRepository
+// import com.example.traders.presentation.dialogs.DialogValidation
+// import com.example.traders.presentation.dialogs.sellDialog.SellDialogEvent
+// import com.example.traders.presentation.dialogs.sellDialog.SellDialogViewModel
+// import com.example.traders.utils.roundNum
+// import com.nhaarman.mockitokotlin2.mock
+// import com.nhaarman.mockitokotlin2.whenever
+// import kotlinx.coroutines.ExperimentalCoroutinesApi
+// import kotlinx.coroutines.launch
+// import kotlinx.coroutines.test.TestCoroutineScope
+// import kotlinx.coroutines.test.runBlockingTest
+// import org.junit.Assert.*
+// import org.junit.Before
+// import org.junit.Rule
+// import org.junit.Test
+// import org.junit.rules.RuleChain
+// import java.math.BigDecimal
 //
-//@ExperimentalCoroutinesApi
-//class SellDialogViewModelTest() : TestCoroutineScope by TestCoroutineScope() {
+// @ExperimentalCoroutinesApi
+// class SellDialogViewModelTest() : TestCoroutineScope by TestCoroutineScope() {
 //
 //    @Rule
 //    @JvmField
@@ -261,4 +261,4 @@ package com.example.traders.dialogs.sellDialog
 //        private val CRYPTO_PRICE = BigDecimal(100)
 //        private val CRYPTO_BALANCE = BigDecimal(10)
 //    }
-//}
+// }

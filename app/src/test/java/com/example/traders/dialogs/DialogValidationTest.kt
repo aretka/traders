@@ -1,13 +1,13 @@
 package com.example.traders.dialogs
 //
-//import com.example.traders.presentation.dialogs.DialogValidation
-//import com.example.traders.presentation.dialogs.DialogValidationMessage
-//import org.junit.Before
-//import org.junit.Test
-//import java.math.BigDecimal
-//import kotlin.test.assertEquals
+// import com.example.traders.presentation.dialogs.DialogValidation
+// import com.example.traders.presentation.dialogs.DialogValidationMessage
+// import org.junit.Before
+// import org.junit.Test
+// import java.math.BigDecimal
+// import kotlin.test.assertEquals
 //
-//class DialogValidationTest {
+// class DialogValidationTest {
 //
 //    private lateinit var dialogValidation: DialogValidation
 //
@@ -59,4 +59,4 @@ package com.example.traders.dialogs
 //        private val MAX_VAL = BigDecimal(1000)
 //        private val MIN_VAL = BigDecimal(10)
 //    }
-//}
+// }

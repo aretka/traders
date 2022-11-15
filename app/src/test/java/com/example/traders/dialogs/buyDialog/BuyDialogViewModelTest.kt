@@ -1,33 +1,33 @@
 package com.example.traders.dialogs.buyDialog
 //
-//import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-//import app.cash.turbine.test
-//import com.example.traders.TestDispatcherRule
-//import com.example.traders.database.Crypto
-//import com.example.traders.database.FixedCryptoList
-//import com.example.traders.network.repository.CryptoRepository
-//import com.example.traders.presentation.dialogs.DialogValidation
-//import com.example.traders.presentation.dialogs.buyDialog.BuyDialogEvent
-//import com.example.traders.presentation.dialogs.buyDialog.BuyDialogViewModel
-//import com.example.traders.utils.roundNum
-//import com.nhaarman.mockitokotlin2.mock
-//import com.nhaarman.mockitokotlin2.whenever
-//import kotlinx.coroutines.ExperimentalCoroutinesApi
-//import kotlinx.coroutines.launch
-//import kotlinx.coroutines.test.TestCoroutineScope
-//import kotlinx.coroutines.test.runBlockingTest
-//import org.junit.Before
-//import org.junit.Rule
-//import org.junit.Test
-//import org.junit.rules.RuleChain
-//import java.math.BigDecimal
-//import java.math.RoundingMode
-//import kotlin.test.assertEquals
-//import kotlin.test.assertFalse
-//import kotlin.test.assertTrue
+// import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+// import app.cash.turbine.test
+// import com.example.traders.TestDispatcherRule
+// import com.example.traders.database.Crypto
+// import com.example.traders.database.FixedCryptoList
+// import com.example.traders.network.repository.CryptoRepository
+// import com.example.traders.presentation.dialogs.DialogValidation
+// import com.example.traders.presentation.dialogs.buyDialog.BuyDialogEvent
+// import com.example.traders.presentation.dialogs.buyDialog.BuyDialogViewModel
+// import com.example.traders.utils.roundNum
+// import com.nhaarman.mockitokotlin2.mock
+// import com.nhaarman.mockitokotlin2.whenever
+// import kotlinx.coroutines.ExperimentalCoroutinesApi
+// import kotlinx.coroutines.launch
+// import kotlinx.coroutines.test.TestCoroutineScope
+// import kotlinx.coroutines.test.runBlockingTest
+// import org.junit.Before
+// import org.junit.Rule
+// import org.junit.Test
+// import org.junit.rules.RuleChain
+// import java.math.BigDecimal
+// import java.math.RoundingMode
+// import kotlin.test.assertEquals
+// import kotlin.test.assertFalse
+// import kotlin.test.assertTrue
 //
-//@ExperimentalCoroutinesApi
-//class BuyDialogViewModelTest : TestCoroutineScope by TestCoroutineScope() {
+// @ExperimentalCoroutinesApi
+// class BuyDialogViewModelTest : TestCoroutineScope by TestCoroutineScope() {
 //
 //    @Rule
 //    @JvmField
@@ -270,4 +270,4 @@ package com.example.traders.dialogs.buyDialog
 //        private val CRYPTO = FixedCryptoList.BTC
 //        private val CRYPTO_PRICE = BigDecimal(100)
 //    }
-//}
+// }

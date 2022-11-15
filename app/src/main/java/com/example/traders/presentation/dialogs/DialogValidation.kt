@@ -32,7 +32,7 @@ class DialogValidation @Inject constructor() {
 * 3. More digits after dot than allowed removes excess values
 * */
 fun String.validateChars(digitsAfterDot: Int = 2): String {
-    if(this.isBlank()) {
+    if (this.isBlank()) {
         return this
     } else if (this.first() == '.') {
 
@@ -40,7 +40,7 @@ fun String.validateChars(digitsAfterDot: Int = 2): String {
         return this.replaceFirst(".", "", true)
     } else {
         var numOfDots = 0
-        this.forEach { if(it=='.') numOfDots++ }
+        this.forEach { if (it == '.') numOfDots++ }
         if (numOfDots >= 2) {
             // 2 dots case
             return this.reversed().replaceFirst(".", "").reversed()
@@ -48,7 +48,7 @@ fun String.validateChars(digitsAfterDot: Int = 2): String {
             val reversedIndex = this.reversed().indexOf(".")
             val index = this.indexOf(".")
             // too many digits after dot case
-            if(reversedIndex > digitsAfterDot) {
+            if (reversedIndex > digitsAfterDot) {
                 return this.substring(0, index + digitsAfterDot + 1)
             }
         }

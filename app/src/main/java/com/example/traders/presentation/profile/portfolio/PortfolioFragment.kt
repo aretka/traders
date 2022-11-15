@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.example.traders.presentation.BaseFragment
 import com.example.traders.R
 import com.example.traders.database.Crypto
 import com.example.traders.databinding.FragmentPortfolioBinding
+import com.example.traders.presentation.BaseFragment
 import com.example.traders.presentation.dialogs.confirmationDialog.ConfirmationDialogFragment
 import com.example.traders.presentation.dialogs.confirmationDialog.ConfirmationType
 import com.example.traders.presentation.dialogs.depositDialog.DepositDialogFragment
@@ -22,7 +22,6 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PortfolioFragment : BaseFragment() {
@@ -133,11 +132,13 @@ class PortfolioFragment : BaseFragment() {
     }
 
     private fun FragmentPortfolioBinding.setUpAdapter() {
-        adapter = PortfolioListAdapter(SingleCryptoListener { slug, symbol ->
-            val direction = ProfileFragmentDirections
-                .actionUserProfileFragmentToCryptoItemFragment(slug, symbol)
-            navController.navigate(direction)
-        })
+        adapter = PortfolioListAdapter(
+            SingleCryptoListener { slug, symbol ->
+                val direction = ProfileFragmentDirections
+                    .actionUserProfileFragmentToCryptoItemFragment(slug, symbol)
+                navController.navigate(direction)
+            }
+        )
         portfolioList.adapter = adapter
     }
 
@@ -153,4 +154,3 @@ class PortfolioFragment : BaseFragment() {
         private val DEPOSIT_CONFIRMATION_MESSAGE = "Are you sure you want to deposit?"
     }
 }
-

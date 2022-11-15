@@ -52,10 +52,12 @@ class CryptoChartViewModel @AssistedInject constructor(
                 )
             }
         } else {
-            _chartState.update { it.copy(
-                showChartPrice = false,
-                mainTickerData = it.latestCryptoTickerPrice
-            ) }
+            _chartState.update {
+                it.copy(
+                    showChartPrice = false,
+                    mainTickerData = it.latestCryptoTickerPrice
+                )
+            }
         }
     }
 
@@ -75,10 +77,12 @@ class CryptoChartViewModel @AssistedInject constructor(
             webSocketClient.state.collect { ticker ->
                 if (ticker.symbol == crypto.name && !_chartState.value.showChartPrice) {
                     val updatedTickerPrice = ticker.toCryptoChartCandle()
-                    _chartState.update { it.copy(
-                        mainTickerData = updatedTickerPrice,
-                        latestCryptoTickerPrice = updatedTickerPrice
-                    ) }
+                    _chartState.update {
+                        it.copy(
+                            mainTickerData = updatedTickerPrice,
+                            latestCryptoTickerPrice = updatedTickerPrice
+                        )
+                    }
                 }
             }
         }
@@ -121,4 +125,3 @@ class CryptoChartViewModel @AssistedInject constructor(
 enum class BtnId {
     MONTH1_BTN, MONTH3_BTN, MONTH6_BTN, MONTH12_BTN
 }
-

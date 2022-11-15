@@ -1,25 +1,25 @@
 package com.example.traders.dialogs.depositDialog
 //
-//import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-//import app.cash.turbine.test
-//import com.example.traders.TestDispatcherRule
-//import com.example.traders.network.repository.CryptoRepository
-//import com.example.traders.presentation.dialogs.DialogValidation
-//import com.example.traders.presentation.dialogs.depositDialog.DepositDialogEvent
-//import com.example.traders.presentation.dialogs.depositDialog.DepositViewModel
-//import com.nhaarman.mockitokotlin2.mock
-//import kotlinx.coroutines.ExperimentalCoroutinesApi
-//import kotlinx.coroutines.launch
-//import kotlinx.coroutines.test.TestCoroutineScope
-//import kotlinx.coroutines.test.runBlockingTest
-//import org.junit.Assert.*
-//import org.junit.Rule
-//import org.junit.Test
-//import org.junit.rules.RuleChain
-//import org.mockito.Mock
+// import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+// import app.cash.turbine.test
+// import com.example.traders.TestDispatcherRule
+// import com.example.traders.network.repository.CryptoRepository
+// import com.example.traders.presentation.dialogs.DialogValidation
+// import com.example.traders.presentation.dialogs.depositDialog.DepositDialogEvent
+// import com.example.traders.presentation.dialogs.depositDialog.DepositViewModel
+// import com.nhaarman.mockitokotlin2.mock
+// import kotlinx.coroutines.ExperimentalCoroutinesApi
+// import kotlinx.coroutines.launch
+// import kotlinx.coroutines.test.TestCoroutineScope
+// import kotlinx.coroutines.test.runBlockingTest
+// import org.junit.Assert.*
+// import org.junit.Rule
+// import org.junit.Test
+// import org.junit.rules.RuleChain
+// import org.mockito.Mock
 //
-//@ExperimentalCoroutinesApi
-//class DepositViewModelTest() : TestCoroutineScope by TestCoroutineScope() {
+// @ExperimentalCoroutinesApi
+// class DepositViewModelTest() : TestCoroutineScope by TestCoroutineScope() {
 //
 //    @Rule
 //    @JvmField
@@ -138,4 +138,4 @@ package com.example.traders.dialogs.depositDialog
 //            DialogValidation()
 //        )
 //    }
-//}
+// }

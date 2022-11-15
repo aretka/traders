@@ -69,5 +69,4 @@ class ConfirmationDialogFragment(
     private fun dismissDialog() {
         dialog?.dismiss()
     }
-
 }

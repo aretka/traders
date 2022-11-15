@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.example.traders.R
+import com.example.traders.database.FixedCryptoList
 import com.example.traders.databinding.ListItemCryptoBinding
+import com.example.traders.network.models.binance24HourData.BinanceDataItem
 import com.example.traders.utils.roundAndFormatDouble
 import com.example.traders.utils.setPriceChangeText
 import com.example.traders.utils.setPriceChangeTextColor
-import com.example.traders.database.FixedCryptoList
-import com.example.traders.network.models.binance24HourData.BinanceDataItem
 
 class WatchListAdapter(private val clickListener: SingleCryptoListener) :
     ListAdapter<BinanceDataItem, SimpleViewHolder<ListItemCryptoBinding>>(DiffCallback()) {
@@ -40,7 +40,7 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
             val item = currentList[position]
             val condition = payloads[0] as Boolean
 
-            if(!condition) {
+            if (!condition) {
                 val priceRoundNum = FixedCryptoList.valueOf(item.symbol).priceToRound
                 holder.binding.cryptoPrice.text =
                     roundAndFormatDouble(item.last.toDouble(), priceRoundNum)
@@ -54,7 +54,6 @@ class WatchListAdapter(private val clickListener: SingleCryptoListener) :
                 holder.binding.root.setOnClickListener { clickListener.onClick(slug, item.symbol) }
             }
         }
-
     }
 
     override fun onBindViewHolder(holder: SimpleViewHolder<ListItemCryptoBinding>, position: Int) {

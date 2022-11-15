@@ -1,33 +1,33 @@
 package com.example.traders.profile.portfolio
 //
-//import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-//import androidx.lifecycle.LiveData
-//import androidx.lifecycle.MutableLiveData
-//import app.cash.turbine.test
-//import com.example.traders.TestDispatcherRule
-//import com.example.traders.database.Crypto
-//import com.example.traders.network.models.CryptoTicker
-//import com.example.traders.network.repository.CryptoRepository
-//import com.example.traders.presentation.profile.portfolio.CryptoInUsd
-//import com.example.traders.presentation.profile.portfolio.PortfolioViewModel
-//import com.example.traders.utils.roundNum
-//import com.github.mikephil.charting.data.PieData
-//import com.github.mikephil.charting.data.PieEntry
-//import com.nhaarman.mockitokotlin2.any
-//import com.nhaarman.mockitokotlin2.mock
-//import com.nhaarman.mockitokotlin2.whenever
-//import kotlinx.coroutines.ExperimentalCoroutinesApi
-//import kotlinx.coroutines.test.TestCoroutineScope
-//import kotlinx.coroutines.test.runBlockingTest
-//import org.junit.Assert.*
-//import org.junit.Rule
-//import org.junit.Test
-//import org.junit.rules.RuleChain
-//import retrofit2.Response
-//import java.math.BigDecimal
+// import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+// import androidx.lifecycle.LiveData
+// import androidx.lifecycle.MutableLiveData
+// import app.cash.turbine.test
+// import com.example.traders.TestDispatcherRule
+// import com.example.traders.database.Crypto
+// import com.example.traders.network.models.CryptoTicker
+// import com.example.traders.network.repository.CryptoRepository
+// import com.example.traders.presentation.profile.portfolio.CryptoInUsd
+// import com.example.traders.presentation.profile.portfolio.PortfolioViewModel
+// import com.example.traders.utils.roundNum
+// import com.github.mikephil.charting.data.PieData
+// import com.github.mikephil.charting.data.PieEntry
+// import com.nhaarman.mockitokotlin2.any
+// import com.nhaarman.mockitokotlin2.mock
+// import com.nhaarman.mockitokotlin2.whenever
+// import kotlinx.coroutines.ExperimentalCoroutinesApi
+// import kotlinx.coroutines.test.TestCoroutineScope
+// import kotlinx.coroutines.test.runBlockingTest
+// import org.junit.Assert.*
+// import org.junit.Rule
+// import org.junit.Test
+// import org.junit.rules.RuleChain
+// import retrofit2.Response
+// import java.math.BigDecimal
 //
-//@ExperimentalCoroutinesApi
-//class PortfolioViewModelTest() : TestCoroutineScope by TestCoroutineScope() {
+// @ExperimentalCoroutinesApi
+// class PortfolioViewModelTest() : TestCoroutineScope by TestCoroutineScope() {
 //    @Rule
 //    @JvmField
 //    val rule: RuleChain =
@@ -89,7 +89,7 @@ package com.example.traders.profile.portfolio
 //        fixture.updatePortfolioState()
 //        fixture.state.test {
 //            val actual = awaitItem()
-////            assertEquals(expectedChartData, actual.chartData)
+// //            assertEquals(expectedChartData, actual.chartData)
 //            assertTrue(actual.chartReadyForUpdate)
 //            assertTrue(actual.chartDataLoaded)
 //        }
@@ -107,7 +107,7 @@ package com.example.traders.profile.portfolio
 //        fixture.updatePortfolioState()
 //        fixture.state.test {
 //            val actual = awaitItem()
-////            assertEquals(expectedChartData, actual.chartData)
+// //            assertEquals(expectedChartData, actual.chartData)
 //            assertTrue(actual.chartReadyForUpdate)
 //            assertTrue(actual.chartDataLoaded)
 //        }
@@ -121,13 +121,13 @@ package com.example.traders.profile.portfolio
 //        fixture.updatePortfolioState()
 //        fixture.state.test {
 //            val actual = awaitItem()
-////            assertEquals(expectedChartData, actual.chartData)
+// //            assertEquals(expectedChartData, actual.chartData)
 //            assertTrue(actual.chartReadyForUpdate)
 //            assertTrue(actual.chartDataLoaded)
 //        }
 //    }
-////    expected: java.util.ArrayList<[Entry, x: 0.0 y: 100.0]>
-////    actual:   java.util.ArrayList<[Entry, x: 0.0 y: 100.0]>
+// //    expected: java.util.ArrayList<[Entry, x: 0.0 y: 100.0]>
+// //    actual:   java.util.ArrayList<[Entry, x: 0.0 y: 100.0]>
 //
 //    private fun returnEmptyPortfolioList(): LiveData<List<Crypto>> {
 //        return MutableLiveData(emptyList())
@@ -166,4 +166,4 @@ package com.example.traders.profile.portfolio
 //        private val BCH_TICKER = CryptoTicker("BCH", "100")
 //        private val ETC_TICKER = CryptoTicker("ETC", "100")
 //    }
-//}
+// }

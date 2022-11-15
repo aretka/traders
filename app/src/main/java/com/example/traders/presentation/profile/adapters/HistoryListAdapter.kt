@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.traders.R
+import com.example.traders.database.FixedCryptoList
 import com.example.traders.database.Transaction
 import com.example.traders.database.TransactionType
 import com.example.traders.databinding.ListTransactionCryptoBinding
 import com.example.traders.databinding.ListTransactionHeaderBinding
 import com.example.traders.databinding.ListTransactionUsdBinding
-import com.example.traders.database.FixedCryptoList
 
 class HistoryListAdapter(val clearHistoryListener: () -> Unit) :
     ListAdapter<HistoryItem, RecyclerView.ViewHolder>(CryptoDiffCallback()) {
@@ -117,9 +117,7 @@ class HistoryListAdapter(val clearHistoryListener: () -> Unit) :
                     .placeholder(R.drawable.ic_download)
                     .error(R.drawable.ic_image_error)
                     .into(icon)
-
             }
-
         }
 
         companion object {

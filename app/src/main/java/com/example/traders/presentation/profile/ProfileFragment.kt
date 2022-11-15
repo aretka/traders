@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager2.widget.ViewPager2
-import com.example.traders.presentation.BaseFragment
 import com.example.traders.R
 import com.example.traders.databinding.FragmentUserProfileBinding
+import com.example.traders.presentation.BaseFragment
 import com.example.traders.presentation.profile.adapters.UserViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -17,7 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class ProfileFragment : BaseFragment() {
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentUserProfileBinding.inflate(inflater, container, false)
@@ -36,5 +37,4 @@ class ProfileFragment : BaseFragment() {
             }
         }.attach()
     }
-
 }

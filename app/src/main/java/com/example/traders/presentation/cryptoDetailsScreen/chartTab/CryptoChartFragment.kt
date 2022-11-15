@@ -44,7 +44,8 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCryptoItemChartBinding.inflate(inflater, container, false)
@@ -190,5 +191,3 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
         newBuyFragment.show(parentFragmentManager, "buy_dialog")
     }
 }
-
-

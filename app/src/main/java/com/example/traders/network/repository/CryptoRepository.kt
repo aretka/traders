@@ -58,7 +58,6 @@ class CryptoRepository @Inject constructor(
     suspend fun insertFavouriteCrypto(favouriteCrypto: FavouriteCrypto) = cryptoDao.insertFavouriteCrypto(favouriteCrypto)
     suspend fun deleteFavouriteCrypto(symbol: String) = cryptoDao.deleteFavouriteCrypto(symbol)
     suspend fun getFavouriteBySymbol(symbol: String) = cryptoDao.getFavouriteBySymbol(symbol)
-
 }
 
 inline fun <reified T : Enum<T>> enumContains(symbol: String): Boolean {

@@ -22,5 +22,5 @@ interface BinanceApi {
         @Query("symbol") symbol: String,
         @Query("interval") interval: String,
         @Query("limit") limit: Int
-    ) : Response<BinanceCandleDataList>
+    ): Response<BinanceCandleDataList>
 }

@@ -4,11 +4,11 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.traders.presentation.BaseViewModel
 import com.example.traders.database.Crypto
 import com.example.traders.database.FixedCryptoList
 import com.example.traders.database.TransactionType
 import com.example.traders.network.repository.CryptoRepository
+import com.example.traders.presentation.BaseViewModel
 import com.example.traders.presentation.dialogs.DialogValidation
 import com.example.traders.presentation.dialogs.DialogValidationMessage
 import com.example.traders.presentation.dialogs.validateChars
@@ -124,7 +124,6 @@ class SellDialogViewModel @AssistedInject constructor(
         }
     }
 
-
     private fun calculateNewBalance() {
         var cryptoLeft = _state.value.cryptoBalance?.amount ?: BigDecimal(0)
         var usdToGet = BigDecimal(0)
@@ -154,5 +153,4 @@ class SellDialogViewModel @AssistedInject constructor(
             }
         }
     }
-
 }

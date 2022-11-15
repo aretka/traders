@@ -24,7 +24,6 @@ fun TextView.setPriceChangeText(
             percentagePriceChange
         )
     }
-
 }
 
 fun TextView.setPriceChangeTextColor() {

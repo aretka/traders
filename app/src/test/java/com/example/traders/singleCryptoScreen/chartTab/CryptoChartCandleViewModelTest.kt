@@ -155,7 +155,7 @@ class CryptoChartCandleViewModelTest : TestCoroutineScope by TestCoroutineScope(
     }
 
     private fun initFixture(crypto: FixedCryptoList = FixedCryptoList.BTC) {
-        fixture =  CryptoChartViewModel(
+        fixture = CryptoChartViewModel(
             repository = repository,
             webSocketClient = webSocketClient,
             crypto = crypto
@@ -164,7 +164,7 @@ class CryptoChartCandleViewModelTest : TestCoroutineScope by TestCoroutineScope(
 
     private fun createSharedFlowWithFirstEmit(
         priceTicker: PriceTickerData
-    ) : SharedFlow<PriceTickerData> {
+    ): SharedFlow<PriceTickerData> {
         val sharedFlow = MutableSharedFlow<PriceTickerData>(
             1,
             1,

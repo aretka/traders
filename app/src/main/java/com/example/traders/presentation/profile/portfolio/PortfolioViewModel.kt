@@ -1,9 +1,9 @@
 package com.example.traders.presentation.profile.portfolio
 
-import com.example.traders.presentation.BaseViewModel
 import com.example.traders.database.Crypto
 import com.example.traders.network.models.CryptoTicker
 import com.example.traders.network.repository.CryptoRepository
+import com.example.traders.presentation.BaseViewModel
 import com.example.traders.utils.roundNum
 import com.github.mikephil.charting.data.PieEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -143,7 +143,7 @@ class PortfolioViewModel @Inject constructor(
     }
 
     private fun calculateChartData() {
-        val chartData: List<PieEntry> = when(_state.value.cryptoListInUsd.size) {
+        val chartData: List<PieEntry> = when (_state.value.cryptoListInUsd.size) {
             0 -> emptyChartData()
             in 1..5 -> middleSizeChartData()
             else -> largeSizeChartData()
@@ -189,5 +189,4 @@ class PortfolioViewModel @Inject constructor(
         private val colors =
             listOf(-13710223, -932849, -1618884, -13330213, -4128884, -2164, -12148, -7542017, -29539)
     }
-
 }
