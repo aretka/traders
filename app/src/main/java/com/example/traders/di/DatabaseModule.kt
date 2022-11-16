@@ -30,8 +30,8 @@ object DatabaseModule {
             CryptoDatabase::class.java,
             "traders_database"
         ).fallbackToDestructiveMigration()
-         .addTypeConverter(convertersInstance)
-         .build()
+            .addTypeConverter(convertersInstance)
+            .build()
     }
 
     @Singleton

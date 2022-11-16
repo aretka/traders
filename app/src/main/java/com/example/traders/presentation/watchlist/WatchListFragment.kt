@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.example.traders.presentation.BaseFragment
 import com.example.traders.R
 import com.example.traders.database.SortOrder
 import com.example.traders.databinding.FragmentWatchListBinding
+import com.example.traders.presentation.BaseFragment
 import com.example.traders.presentation.watchlist.adapters.SingleCryptoListener
 import com.example.traders.presentation.watchlist.adapters.WatchListAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,11 +52,13 @@ class WatchListFragment : BaseFragment() {
     }
 
     private fun FragmentWatchListBinding.setListAdapter() {
-        adapter = WatchListAdapter(SingleCryptoListener { slug, symbol ->
-            val direction = WatchListFragmentDirections
-                .actionWatchListFragmentToCryptoItem(slug, symbol)
-            navController.navigate(direction)
-        })
+        adapter = WatchListAdapter(
+            SingleCryptoListener { slug, symbol ->
+                val direction = WatchListFragmentDirections
+                    .actionWatchListFragmentToCryptoItem(slug, symbol)
+                navController.navigate(direction)
+            }
+        )
         itemsList.adapter = adapter
     }
 
@@ -71,14 +73,14 @@ class WatchListFragment : BaseFragment() {
     private fun FragmentWatchListBinding.updateUi(state: WatchListState) {
         pullToRefresh.isRefreshing = state.isRefreshing
 
-        if(state.showFavourites) {
+        if (state.showFavourites) {
             favouriteBtn.setImageResource(R.drawable.ic_star_active)
         } else {
             favouriteBtn.setImageResource(R.drawable.ic_star_inactive)
         }
 
         this.setSortBtnStyleToDefault()
-        when(state.sortOrder) {
+        when (state.sortOrder) {
             SortOrder.BY_NAME_DESC -> sortByNameDesc.setImageResource(R.drawable.ic_arrow_up_active)
             SortOrder.BY_NAME_ASC -> sortByNameAsc.setImageResource(R.drawable.ic_arrow_down_active)
             SortOrder.BY_CHANGE_DESC -> sortByChangeDesc.setImageResource(R.drawable.ic_arrow_up_active)

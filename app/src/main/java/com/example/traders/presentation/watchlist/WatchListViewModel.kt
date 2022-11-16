@@ -1,7 +1,7 @@
 package com.example.traders.presentation.watchlist
 
-import com.example.traders.presentation.BaseViewModel
 import com.example.traders.database.SortOrder
+import com.example.traders.presentation.BaseViewModel
 import com.example.traders.utils.exhaustive
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -48,7 +48,7 @@ class WatchListViewModel @Inject constructor(
     }
 
     fun onSortNameButtonClicked() {
-        when(_state.value.sortOrder) {
+        when (_state.value.sortOrder) {
             SortOrder.BY_NAME_DESC -> updateSortOrder(SortOrder.BY_NAME_ASC)
             SortOrder.BY_NAME_ASC -> updateSortOrder(SortOrder.DEFAULT)
             else -> updateSortOrder(SortOrder.BY_NAME_DESC)
@@ -56,7 +56,7 @@ class WatchListViewModel @Inject constructor(
     }
 
     fun onSortPriceChangeButtonClicked() {
-        when(_state.value.sortOrder) {
+        when (_state.value.sortOrder) {
             SortOrder.BY_CHANGE_DESC -> updateSortOrder(SortOrder.BY_CHANGE_ASC)
             SortOrder.BY_CHANGE_ASC -> updateSortOrder(SortOrder.DEFAULT)
             else -> updateSortOrder(SortOrder.BY_CHANGE_DESC)
@@ -110,12 +110,4 @@ class WatchListViewModel @Inject constructor(
             watchListRepository.startCollectingBinanceTickerData()
         }
     }
-
-
-// This function cannot be called since connection hasnt been established yet at this point
-// Subscribe and unsubscribe must be called when connection is successfully established and terminated respectively
-//    private fun subscribeWebSocket() {
-//        Log.e("ALlCryptoViewModel", "initWebSocket called")
-//        webSocketClient.subscribe(listOf("btcusdt", "bnbusdt"), "ticker")
-//    }
 }

@@ -18,5 +18,4 @@ abstract class WebSocketModule {
     abstract fun provideBinanceWSClient(
         binanceWSClientImpl: BinanceWSClientImpl
     ): BinanceWSClient
-
 }

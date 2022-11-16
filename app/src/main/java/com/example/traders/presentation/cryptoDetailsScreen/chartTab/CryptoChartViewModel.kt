@@ -1,19 +1,16 @@
 package com.example.traders.presentation.cryptoDetailsScreen.chartTab
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.traders.database.FixedCryptoList
 import com.example.traders.network.models.cryptoChartData.CryptoChartCandle
-import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.network.webSocket.BinanceWSClient
 import com.example.traders.presentation.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,15 +47,17 @@ class CryptoChartViewModel @AssistedInject constructor(
         if (cryptoCandle != null) {
             _chartState.update {
                 it.copy(
-                    tickerData = cryptoCandle,
+                    mainTickerData = cryptoCandle,
                     showChartPrice = true
                 )
             }
         } else {
-            _chartState.update { it.copy(
-                showChartPrice = false,
-                tickerData = it.latestCryptoTickerPrice
-            ) }
+            _chartState.update {
+                it.copy(
+                    showChartPrice = false,
+                    mainTickerData = it.latestCryptoTickerPrice
+                )
+            }
         }
     }
 
@@ -78,10 +77,12 @@ class CryptoChartViewModel @AssistedInject constructor(
             webSocketClient.state.collect { ticker ->
                 if (ticker.symbol == crypto.name && !_chartState.value.showChartPrice) {
                     val updatedTickerPrice = ticker.toCryptoChartCandle()
-                    _chartState.update { it.copy(
-                        tickerData = updatedTickerPrice,
-                        latestCryptoTickerPrice = updatedTickerPrice
-                    ) }
+                    _chartState.update {
+                        it.copy(
+                            mainTickerData = updatedTickerPrice,
+                            latestCryptoTickerPrice = updatedTickerPrice
+                        )
+                    }
                 }
             }
         }
@@ -124,4 +125,3 @@ class CryptoChartViewModel @AssistedInject constructor(
 enum class BtnId {
     MONTH1_BTN, MONTH3_BTN, MONTH6_BTN, MONTH12_BTN
 }
-

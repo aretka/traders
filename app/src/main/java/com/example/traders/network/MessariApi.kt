@@ -11,9 +11,11 @@ import retrofit2.http.Query
 
 interface MessariApi {
     // Get request for recent crypto prices
-    @GET("/api/v2/assets?limit=50&fields=id,slug,symbol," +
+    @GET(
+        "/api/v2/assets?limit=50&fields=id,slug,symbol," +
             "metrics/market_data/ohlcv_last_24_hour," +
-            "metrics/market_data/percent_change_usd_last_24_hours")
+            "metrics/market_data/percent_change_usd_last_24_hours"
+    )
     suspend fun getCryptoPrices(): Response<CryptoPriceResponse>
 
     // Get request for crypto price statistics
@@ -24,7 +26,7 @@ interface MessariApi {
 
     // Get request for chart data
     @GET(
-"/api/v1/assets/{slug}/metrics/price/time-series"
+        "/api/v1/assets/{slug}/metrics/price/time-series"
     )
     suspend fun getCryptoChartData(
         @Path("slug") slug: String,
@@ -34,8 +36,8 @@ interface MessariApi {
 
     @GET(
         "/api/v2/assets/{id}/profile?fields=" +
-                "profile/general/overview/project_details," +
-                "profile/general/background"
+            "profile/general/overview/project_details," +
+            "profile/general/background"
     )
     suspend fun getCryptoDescriptionData(
         @Path("id") id: String

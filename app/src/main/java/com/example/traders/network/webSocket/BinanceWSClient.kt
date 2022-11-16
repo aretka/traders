@@ -11,4 +11,3 @@ interface BinanceWSClient {
     fun stopConnection()
     fun restartConnection()
 }
-

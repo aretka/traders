@@ -27,7 +27,6 @@ import com.example.traders.utils.setPriceChangeText
 import com.example.traders.utils.setPriceChangeTextColor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -45,7 +44,8 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCryptoItemChartBinding.inflate(inflater, container, false)
@@ -70,7 +70,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
 
         lifecycleScope.launchWhenStarted {
             viewModel.chartState.collect { state ->
-                binding.setHeaderPrices(state.tickerData)
+                binding.setHeaderPrices(state.mainTickerData)
                 binding.updateBuySellBtnAccessibility(state)
                 updateChartBtnStyles(state)
                 updateChart(state)
@@ -166,7 +166,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
     }
 
     private fun FragmentCryptoItemChartBinding.updateBuySellBtnAccessibility(state: ChartState) {
-        if (state.tickerData != null) {
+        if (state.mainTickerData != null) {
             buyBtn.isEnabled = true
             sellBtn.isEnabled = true
         } else {
@@ -177,7 +177,7 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
 
     private fun showSellDialog() {
         val newSellFragment = SellDialogFragment(
-            lastPrice = BigDecimal(viewModel.chartState.value.tickerData?.close.toString()),
+            lastPrice = BigDecimal(viewModel.chartState.value.mainTickerData?.close.toString()),
             crypto = crypto
         )
         newSellFragment.show(parentFragmentManager, "sell_dialog")
@@ -185,11 +185,9 @@ class CryptoChartFragment(val crypto: FixedCryptoList) : BaseFragment() {
 
     private fun showBuyDialog() {
         val newBuyFragment = BuyDialogFragment(
-            lastPrice = BigDecimal(viewModel.chartState.value.tickerData?.close.toString()),
+            lastPrice = BigDecimal(viewModel.chartState.value.mainTickerData?.close.toString()),
             crypto = crypto
         )
         newBuyFragment.show(parentFragmentManager, "buy_dialog")
     }
 }
-
-

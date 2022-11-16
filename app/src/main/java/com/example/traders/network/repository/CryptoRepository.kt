@@ -1,15 +1,8 @@
 package com.example.traders.network.repository
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.traders.database.*
 import com.example.traders.network.BinanceApi
 import com.example.traders.network.MessariApi
-import com.example.traders.network.models.binanceCandleData.BinanceCandleDataSublist
-import com.example.traders.network.models.cryptoChartData.CryptoChartCandle
-import com.example.traders.presentation.cryptoDetailsScreen.chartTab.CandleType
-import com.example.traders.utils.DateUtils.getCandleDate
-import com.example.traders.utils.DateUtils.getDateFromTimeStamp
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -65,7 +58,6 @@ class CryptoRepository @Inject constructor(
     suspend fun insertFavouriteCrypto(favouriteCrypto: FavouriteCrypto) = cryptoDao.insertFavouriteCrypto(favouriteCrypto)
     suspend fun deleteFavouriteCrypto(symbol: String) = cryptoDao.deleteFavouriteCrypto(symbol)
     suspend fun getFavouriteBySymbol(symbol: String) = cryptoDao.getFavouriteBySymbol(symbol)
-
 }
 
 inline fun <reified T : Enum<T>> enumContains(symbol: String): Boolean {

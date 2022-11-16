@@ -18,13 +18,12 @@ private const val BASE_URL = "https://data.messari.io"
 class MessariApiModule {
     @Singleton
     @Provides
-        fun provideCryptoApi(): MessariApi {
-            return Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(OkHttpClient.Builder().addFlipperNetworkInterceptor().build())
-                .build()
-                .create(MessariApi::class.java)
-        }
-
+    fun provideCryptoApi(): MessariApi {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(OkHttpClient.Builder().addFlipperNetworkInterceptor().build())
+            .build()
+            .create(MessariApi::class.java)
+    }
 }

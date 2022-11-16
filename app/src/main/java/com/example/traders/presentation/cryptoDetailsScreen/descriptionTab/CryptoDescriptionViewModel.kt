@@ -1,9 +1,9 @@
 package com.example.traders.presentation.cryptoDetailsScreen.descriptionTab
 
 import androidx.lifecycle.viewModelScope
-import com.example.traders.presentation.BaseViewModel
-import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.database.FixedCryptoList
+import com.example.traders.network.repository.CryptoRepository
+import com.example.traders.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

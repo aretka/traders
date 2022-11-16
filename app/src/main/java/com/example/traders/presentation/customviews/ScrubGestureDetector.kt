@@ -63,7 +63,6 @@ class ScrubGestureDetector(
     }
 
     companion object {
-        private val LONG_PRESS_TIMEOUT_MS : Long = 250
+        private val LONG_PRESS_TIMEOUT_MS: Long = 250
     }
-
 }

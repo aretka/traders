@@ -97,13 +97,5 @@
         android:fontFamily="@font/roboto_bold"
         android:textColor="@color/black"
         tools:text="0.23421"/>
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/crypto_amount"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        android:textSize="@dimen/very_small_text_size"-->
-<!--        android:textStyle="italic"-->
-<!--        android:text="Amount"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

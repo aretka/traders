@@ -2,14 +2,13 @@ package com.example.traders.presentation.cryptoDetailsScreen.priceStatisticsTab
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.traders.presentation.BaseViewModel
-import com.example.traders.network.repository.CryptoRepository
 import com.example.traders.database.FixedCryptoList
 import com.example.traders.network.models.cryptoStatsData.CryptoStatistics
+import com.example.traders.network.repository.CryptoRepository
+import com.example.traders.presentation.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class CryptoPriceStatisticsViewModel @AssistedInject constructor(

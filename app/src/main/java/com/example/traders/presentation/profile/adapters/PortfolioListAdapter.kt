@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.traders.R
+import com.example.traders.database.FixedCryptoList
 import com.example.traders.databinding.ListItemCryptoBinding
 import com.example.traders.databinding.ListPortfolioHeaderBinding
 import com.example.traders.presentation.profile.portfolio.CryptoInUsd
 import com.example.traders.presentation.watchlist.adapters.SingleCryptoListener
-import com.example.traders.database.FixedCryptoList
 
 class PortfolioListAdapter(private val singleCryptoListener: SingleCryptoListener) :
     ListAdapter<DataItem, RecyclerView.ViewHolder>(CryptoDiffCallback()) {
@@ -81,7 +81,7 @@ class PortfolioListAdapter(private val singleCryptoListener: SingleCryptoListene
             when (item.symbol) {
                 "USD" -> binding.cryptoLogo.setImageResource(R.drawable.ic_dollar)
                 else -> {
-                    binding.root.setOnClickListener { openSingleCrypto.onClick(slug, item.symbol)}
+                    binding.root.setOnClickListener { openSingleCrypto.onClick(slug, item.symbol) }
                     Glide.with(binding.cryptoLogo)
                         .load(FixedCryptoList.valueOf(item.symbol).logoUrl)
                         .placeholder(R.drawable.ic_download)

@@ -41,5 +41,4 @@ class ChartRepository @Inject constructor(
     private fun binancePercentPriceChange(binanceCandle: BinanceChartCandle): Float {
         return 100 * (binanceCandle.close - binanceCandle.open) / binanceCandle.open
     }
-
 }

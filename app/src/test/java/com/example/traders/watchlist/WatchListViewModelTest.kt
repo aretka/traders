@@ -1,32 +1,32 @@
 package com.example.traders.watchlist
 //
-//import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-//import app.cash.turbine.test
-//import com.example.traders.TestDispatcherRule
-//import com.example.traders.network.models.binance24HourData.Binance24DataItem
-//import com.example.traders.network.models.binance24hTickerData.PriceTickerData
-//import com.example.traders.network.repository.CryptoRepository
-//import com.example.traders.network.webSocket.BinanceWSClient
-//import com.example.traders.presentation.watchlist.WatchListViewModel
-//import com.nhaarman.mockitokotlin2.mock
-//import com.nhaarman.mockitokotlin2.whenever
-//import kotlinx.coroutines.ExperimentalCoroutinesApi
-//import kotlinx.coroutines.channels.BufferOverflow
-//import kotlinx.coroutines.flow.MutableSharedFlow
-//import kotlinx.coroutines.flow.SharedFlow
-//import kotlinx.coroutines.launch
-//import kotlinx.coroutines.test.TestCoroutineScope
-//import kotlinx.coroutines.test.runBlockingTest
-//import org.junit.Rule
-//import org.junit.Test
-//import org.junit.rules.RuleChain
-//import retrofit2.Response
-//import kotlin.test.assertEquals
-//import kotlin.test.assertFalse
-//import kotlin.test.assertTrue
+// import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+// import app.cash.turbine.test
+// import com.example.traders.TestDispatcherRule
+// import com.example.traders.network.models.binance24HourData.Binance24DataItem
+// import com.example.traders.network.models.binance24hTickerData.PriceTickerData
+// import com.example.traders.network.repository.CryptoRepository
+// import com.example.traders.network.webSocket.BinanceWSClient
+// import com.example.traders.presentation.watchlist.WatchListViewModel
+// import com.nhaarman.mockitokotlin2.mock
+// import com.nhaarman.mockitokotlin2.whenever
+// import kotlinx.coroutines.ExperimentalCoroutinesApi
+// import kotlinx.coroutines.channels.BufferOverflow
+// import kotlinx.coroutines.flow.MutableSharedFlow
+// import kotlinx.coroutines.flow.SharedFlow
+// import kotlinx.coroutines.launch
+// import kotlinx.coroutines.test.TestCoroutineScope
+// import kotlinx.coroutines.test.runBlockingTest
+// import org.junit.Rule
+// import org.junit.Test
+// import org.junit.rules.RuleChain
+// import retrofit2.Response
+// import kotlin.test.assertEquals
+// import kotlin.test.assertFalse
+// import kotlin.test.assertTrue
 //
-//@ExperimentalCoroutinesApi
-//class WatchListViewModelTest() : TestCoroutineScope by TestCoroutineScope() {
+// @ExperimentalCoroutinesApi
+// class WatchListViewModelTest() : TestCoroutineScope by TestCoroutineScope() {
 //
 //    @Rule
 //    @JvmField
@@ -123,4 +123,4 @@ package com.example.traders.watchlist
 //        repository = repository,
 //        webSocketClient = webSocketClient
 //    )
-//}
+// }

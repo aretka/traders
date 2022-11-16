@@ -2,16 +2,16 @@ package com.example.traders.presentation.watchlist
 
 import com.example.traders.database.CryptoDatabaseDao
 import com.example.traders.database.FavouriteCrypto
+import com.example.traders.database.FixedCryptoList
 import com.example.traders.database.PreferancesManager
 import com.example.traders.database.SortOrder
 import com.example.traders.network.BinanceApi
-import com.example.traders.network.repository.enumContains
-import com.example.traders.utils.MappingUtils.enumConstantNames
-import com.example.traders.database.FixedCryptoList
 import com.example.traders.network.models.binance24HourData.Binance24DataItem
 import com.example.traders.network.models.binance24HourData.BinanceDataItem
 import com.example.traders.network.models.binance24hTickerData.PriceTickerData
+import com.example.traders.network.repository.enumContains
 import com.example.traders.network.webSocket.BinanceWSClient
+import com.example.traders.utils.MappingUtils.enumConstantNames
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -66,19 +66,19 @@ class WatchListRepository @Inject constructor(
     }
 
     private fun emitSortedByNameAsc() {
-        _binanceCryptoList.update { list ->  list.sortedBy { it.symbol } }
+        _binanceCryptoList.update { list -> list.sortedBy { it.symbol } }
     }
 
     private fun emitSortedByNameDesc() {
-        _binanceCryptoList.update { list ->  list.sortedByDescending { it.symbol } }
+        _binanceCryptoList.update { list -> list.sortedByDescending { it.symbol } }
     }
 
     private fun emitSortedByChangeAsc() {
-        _binanceCryptoList.update { list ->  list.sortedBy { it.priceChangePercent.toBigDecimal() } }
+        _binanceCryptoList.update { list -> list.sortedBy { it.priceChangePercent.toBigDecimal() } }
     }
 
     private fun emitSortedByChangeDesc() {
-        _binanceCryptoList.update { list ->  list.sortedByDescending { it.priceChangePercent.toBigDecimal() } }
+        _binanceCryptoList.update { list -> list.sortedByDescending { it.priceChangePercent.toBigDecimal() } }
     }
 
     suspend fun saveSortOrderOnPreference(sortOrder: SortOrder) {
@@ -131,35 +131,28 @@ class WatchListRepository @Inject constructor(
     // It collects message emitted from websocket sharedFlow and updates list item by reassigning BinanceDataItem to new value
     suspend fun startCollectingBinanceTickerData() {
         webSocketClient.state.collect { tickerData ->
-            val indexOfCryptoDataToUpdate = _binanceCryptoList.value.indexOfFirst {
-                it.symbol == tickerData.symbol
-            }
-
-            if (indexOfCryptoDataToUpdate != -1) {
-                _binanceCryptoList.value = _binanceCryptoList.value.let {
-                    val updatedList = it.toMutableList()
-                    val itemToUpdate =
-                        tickerData.toBinanceDataItem(updatedList[indexOfCryptoDataToUpdate].isFavourite)
-                    if (itemToUpdate != null) {
-                        updatedList[indexOfCryptoDataToUpdate] = itemToUpdate
-                    }
-                    updatedList
+            val updatedList = _binanceCryptoList.value.map {
+                if (it.symbol == tickerData.symbol) {
+                    tickerData.toBinanceDataItem(it.isFavourite)
+                } else {
+                    it
                 }
             }
+
+            _binanceCryptoList.update { updatedList }
         }
     }
 
     // Converts PriceTickerData tp Binance24DataItem
-    private fun PriceTickerData?.toBinanceDataItem(isFavourite: Boolean): BinanceDataItem? {
-        if (this == null) return null
+    private fun PriceTickerData.toBinanceDataItem(isFavourite: Boolean): BinanceDataItem {
         return BinanceDataItem(
-            symbol = symbol.replace("USDT", ""),
-            last = last,
-            high = high,
-            low = low,
-            open = open,
-            priceChange = priceChange,
-            priceChangePercent = priceChangePercent,
+            symbol = this.symbol.replace("USDT", ""),
+            last = this.last,
+            high = this.high,
+            low = this.low,
+            open = this.open,
+            priceChange = this.priceChange,
+            priceChangePercent = this.priceChangePercent,
             isFavourite = isFavourite
         )
     }

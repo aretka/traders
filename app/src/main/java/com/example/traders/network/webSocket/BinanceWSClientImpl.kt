@@ -2,12 +2,12 @@ package com.example.traders.network.webSocket
 
 import android.os.Build
 import android.util.Log
-import com.example.traders.utils.MappingUtils
-import com.example.traders.utils.MappingUtils.enumConstantNames
-import com.example.traders.utils.returnTickerWithRoundedPrice
 import com.example.traders.database.FixedCryptoList
 import com.example.traders.network.models.binance24hTickerData.PriceTicker
 import com.example.traders.network.models.binance24hTickerData.PriceTickerData
+import com.example.traders.utils.MappingUtils
+import com.example.traders.utils.MappingUtils.enumConstantNames
+import com.example.traders.utils.returnTickerWithRoundedPrice
 import com.google.gson.Gson
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow

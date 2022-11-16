@@ -30,9 +30,6 @@
         <argument
             android:name="symbol"
             app:argType="string" />
-<!--        <argument-->
-<!--            android:name="isFavourite"-->
-<!--            app:argType="boolean[]" />-->
     </fragment>
 
 </navigation>

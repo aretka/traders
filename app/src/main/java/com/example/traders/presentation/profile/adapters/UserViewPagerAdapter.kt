@@ -25,5 +25,4 @@ class UserViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycl
             else -> Fragment()
         }
     }
-
 }

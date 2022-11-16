@@ -1,9 +1,9 @@
 package com.example.traders.presentation.profile.portfolio
 
-import com.example.traders.presentation.BaseViewModel
 import com.example.traders.database.Crypto
 import com.example.traders.network.models.CryptoTicker
 import com.example.traders.network.repository.CryptoRepository
+import com.example.traders.presentation.BaseViewModel
 import com.example.traders.utils.roundNum
 import com.github.mikephil.charting.data.PieEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,16 +21,8 @@ class PortfolioViewModel @Inject constructor(
     private val repository: CryptoRepository
 ) : BaseViewModel() {
 
-    private val _state = MutableStateFlow(
-        PortfolioState(
-            colors = colors
-        )
-    )
+    private val _state = MutableStateFlow(PortfolioState(colors = colors))
     val state = _state.asStateFlow()
-//    val state = _state.asStateFlow().combine(repository.getLiveAllCryptoPortfolio().asFlow()) {
-//        portfolioState, liveAllCryptoPortfolio ->
-//        updateStateData()
-//    }
 
     val livePortfolioList = repository.getLiveAllCryptoPortfolio()
 
@@ -52,7 +44,6 @@ class PortfolioViewModel @Inject constructor(
                 calculateChartData()
             }
         }
-        // if we wrote else it would mean nothing has changed and we dont need to change anything
     }
 
     private fun listIsEmpty(): Boolean {
@@ -88,10 +79,7 @@ class PortfolioViewModel @Inject constructor(
 
     private suspend fun collectRequiredPrices(listToFetch: List<Crypto>) {
 
-        // Waits for required cryptoTickers to fetch
         val results = fetchBinanceTickerTasks(listToFetch).awaitAll()
-
-        // Takes all crypto elements into one array
         val allPricesFromApi = listOfSameItems() + results
 
         _state.value = _state.value.copy(
@@ -138,7 +126,6 @@ class PortfolioViewModel @Inject constructor(
         val binanceTickerTasks = mutableListOf<Deferred<CryptoTicker?>>()
         for (crypto in listToFetch) {
             if (crypto.symbol != "USD") {
-//                Log.e("API_FETCH", "NEW REQUEST OF ${crypto.symbol}")
                 binanceTickerTasks.add(
                     async { repository.getBinanceTickerBySymbol(crypto.symbol + "USDT").body() }
                 )
@@ -156,7 +143,7 @@ class PortfolioViewModel @Inject constructor(
     }
 
     private fun calculateChartData() {
-        val chartData: List<PieEntry> = when(_state.value.cryptoListInUsd.size) {
+        val chartData: List<PieEntry> = when (_state.value.cryptoListInUsd.size) {
             0 -> emptyChartData()
             in 1..5 -> middleSizeChartData()
             else -> largeSizeChartData()
@@ -175,7 +162,7 @@ class PortfolioViewModel @Inject constructor(
 
     private fun middleSizeChartData(): List<PieEntry> {
         return _state.value.cryptoListInUsd.map { crypto ->
-            PieEntry(crypto.amountInUsd.toFloat() ?: 0F, crypto.symbol)
+            PieEntry(crypto.amountInUsd.toFloat(), crypto.symbol)
         }
     }
 
@@ -202,5 +189,4 @@ class PortfolioViewModel @Inject constructor(
         private val colors =
             listOf(-13710223, -932849, -1618884, -13330213, -4128884, -2164, -12148, -7542017, -29539)
     }
-
 }

@@ -1,4 +1,4 @@
-package com.example.traders.presentation.customviews.candleChartData
+package com.example.traders.presentation.customviews.candleDataModels
 
 data class CandlePosition(
     val candleOpen: Float,

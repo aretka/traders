@@ -6,16 +6,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/very_light_gray">
 
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="15dp"-->
-<!--        android:text="Transaction history"-->
-<!--        android:textSize="@dimen/large_text_size"-->
-<!--        android:fontFamily="@font/roboto_bold"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"/>-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/history_list"
         android:layout_width="match_parent"

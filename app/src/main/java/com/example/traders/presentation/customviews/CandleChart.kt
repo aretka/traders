@@ -10,8 +10,8 @@ import android.view.ViewConfiguration
 import androidx.core.content.res.ResourcesCompat
 import com.example.traders.R
 import com.example.traders.network.models.cryptoChartData.CryptoChartCandle
-import com.example.traders.presentation.customviews.candleChartData.CandlePosition
-import com.example.traders.presentation.customviews.candleChartData.LinePosition
+import com.example.traders.presentation.customviews.candleDataModels.CandlePosition
+import com.example.traders.presentation.customviews.candleDataModels.LinePosition
 import com.example.traders.utils.roundAndFormatDouble
 import java.util.Collections.binarySearch
 import kotlin.math.abs
@@ -19,28 +19,32 @@ import kotlin.properties.Delegates
 
 class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs), ScrubListener {
     private var cryptoChartCandles: List<CryptoChartCandle> = emptyList()
-    private var linePositions: MutableList<LinePosition>   = mutableListOf()
+    private var linePositions: MutableList<LinePosition> = mutableListOf()
     private var candlePositions: MutableList<CandlePosition> = mutableListOf()
     private var mWidth = 0f
     private var mHeight = 0f
     private var candleWidth = 0f
     private var candleSpacing = 0f
     private var chartSizeMultiplier = 0.84f
-    private var mGreenPaint = Paint()
-    private var mRedPaint = Paint()
+    private var mGreenCandlePaint = Paint()
+    private var mRedCandlePaint = Paint()
     private var mGreenLinePaint = Paint()
     private var mRedLinePaint = Paint()
     private var mTextPaint = Paint()
+    private var mLightGrayTextPaint = Paint()
+    private var mRedTextPaint = Paint()
+    private var mGreenTextPaint = Paint()
     private var minVal = 0f
     private var maxVal = 0f
-    private var maxValPosition = 0f
-    private var minValPosition = 0f
+    private var maxValIndex = -1
+    private var minValIndex = -1
     private var currentPricePosition = 0f
     private var digitsRounded by Delegates.notNull<Int>()
 
     // scrubLine
     val scrubLinePaint = Paint(Paint.ANTI_ALIAS_FLAG)
     val scrubLinePath = Path()
+
     // listeners
     private var scrubListener: OnScrubListener? = null
     lateinit var scrubGestureDetector: ScrubGestureDetector
@@ -61,7 +65,7 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
     }
 
     fun importListValues(list: List<CryptoChartCandle>) {
-        if(list == cryptoChartCandles) return
+        if (list == cryptoChartCandles) return
         cryptoChartCandles = list
         minVal = list.minOf { it.low }
         maxVal = list.maxOf { it.high }
@@ -72,22 +76,29 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
     }
 
     private fun setPaintColors() {
-        mGreenPaint.color = ResourcesCompat.getColor(getResources(), R.color.green, null); //without theme
-        mRedPaint.color = ResourcesCompat.getColor(getResources(), R.color.red, null);
-        mGreenLinePaint.color = ResourcesCompat.getColor(getResources(), R.color.green, null);
-        mRedLinePaint.color = ResourcesCompat.getColor(getResources(), R.color.red, null);
+        mGreenCandlePaint.color = ResourcesCompat.getColor(resources, R.color.green, null); // without theme
+        mRedCandlePaint.color = ResourcesCompat.getColor(resources, R.color.red, null)
+        mGreenLinePaint.color = ResourcesCompat.getColor(resources, R.color.green, null)
+        mRedLinePaint.color = ResourcesCompat.getColor(resources, R.color.red, null)
+
+        mLightGrayTextPaint.color = ResourcesCompat.getColor(resources, R.color.light_gray, null)
+        mRedTextPaint.color = ResourcesCompat.getColor(resources, R.color.red, null)
+        mGreenTextPaint.color = ResourcesCompat.getColor(resources, R.color.green, null)
     }
 
     private fun setScrubLinePaint() {
         scrubLinePaint.style = Paint.Style.STROKE
         scrubLinePaint.strokeWidth = 5f
         scrubLinePaint.color = ResourcesCompat.getColor(getResources(), R.color.black, null)
-//        scrubLinePaint.strokeCap = Paint.Cap.ROUND
     }
 
     private fun setPaintSize() {
-        mTextPaint.textSize = 25F
-        mTextPaint.strokeWidth = 3F
+        mGreenTextPaint.textSize = 25F
+        mGreenTextPaint.strokeWidth = 3F
+        mRedTextPaint.textSize = 25F
+        mRedTextPaint.strokeWidth = 3F
+        mLightGrayTextPaint.textSize = 25F
+        mLightGrayTextPaint.strokeWidth = 3F
         mGreenLinePaint.strokeWidth = 3f
         mRedLinePaint.strokeWidth = 3f
     }
@@ -105,10 +116,10 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
     }
 
     private fun calculateCandleSizes() {
-        candleWidth = mWidth * chartSizeMultiplier / (cryptoChartCandles.size-1) * 0.6f
-        candleSpacing = mWidth * chartSizeMultiplier / (cryptoChartCandles.size-1) * 0.4f
-        mGreenPaint.strokeWidth = candleWidth
-        mRedPaint.strokeWidth = candleWidth
+        candleWidth = mWidth * chartSizeMultiplier / (cryptoChartCandles.size - 1) * 0.6f
+        candleSpacing = mWidth * chartSizeMultiplier / (cryptoChartCandles.size - 1) * 0.4f
+        mGreenCandlePaint.strokeWidth = candleWidth
+        mRedCandlePaint.strokeWidth = candleWidth
     }
 
     private fun calculateCoords() {
@@ -122,77 +133,104 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
 
         val minMaxDiff = maxVal - minVal
 
-        //listof([volume, open, high, low, close], [], ..., [])
+        // listof([volume, open, high, low, close], [], ..., [])
 
-        for(i in 0..(cryptoChartCandles.size -1)) {
-            yLineTop = mHeight - ((mHeight * 0.9f) * ((cryptoChartCandles[i].high - minVal)/minMaxDiff) + (mHeight * 0.05f))
-            yLineBottom = mHeight - ((mHeight * 0.9f) * ((cryptoChartCandles[i].low - minVal)/minMaxDiff) + (mHeight * 0.05f))
+        for (i in 0..(cryptoChartCandles.size - 1)) {
+            yLineTop = mHeight - ((mHeight * 0.9f) * ((cryptoChartCandles[i].high - minVal) / minMaxDiff) + (mHeight * 0.05f))
+            yLineBottom = mHeight - ((mHeight * 0.9f) * ((cryptoChartCandles[i].low - minVal) / minMaxDiff) + (mHeight * 0.05f))
             val linePosition = LinePosition(
                 yTop = yLineTop,
                 yBot = yLineBottom,
                 x = xVal
             )
             linePositions.add(linePosition)
-//            linePositions.add(listOf(yLineTop, yLineBottom, xVal))
 
-            if(cryptoChartCandles[i].high == maxVal) maxValPosition = yLineTop
-            if(cryptoChartCandles[i].low == minVal) minValPosition = yLineBottom
+            if (cryptoChartCandles[i].high == maxVal) maxValIndex = i
+            if (cryptoChartCandles[i].low == minVal) minValIndex = i
 
-            yCandleOpen = mHeight - ((mHeight * 0.9f) * ((cryptoChartCandles[i].open - minVal)/minMaxDiff) + (mHeight * 0.05f))
-            yCandleClose = mHeight - ((mHeight * 0.9f) * ((cryptoChartCandles[i].close - minVal)/minMaxDiff) + (mHeight * 0.05f))
+            yCandleOpen = mHeight - ((mHeight * 0.9f) * ((cryptoChartCandles[i].open - minVal) / minMaxDiff) + (mHeight * 0.05f))
+            yCandleClose = mHeight - ((mHeight * 0.9f) * ((cryptoChartCandles[i].close - minVal) / minMaxDiff) + (mHeight * 0.05f))
             val candlePosition = CandlePosition(
                 candleOpen = yCandleOpen,
                 candleClose = yCandleClose,
                 x = xVal
             )
             candlePositions.add(candlePosition)
-//            candlePositions.add(listOf(yCandleOpen, yCandleClose, xVal))
 
-            if(i == (cryptoChartCandles.size-1)) currentPricePosition = yCandleClose
+            if (i == (cryptoChartCandles.size - 1)) currentPricePosition = yCandleClose
             xVal += (candleSpacing) + candleWidth
         }
     }
 
-    private fun drawCandles( canvas: Canvas? ) {
-        if(cryptoChartCandles.size > 0) {
-            for(i in 0..linePositions.size - 1) {
-                // draw candles
-                // height is compared inversely duo to top position of height is 0
-                if(candlePositions[i].candleClose < candlePositions[i].candleOpen) {
-                    // draw line
-                    canvas?.drawLine(linePositions[i].x, linePositions[i].yTop, linePositions[i].x, linePositions[i].yBot, mGreenLinePaint)
-                    canvas?.drawLine(candlePositions[i].x, candlePositions[i].candleOpen, candlePositions[i].x, candlePositions[i].candleClose, mGreenPaint)
+    private fun drawCandles(canvas: Canvas?) {
+        if (canvas == null) return
+        if (cryptoChartCandles.isEmpty()) return
 
+        for (i in 0..linePositions.size - 1) {
+            with(canvas) {
+                if (candlePositions[i].candleClose < candlePositions[i].candleOpen) {
+                    drawCandleLine(i, mGreenLinePaint)
+                    drawCandle(i, mGreenCandlePaint)
                 } else {
-                    canvas?.drawLine(linePositions[i].x, linePositions[i].yTop, linePositions[i].x, linePositions[i].yBot, mRedLinePaint)
-                    canvas?.drawLine(candlePositions[i].x, candlePositions[i].candleOpen, candlePositions[i].x, candlePositions[i].candleClose, mRedPaint)
-                }
-
-                // draw high, low, current lines when found in list
-                if(linePositions[i].yTop == maxValPosition){
-                    canvas?.drawLine(linePositions[i].x,linePositions[i].yTop, mWidth, linePositions[i].yTop, mGreenLinePaint)
-                    mTextPaint.color = ResourcesCompat.getColor(getResources(), R.color.green, null);
-                    canvas?.drawText(roundAndFormatDouble(cryptoChartCandles[i].high.toDouble(), digitsRounded), mWidth - 115F, linePositions[i].yTop - 5F, mTextPaint)
-                }
-                if(linePositions[i].yBot == minValPosition) {
-                    canvas?.drawLine(linePositions[i].x,linePositions[i].yBot, mWidth, linePositions[i].yBot, mRedLinePaint)
-                    mTextPaint.color = ResourcesCompat.getColor(getResources(), R.color.red, null);
-                    canvas?.drawText(roundAndFormatDouble(cryptoChartCandles[i].low.toDouble(), digitsRounded), mWidth - 115F, linePositions[i].yBot - 5F, mTextPaint)
+                    drawCandleLine(i, mRedLinePaint)
+                    drawCandle(i, mRedCandlePaint)
                 }
             }
-
-            // Draw most recent price
-            mTextPaint.color = ResourcesCompat.getColor(getResources(), R.color.light_gray, null);
-            canvas?.drawLine(candlePositions.last().x,candlePositions.last().candleClose, mWidth, candlePositions.last().candleClose, mTextPaint)
-            canvas?.drawText(
-                roundAndFormatDouble(
-                    numToRound = cryptoChartCandles.last().close.toDouble(),
-                    digitsRounded = digitsRounded
-                ),
-                mWidth - 115F,
-                candlePositions.last().candleClose - 5F,
-                mTextPaint)
         }
+        drawMaxMinCurrentPrices(canvas)
+    }
+
+    private fun drawMaxMinCurrentPrices(canvas: Canvas) {
+        with(canvas) {
+            drawPriceLineAndText(
+                x = linePositions[maxValIndex].x,
+                y = linePositions[maxValIndex].yTop,
+                textPrice = cryptoChartCandles[maxValIndex].high.toDouble(),
+                linePaint = mGreenTextPaint,
+                textPaint = mGreenTextPaint
+            )
+
+            drawPriceLineAndText(
+                x = linePositions[minValIndex].x,
+                y = linePositions[minValIndex].yBot,
+                textPrice = cryptoChartCandles[minValIndex].high.toDouble(),
+                linePaint = mRedLinePaint,
+                textPaint = mRedTextPaint
+            )
+
+            drawPriceLineAndText(
+                x = candlePositions.last().x,
+                y = candlePositions.last().candleClose,
+                textPrice = cryptoChartCandles.last().close.toDouble(),
+                linePaint = mLightGrayTextPaint,
+                textPaint = mLightGrayTextPaint
+            )
+        }
+    }
+
+    private fun Canvas.drawCandle(index: Int, painter: Paint) {
+        drawLine(
+            candlePositions[index].x,
+            candlePositions[index].candleOpen,
+            candlePositions[index].x,
+            candlePositions[index].candleClose,
+            painter
+        )
+    }
+
+    private fun Canvas.drawCandleLine(index: Int, painter: Paint) {
+        drawLine(
+            linePositions[index].x,
+            linePositions[index].yTop,
+            linePositions[index].x,
+            linePositions[index].yBot,
+            painter
+        )
+    }
+
+    private fun Canvas.drawPriceLineAndText(x: Float, y: Float, textPrice: Double, linePaint: Paint, textPaint: Paint) {
+        drawLine(x, y, mWidth, y, linePaint)
+        drawText(roundAndFormatDouble(textPrice, digitsRounded), mWidth - 115F, y - 5F, textPaint)
     }
 
     class OnScrubListener(private val clickListener: (CryptoChartCandle?) -> Unit) {
@@ -210,23 +248,23 @@ class CandleChart(context: Context, attrs: AttributeSet) : View(context, attrs),
         val index = binarySearch(xPoints, x)
 
         // if index non negative it means that x matches exact point
-        if(index >= 0) return index
+        if (index >= 0) return index
 
         // if index closest to left return first element
-        if(index == -1) return index + 1
+        if (index == -1) return 0
 
         // if index closest to right return last element
-        if(abs(index) >= xPoints.size) return xPoints.size - 1
+        if (abs(index) >= xPoints.size) return xPoints.size - 1
 
         // otherwise return element closest to the x coordinate
-        val point1Index = abs(index+1)
+        val point1Index = abs(index + 1)
         val point2Index = abs(index)
         val distance1 = abs(x - xPoints[point1Index])
         val distance2 = abs(x - xPoints[point2Index])
-        return if(distance1 <= distance2) {
-             point1Index
+        return if (distance1 <= distance2) {
+            point1Index
         } else {
-             point2Index
+            point2Index
         }
     }
 

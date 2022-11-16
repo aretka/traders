@@ -42,5 +42,4 @@ class CryptoViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecy
             }
         }
     }
-
 }

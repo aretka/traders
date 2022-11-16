@@ -11,11 +11,13 @@ fun roundAndFormatDouble(numToRound: Double, digitsRounded: Int = 2): String {
 }
 
 fun BigDecimal.roundFormatBigDecimal(digitsRounded: Int = 2): String {
-    val pattern = ",###.".plus(buildString {
-        for (i in 1..digitsRounded) {
-            append("0")
+    val pattern = ",###.".plus(
+        buildString {
+            for (i in 1..digitsRounded) {
+                append("0")
+            }
         }
-    })
+    )
     val df = DecimalFormat(pattern)
     return df.format(this)
 }

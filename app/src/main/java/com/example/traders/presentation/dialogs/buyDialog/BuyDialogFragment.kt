@@ -13,9 +13,9 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.traders.R
+import com.example.traders.database.FixedCryptoList
 import com.example.traders.databinding.DialogFragmentBuyBinding
 import com.example.traders.presentation.dialogs.DialogValidationMessage
-import com.example.traders.database.FixedCryptoList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import java.math.BigDecimal
@@ -55,7 +55,7 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val crypto: FixedCryptoList) 
 
     private fun collectViewModelState() {
         lifecycleScope.launchWhenCreated {
-            Log.e("TAG", "collectViewModelState: ${Thread.currentThread().name}", )
+            Log.e("TAG", "collectViewModelState: ${Thread.currentThread().name}",)
             with(viewModel) {
                 state.collect { state ->
                     binding.updateValues(state)
@@ -126,7 +126,7 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val crypto: FixedCryptoList) 
             validationMessage.text = state.messageType.message
         }
 
-        if(state.updateInput) {
+        if (state.updateInput) {
             priceInputField.setText(state.validatedInputValue)
             viewModel.inputUpdated()
         }
@@ -141,7 +141,3 @@ class BuyDialogFragment(val lastPrice: BigDecimal, val crypto: FixedCryptoList) 
         buyBtn.isEnabled = state.isBtnEnabled
     }
 }
-
-
-
-
